@@ -1,0 +1,77 @@
+import { Box, Button, InputAdornment, Stack, TextField } from '@mui/material'
+import SectionHeader from '../../components/SectionHeader'
+import searchIcon from '../../assets/search.svg'
+import AddIcon from '@mui/icons-material/Add';
+import { debounce } from 'lodash';
+import { useEffect, useState } from 'react';
+import { CreateSubCategory } from './modals/create-sub-category';
+import { useModalControl } from '../../hooks/useModalControl';
+import { CustomPagination, CustomTable } from '../../components';
+import { useColumns } from './hooks/useColumns';
+import { useQuery } from '@tanstack/react-query';
+import { fetchSubCategories } from '../../services';
+import { usePagination } from '../../hooks/usePagination';
+import useReload from '../../hooks/useReload';
+import { useEditData } from '../../hooks/useEdit';
+import { useParams } from 'react-router';
+export function SubCategoriesPage() {
+    let { id } = useParams();
+    const { editData, handleEditData } = useEditData()
+    const { open, handleCloseModal, handleOpenModal } = useModalControl()
+    const [search, setSearch] = useState("")
+    const { columns } = useColumns(handleEditData, handleOpenModal)
+    const { handleReload, reload } = useReload()
+    const { page, setPage, page_size, total_records, setTotal_records, totalPages, setTotalPages, handlePageSize } = usePagination()
+    const handleSearch = debounce((value) => {
+        setSearch(value)
+    }, 400)
+
+
+    const { data, isLoading, refetch } = useQuery({
+        queryKey: ['sub-categories', id, page, page_size, search, reload],
+        queryFn: ({ signal }) => fetchSubCategories(signal, id, page + 1, page_size, search),
+        enabled: !!id
+    })
+    useEffect(() => {
+        if (data) {
+            setTotal_records(data?.count)
+            setTotalPages(data?.totalPages)
+        }
+    }, [data])
+    return (
+        <Box>
+            <SectionHeader heading="Sub Categories" icon="https://ticketsque-public.s3.ap-south-1.amazonaws.com/icons/Events.svg" />
+            <Stack gap={1} sx={{ mb: 2 }} direction="row" justifyContent={{ xs: "flex-end", md: "space-between" }} alignItems="center" flexWrap="wrap">
+                <TextField
+                    fullWidth
+                    id="Search"
+                    variant="outlined"
+                    size="small"
+                    placeholder="Search"
+                    onChange={(e) => handleSearch(e.target.value)}
+                    sx={{
+                        maxWidth: { xs: "100%", md: "236px", lg: "256px" },
+                        background: "white",
+                    }}
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <Box component="img" src={searchIcon} alt="Search Icon" />
+                            </InputAdornment>
+                        ),
+                    }}
+                />
+                <Stack>
+                    <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenModal} >Create Sub Category</Button>
+                </Stack>
+            </Stack>
+            <CustomTable
+                rows={data?.rows}
+                columns={columns}
+                loading={isLoading}
+            />
+            {data?.rows?.length > 0 && <CustomPagination  {...{ page, page_size, total_records, setPage, totalPages, handlePageSize }} />}
+            {open && <CreateSubCategory open={open} close={handleCloseModal} refetch={refetch} editData={editData} />}
+        </Box>
+    )
+}

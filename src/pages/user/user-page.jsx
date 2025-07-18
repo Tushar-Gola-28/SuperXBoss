@@ -4,7 +4,6 @@ import searchIcon from '../../assets/search.svg'
 import AddIcon from '@mui/icons-material/Add';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
-// import { CreateCategory } from './modals/create-category';
 import { useModalControl } from '../../hooks/useModalControl';
 import { CustomPagination, CustomTable } from '../../components';
 import useColumns from './hooks/useColumns';
@@ -13,8 +12,10 @@ import { fetchCategories } from '../../services';
 import { usePagination } from '../../hooks/usePagination';
 import useReload from '../../hooks/useReload';
 import { useEditData } from '../../hooks/useEdit';
-// import { BrandModal } from './modals/BrandModal';
+import { urls } from '../../routes/urls';
+import { useNavigate } from 'react-router';
 export function UserPage() {
+    const navigate = useNavigate()
     const { editData, handleEditData } = useEditData()
     const { open, handleCloseModal, handleOpenModal } = useModalControl()
     const [search, setSearch] = useState("")
@@ -26,7 +27,7 @@ export function UserPage() {
     }, 400)
 
 
-    const { data, isLoading, refetch } = useQuery({
+    const { data, isLoading } = useQuery({
         queryKey: ['categories', page, page_size, search, reload],
         queryFn: ({ signal }) => fetchCategories(signal, page + 1, page_size, search)
     })
@@ -60,7 +61,7 @@ export function UserPage() {
                     }}
                 />
                 <Stack>
-                    <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenModal} >Create User</Button>
+                    <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate(`${urls.USER_HANDLER}/`)} >Create User</Button>
                 </Stack>
             </Stack>
             <CustomTable
@@ -69,7 +70,6 @@ export function UserPage() {
                 loading={isLoading}
             />
             {data?.rows?.length > 0 && <CustomPagination  {...{ page, page_size, total_records, setPage, totalPages, handlePageSize }} />}
-            {/* {open && <BrandModal open={open} close={handleCloseModal} refetch={refetch} editData={editData} />} */}
         </Box>
     )
 }

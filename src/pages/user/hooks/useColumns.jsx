@@ -6,6 +6,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import { useNavigate } from 'react-router';
 import { HoverAvatar } from '../../../components';
+import { urls } from '../../../routes/urls';
 export default function useColumns(handleEditData, handleOpenModal) {
     const navigate = useNavigate()
     const columns = [
@@ -64,7 +65,7 @@ export default function useColumns(handleEditData, handleOpenModal) {
                         <IconButton color="primary" onClick={() => { handleEditData(row); handleOpenModal() }}>
                             <EditIcon />
                         </IconButton>
-                        <IconButton color="primary" onClick={() => navigate(`sub-categories/${row?.id}`)}>
+                        <IconButton color="primary" onClick={() => navigate(`${urls.USER_HANDLER}/`)}>
                             <PlaylistAddIcon />
                         </IconButton>
                     </Stack >

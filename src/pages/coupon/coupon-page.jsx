@@ -14,8 +14,11 @@ import { fetchCategories } from '../../services';
 import { usePagination } from '../../hooks/usePagination';
 import useReload from '../../hooks/useReload';
 import { useEditData } from '../../hooks/useEdit';
+import { useNavigate } from 'react-router';
+import { urls } from '../../routes';
 // import { BrandModal } from './modals/BrandModal';
 export function CouponPage() {
+    const navigate = useNavigate()
     const { editData, handleEditData } = useEditData()
     const { open, handleCloseModal, handleOpenModal } = useModalControl()
     const [search, setSearch] = useState("")
@@ -61,7 +64,7 @@ export function CouponPage() {
                     }}
                 />
                 <Stack>
-                    <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenModal} >Create Coupon</Button>
+                    <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate(`${urls.COUPON_HANDLER}/`)} >Create Coupon</Button>
                 </Stack>
             </Stack>
             <CustomTable

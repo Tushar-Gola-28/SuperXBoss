@@ -14,8 +14,11 @@ import { fetchCategories } from '../../services';
 import { usePagination } from '../../hooks/usePagination';
 import useReload from '../../hooks/useReload';
 import { useEditData } from '../../hooks/useEdit';
+import { useNavigate } from 'react-router';
+import { urls } from '../../routes';
 // import { BrandModal } from './modals/BrandModal';
 export function BannerPage() {
+    const navigate = useNavigate()
     const { editData, handleEditData } = useEditData()
     const { open, handleCloseModal, handleOpenModal } = useModalControl()
     const [search, setSearch] = useState("")
@@ -39,7 +42,7 @@ export function BannerPage() {
     }, [data])
     return (
         <Box>
-            <SectionHeader heading="Coupons" icon="https://ticketsque-public.s3.ap-south-1.amazonaws.com/icons/Events.svg" />
+            <SectionHeader heading="Banners" icon="https://ticketsque-public.s3.ap-south-1.amazonaws.com/icons/Events.svg" />
             <Stack gap={1} sx={{ mb: 2 }} direction="row" justifyContent={{ xs: "flex-end       ", md: "space-between" }} alignItems="center" flexWrap="wrap">
                 <TextField
                     fullWidth
@@ -61,7 +64,7 @@ export function BannerPage() {
                     }}
                 />
                 <Stack>
-                    <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenModal} >Create Coupon</Button>
+                    <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate(`${urls.BANNER_HANDLER}/`)} >Create Banner</Button>
                 </Stack>
             </Stack>
             <CustomTable

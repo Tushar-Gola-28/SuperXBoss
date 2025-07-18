@@ -2,7 +2,7 @@ import { Box, Button, InputAdornment, Stack, TextField } from '@mui/material'
 import SectionHeader from '../../components/SectionHeader'
 import searchIcon from '../../assets/search.svg'
 import AddIcon from '@mui/icons-material/Add';
-import { debounce } from 'lodash';
+import { debounce, mapValues } from 'lodash';
 import { useEffect, useState } from 'react';
 // import { CreateCategory } from './modals/create-category';
 import { useModalControl } from '../../hooks/useModalControl';
@@ -13,8 +13,11 @@ import { fetchCategories } from '../../services';
 import { usePagination } from '../../hooks/usePagination';
 import useReload from '../../hooks/useReload';
 import { useEditData } from '../../hooks/useEdit';
+import { useNavigate } from 'react-router';
+import { urls } from '../../routes';
 // import { BrandModal } from './modals/BrandModal';
 export function ShippingPage() {
+    const navigate = useNavigate()
     const { editData, handleEditData } = useEditData()
     const { open, handleCloseModal, handleOpenModal } = useModalControl()
     const [search, setSearch] = useState("")
@@ -60,7 +63,7 @@ export function ShippingPage() {
                     }}
                 />
                 <Stack>
-                    <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenModal} >Create Shipping Charges</Button>
+                    <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate(`${urls.SHIPPING_HANDLER}/`)} >Create Shipping Charges</Button>
                 </Stack>
             </Stack>
             <CustomTable

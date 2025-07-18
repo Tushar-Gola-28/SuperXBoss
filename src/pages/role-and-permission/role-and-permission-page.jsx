@@ -13,8 +13,11 @@ import { fetchCategories } from '../../services';
 import { usePagination } from '../../hooks/usePagination';
 import useReload from '../../hooks/useReload';
 import { useEditData } from '../../hooks/useEdit';
+import { useNavigate } from 'react-router';
+import { urls } from '../../routes/urls';
 // import { BrandModal } from './modals/BrandModal';
 export function RoleAndPermissionPage() {
+    const navigate = useNavigate()
     const { editData, handleEditData } = useEditData()
     const { open, handleCloseModal, handleOpenModal } = useModalControl()
     const [search, setSearch] = useState("")
@@ -60,7 +63,7 @@ export function RoleAndPermissionPage() {
                     }}
                 />
                 <Stack>
-                    <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenModal} >Create Role Permission</Button>
+                    <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate(`${urls.ROLE_HANDLER}/`)} >Create Role</Button>
                 </Stack>
             </Stack>
             <CustomTable

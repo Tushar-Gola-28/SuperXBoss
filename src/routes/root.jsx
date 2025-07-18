@@ -18,6 +18,12 @@ import { NotificationPage } from '../pages/notification/notification-page'
 import { CouponPage } from '../pages/coupon/coupon-page'
 import { BannerPage } from '../pages/banner/banner-page'
 import { ProductHandlePage } from '../pages/product/product-handler-page'
+import { UserHandle } from '../pages/user/user-handle'
+import { RoleHandler } from '../pages/role-and-permission/role-handler'
+import { ShippingHandler } from '../pages/shipping/shipping-handler'
+import { CouponHandler } from '../pages/coupon/coupon-handler'
+import { BannerHandler } from '../pages/banner/banner-handler'
+import { NotificationHandler } from '../pages/notification/notification-handler'
 
 export const root = [
   {
@@ -109,6 +115,10 @@ export const root = [
             index: true,
             element: <UserPage />
           },
+          {
+            path: urls.USER_HANDLER,
+            element: <UserHandle />
+          },
         ]
       },
       {
@@ -117,6 +127,10 @@ export const root = [
           {
             index: true,
             element: <RoleAndPermissionPage />
+          },
+          {
+            path: urls.ROLE_HANDLER,
+            element: <RoleHandler />
           },
         ]
       },
@@ -135,6 +149,10 @@ export const root = [
           {
             index: true,
             element: <ShippingPage />
+          },
+          {
+            path: urls.SHIPPING_HANDLER,
+            element: <ShippingHandler />
           },
         ]
       },
@@ -163,6 +181,10 @@ export const root = [
             index: true,
             element: <NotificationPage />
           },
+          {
+            path: urls.NOTIFICATION_HANDLER,
+            element: <NotificationHandler />
+          },
         ]
       },
       {
@@ -181,6 +203,10 @@ export const root = [
             index: true,
             element: <CouponPage />
           },
+          {
+            path: urls.COUPON_HANDLER,
+            element: <CouponHandler />
+          },
         ]
       },
       {
@@ -198,6 +224,10 @@ export const root = [
           {
             index: true,
             element: <BannerPage />
+          },
+          {
+            path: urls.BANNER_HANDLER,
+            element: <BannerHandler />
           },
         ]
       },

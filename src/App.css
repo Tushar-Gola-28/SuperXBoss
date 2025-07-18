@@ -2,7 +2,12 @@
   margin: 0;
   padding: 0;
 }
+:root {
+  /* ************* colors************* */
 
+  --first-hue: 0;
+  --first-color: #1B4B66;
+}
 
 
 /* Style the main scrollbar */
@@ -124,4 +129,11 @@
 .information-edit span {
   font-size: 1rem;
   color: white;
+}
+
+
+
+.featured-1,
+.featured-true {
+  color: var(--first-color);
 }

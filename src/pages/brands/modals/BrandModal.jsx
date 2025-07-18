@@ -26,7 +26,10 @@ export function BrandModal({ open, close, refetch, editData }) {
         initialValues: {
             name: '',
             description: '',
-            status: "true"
+            status: "true",
+            type: "",
+            brand_day_offer: ""
+
         },
         validationSchema: Yup.object({
             name: Yup.string().required('Name is required'),
@@ -59,7 +62,6 @@ export function BrandModal({ open, close, refetch, editData }) {
         queryKey: ['vehicleSegmentType',],
         queryFn: ({ signal }) => fetchVehicleSegmentType(signal)
     })
-    console.log(data);
 
     const createMutation = useMutation({
         mutationFn: async (data) => {
@@ -77,13 +79,27 @@ export function BrandModal({ open, close, refetch, editData }) {
             setImages([`${BASE_URL}/upload/categories/${editData?.icon}`])
         }
     }, [editData])
+    const types = [
+        {
+            value: "vehicle",
+            label: "Vehicle"
+
+        }, {
+            value: "Spare Parts",
+            label: "Spare Parts"
+        },
+        {
+            value: "vehicle_SpareParts",
+            label: "Vehicle + Spare Parts"
+        }
+    ];
     return (
         <div>
             <CustomModal
                 {...{
                     open,
                     close,
-                    heading: 'Create Category',
+                    heading: 'Create Brand',
                     action: (
                         <LoadingButton
                             variant="contained"
@@ -97,6 +113,13 @@ export function BrandModal({ open, close, refetch, editData }) {
                 }}
             >
                 <Stack spacing={1}>
+                    <ImageUpload
+                        onImageChange={(images) => {
+                            setImages(images)
+                        }}
+                        initialImages={editData ? images : []}
+                        maxImages={1}
+                    />
                     <CustomInput
                         label="Name"
                         input={
@@ -149,20 +172,21 @@ export function BrandModal({ open, close, refetch, editData }) {
                         label="Brand Day Offer"
                         input={
                             <FormControl fullWidth>
-                                <InputLabel id="demo-multiple-checkbox-label">Brand Day Offer</InputLabel>
+                                {/* <InputLabel id="demo-multiple-checkbox-label">Brand Day Offer</InputLabel> */}
                                 <Select
-                                    multiple
-                                    id="demo-multiple-checkbox-label"
-                                    // value={personName}
-                                    // onChange={handleChange}
-
-                                    input={<OutlinedInput label="Brand Day Offer" />}
-                                    renderValue={(selected) => selected.join(', ')}
+                                    value={formik.values.type}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    name="type"
+                                    displayEmpty
+                                // input={<OutlinedInput label="Brand Day Offer" />}
                                 >
-                                    {[].map((name) => (
-                                        <MenuItem key={name} value={name}>
-                                            <Checkbox />
-                                            <ListItemText primary={name} />
+                                    <MenuItem value={""}>
+                                        <em> <ListItemText primary={"Brand Day Offer"} /></em>
+                                    </MenuItem>
+                                    {types.map(({ label }) => (
+                                        <MenuItem key={label} value={label}>
+                                            <ListItemText primary={label} />
                                         </MenuItem>
                                     ))}
                                 </Select>

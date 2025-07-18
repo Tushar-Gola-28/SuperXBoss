@@ -9,12 +9,16 @@ import { useModalControl } from '../../hooks/useModalControl';
 import { CustomPagination, CustomTable } from '../../components';
 import useColumns from './hooks/useColumns';
 import { useQuery } from '@tanstack/react-query';
+import { fetchCategories } from '../../services';
 import { usePagination } from '../../hooks/usePagination';
 import useReload from '../../hooks/useReload';
 import { useEditData } from '../../hooks/useEdit';
-import { BrandModal } from './modals/BrandModal';
-import { fetchBrands } from '../../services/brands';
-export function BrandsPage() {
+import { useNavigate } from 'react-router';
+import { urls } from '../../routes';
+// import { BrandModal } from './modals/BrandModal';
+
+export function ProductPage() {
+    const navigate = useNavigate()
     const { editData, handleEditData } = useEditData()
     const { open, handleCloseModal, handleOpenModal } = useModalControl()
     const [search, setSearch] = useState("")
@@ -27,8 +31,8 @@ export function BrandsPage() {
 
 
     const { data, isLoading, refetch } = useQuery({
-        queryKey: ['brands', page, page_size, search, reload],
-        queryFn: ({ signal }) => fetchBrands(signal, page + 1, page_size, search)
+        queryKey: ['categories', page, page_size, search, reload],
+        queryFn: ({ signal }) => fetchCategories(signal, page + 1, page_size, search)
     })
     useEffect(() => {
         if (data) {
@@ -38,7 +42,7 @@ export function BrandsPage() {
     }, [data])
     return (
         <Box>
-            <SectionHeader heading="Brands" icon="https://ticketsque-public.s3.ap-south-1.amazonaws.com/icons/Events.svg" />
+            <SectionHeader heading="Products" icon="https://ticketsque-public.s3.ap-south-1.amazonaws.com/icons/Events.svg" />
             <Stack gap={1} sx={{ mb: 2 }} direction="row" justifyContent={{ xs: "flex-end       ", md: "space-between" }} alignItems="center" flexWrap="wrap">
                 <TextField
                     fullWidth
@@ -60,7 +64,7 @@ export function BrandsPage() {
                     }}
                 />
                 <Stack>
-                    <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenModal} >Create Brand</Button>
+                    <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate(`${urls?.PRODUCTS_HANDLER}/`)} >Create Product</Button>
                 </Stack>
             </Stack>
             <CustomTable
@@ -69,7 +73,7 @@ export function BrandsPage() {
                 loading={isLoading}
             />
             {data?.rows?.length > 0 && <CustomPagination  {...{ page, page_size, total_records, setPage, totalPages, handlePageSize }} />}
-            {open && <BrandModal open={open} close={handleCloseModal} refetch={refetch} editData={editData} />}
+            {/* {open && <BrandModal open={open} close={handleCloseModal} refetch={refetch} editData={editData} />} */}
         </Box>
     )
 }

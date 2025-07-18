@@ -5,7 +5,6 @@ import dayjs from 'dayjs';
 import EditIcon from '@mui/icons-material/Edit';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import { useNavigate } from 'react-router';
-import { HoverAvatar } from '../../../components';
 export default function useColumns(handleEditData, handleOpenModal) {
     const navigate = useNavigate()
     const columns = [
@@ -14,20 +13,8 @@ export default function useColumns(handleEditData, handleOpenModal) {
                 return index + 1
             },
         },
-        {
-            id: "icon",
-            label: "Photo",
-            renderCell: (row) => {
-                return (
-                    <HoverAvatar
-                        src={`${BASE_URL}/upload/categories/${row?.icon}`}
-                        alt="_blank"
-                    />
-
-                );
-            },
-        },
-        { id: "name", label: "Name" },
+        { id: "State", label: "State" },
+        { id: "Shipping Price", label: "Shipping Price" },
         {
             id: "user", label: "Create By", renderCell: (row) => {
                 return <div>{row?.user?.name}</div>

@@ -5,6 +5,7 @@ export const urls = {
     SUB_CATEGORIES: "sub-categories/:id",
     BRAND: "/brands",
     PRODUCTS: "/products",
+    PRODUCTS_HANDLER: "handler",
     USERS: "/users",
     ROLE_AND_PERMISSION: "/role-permissions",
     CUSTOMERS: "/customers",

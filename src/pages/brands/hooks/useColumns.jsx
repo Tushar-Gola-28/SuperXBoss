@@ -5,20 +5,25 @@ import dayjs from 'dayjs';
 import EditIcon from '@mui/icons-material/Edit';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import { useNavigate } from 'react-router';
+import { HoverAvatar } from '../../../components';
 export default function useColumns(handleEditData, handleOpenModal) {
     const navigate = useNavigate()
     const columns = [
+        {
+            id: "S No", label: "S No.", renderCell: (row, index) => {
+                return index + 1
+            },
+        },
         {
             id: "icon",
             label: "Photo",
             renderCell: (row) => {
                 return (
-                    <Stack direction="row" justifyContent="center">
-                        <Avatar className="modalImgBtn"
-                            src={`${BASE_URL}/upload/brands/${row?.icon}`}
-                            alt="_blank"
-                        />
-                    </Stack>
+
+                    <HoverAvatar
+                        src={`${BASE_URL}/upload/brands/${row?.icon}`}
+                        alt="_blank"
+                    />
 
                 );
             },

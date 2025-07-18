@@ -13,8 +13,8 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const ImageUpload = ({
-    label = "Add Event Image",
-    description = "Event images must be in PNG, JPEG, or JPG format.",
+    label = "Add Image",
+    description = "Images must be in PNG, JPEG, or JPG format.",
     ratio = "1:1",
     required = true,
     onImageChange,

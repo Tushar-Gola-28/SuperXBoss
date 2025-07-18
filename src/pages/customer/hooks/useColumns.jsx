@@ -16,11 +16,11 @@ export default function useColumns(handleEditData, handleOpenModal) {
         },
         {
             id: "icon",
-            label: "Photo",
+            label: "Profile Photo",
             renderCell: (row) => {
                 return (
                     <HoverAvatar
-                        src={`${BASE_URL}/upload/categories/${row?.icon}`}
+                        src={`${BASE_URL}/upload/brands/${row?.icon}`}
                         alt="_blank"
                     />
 
@@ -28,6 +28,13 @@ export default function useColumns(handleEditData, handleOpenModal) {
             },
         },
         { id: "name", label: "Name" },
+        { id: "Mobile", label: "Mobile" },
+        { id: "State", label: "State" },
+        { id: "Type", label: "Type" },
+        { id: "Gst No", label: "Gst No" },
+        { id: "Business type", label: "Business type" },
+        { id: "Business name", label: "Business name" },
+        { id: "Business contact no", label: "Business contact no" },
         {
             id: "user", label: "Create By", renderCell: (row) => {
                 return <div>{row?.user?.name}</div>

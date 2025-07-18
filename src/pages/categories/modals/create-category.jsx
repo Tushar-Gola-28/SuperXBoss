@@ -16,7 +16,8 @@ export function CreateCategory({ open, close, refetch, editData }) {
         initialValues: {
             name: '',
             description: '',
-            status: "true"
+            status: "true",
+            featuredId: "true"
         },
         validationSchema: Yup.object({
             name: Yup.string().required('Name is required'),
@@ -90,8 +91,10 @@ export function CreateCategory({ open, close, refetch, editData }) {
                     />
                     <CustomInput
                         label="Name"
+                        required
                         input={
                             <TextField
+                                required
                                 fullWidth
                                 name="name"
                                 placeholder="Enter Name"
@@ -106,9 +109,11 @@ export function CreateCategory({ open, close, refetch, editData }) {
 
                     <CustomInput
                         label="Description"
+                        required
                         input={
                             <TextField
                                 fullWidth
+                                required
                                 multiline
                                 minRows={5}
                                 name="description"
@@ -124,12 +129,26 @@ export function CreateCategory({ open, close, refetch, editData }) {
                     <CustomRadio
                         name="status"
                         title="Status"
+                        required
                         value={formik.values.status}
                         handleChange={formik.handleChange}
                         options={
                             [
                                 { value: "true", label: "Active" },
                                 { value: "false", label: "In Active" },
+                            ]
+                        }
+                    />
+                    <CustomRadio
+                        name="featuredId"
+                        required
+                        title="Featured"
+                        value={formik.values.featuredId}
+                        handleChange={formik.handleChange}
+                        options={
+                            [
+                                { value: "true", label: "Yes" },
+                                { value: "false", label: "No" },
                             ]
                         }
                     />

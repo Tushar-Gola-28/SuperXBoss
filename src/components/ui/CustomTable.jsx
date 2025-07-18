@@ -1,18 +1,21 @@
 import {
   Box,
   IconButton,
+  Paper,
   Skeleton,
+  Stack,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow,
+  Typography
 } from '@mui/material'
 
 
 const ScrollBarDesign = {
-  
+
   '&::-webkit-scrollbar-thumb': {
     background: '#BFD6F8',
     borderRadius: '10px'
@@ -56,19 +59,21 @@ const ScrollBarDesign = {
 export function CustomTable({
   columns = [],
   rows = [],
-  loading
+  loading,
+  imageUrl,
+  empty
 }) {
   return (
-    <TableContainer
+    rows.length || loading ? <TableContainer
       sx={{
         maxHeight: `${window.innerHeight - 330}px`,
         overflow: "auto",
         ...ScrollBarDesign,
-        borderRadius:"6px"
+        borderRadius: "6px"
       }}
     >
       <Table stickyHeader aria-label="sticky table" sx={{ borderSpacing: "0" }}>
-        <TableHead sx={{borderRadius:"6px !important"}}>
+        <TableHead sx={{ borderRadius: "6px !important" }}>
           <TableRow >
             {columns.map((column) => (
               <TableCell
@@ -83,7 +88,7 @@ export function CustomTable({
                   zIndex: 2,
                   backgroundColor: "white",
                 }}
-            
+
               >
                 {column.label}
                 {
@@ -148,6 +153,13 @@ export function CustomTable({
             ))}
         </TableBody>
       </Table>
-    </TableContainer>
+    </TableContainer> : <Stack mt={2}>
+      <Paper sx={{ padding: "40px 0 40px 0" }}>
+        <Stack sx={{ maxWidth: "400px", margin: "auto" }}>
+          <img src={imageUrl ? imageUrl : "https://ticketsque-public.s3.ap-south-1.amazonaws.com/no_data/data_not_found/no_report.svg"} width={380} height={300} alt="Empty Data" loading="lazy" />
+          <Typography variant="h4" sx={{ color: "primary.main", textAlign: "center", mt: 4 }}> {empty ? empty : "No data found..."}</Typography>
+        </Stack>
+      </Paper>
+    </Stack>
   )
 }

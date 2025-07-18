@@ -20,7 +20,7 @@ export default function useColumns(handleEditData, handleOpenModal) {
             renderCell: (row) => {
                 return (
                     <HoverAvatar
-                        src={`${BASE_URL}/upload/categories/${row?.icon}`}
+                        src={`${BASE_URL}/upload/brands/${row?.icon}`}
                         alt="_blank"
                     />
 
@@ -28,6 +28,18 @@ export default function useColumns(handleEditData, handleOpenModal) {
             },
         },
         { id: "name", label: "Name" },
+        { id: "Order Id", label: "Order Id" },
+        { id: "Mobile", label: "Mobile" },
+        { id: "Pin code", label: "Pin code" },
+        { id: "Address", label: "Address" },
+        { id: "City", label: "City" },
+        { id: "State", label: "State" },
+        { id: "Address Type", label: "Address Type" },
+        { id: "Transaction Id", label: "Transaction Id" },
+        { id: "User Id", label: "User Id" },
+        { id: "Discount", label: "Discount" },
+        { id: "Total Amount", label: "Total Amount" },
+        { id: "Ship Charge	", label: "Ship Charge	" },
         {
             id: "user", label: "Create By", renderCell: (row) => {
                 return <div>{row?.user?.name}</div>

@@ -384,24 +384,8 @@ const Sidebar = ({
             path: "/orders",
             children: []
         },
-        {
 
-            icon: <NotificationAddIcon />,
-            label: "Notification",
-            order: 0,
-            parent: null,
-            path: "/notification",
-            children: []
-        },
-        {
 
-            icon: <QuizIcon />,
-            label: "FAQ",
-            order: 0,
-            parent: null,
-            path: "/faq",
-            children: []
-        },
 
 
         {
@@ -411,6 +395,26 @@ const Sidebar = ({
             order: 0,
             parent: null,
             path: "/coupon",
+            children: []
+        },
+
+
+        {
+
+            icon: <ViewCarouselIcon />,
+            label: "Banner",
+            order: 0,
+            parent: null,
+            path: "/banner",
+            children: []
+        },
+        {
+
+            icon: <NotificationAddIcon />,
+            label: "Notification",
+            order: 0,
+            parent: null,
+            path: "/notification",
             children: []
         },
         {
@@ -424,11 +428,11 @@ const Sidebar = ({
         },
         {
 
-            icon: <ViewCarouselIcon />,
-            label: "Banner",
+            icon: <QuizIcon />,
+            label: "FAQ",
             order: 0,
             parent: null,
-            path: "/banner",
+            path: "/faq",
             children: []
         },
 

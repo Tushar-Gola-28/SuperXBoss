@@ -8,6 +8,16 @@ import { InformationPage } from '../pages/information'
 import { WalletOfferPage } from '../pages/wallet-offer'
 import { DashboardPage } from '../pages/dashboard'
 import { BrandsPage } from '../pages/brands/brands-page'
+import { ProductPage } from '../pages/product/product-page'
+import { UserPage } from '../pages/user/user-page'
+import { RoleAndPermissionPage } from '../pages/role-and-permission/role-and-permission-page'
+import { CustomerPage } from '../pages/customer/customer-page'
+import { ShippingPage } from '../pages/shipping/shipping-page'
+import { OrderPage } from '../pages/order/order-page'
+import { NotificationPage } from '../pages/notification/notification-page'
+import { CouponPage } from '../pages/coupon/coupon-page'
+import { BannerPage } from '../pages/banner/banner-page'
+import { ProductHandlePage } from '../pages/product/product-handler-page'
 
 export const root = [
   {
@@ -81,9 +91,14 @@ export const root = [
       {
         path: urls.PRODUCTS,
         children: [
+
           {
             index: true,
-            element: <></>
+            element: <ProductPage />
+          },
+          {
+            path: urls?.PRODUCTS_HANDLER,
+            element: <ProductHandlePage />
           },
         ]
       },
@@ -92,7 +107,7 @@ export const root = [
         children: [
           {
             index: true,
-            element: <></>
+            element: <UserPage />
           },
         ]
       },
@@ -101,7 +116,7 @@ export const root = [
         children: [
           {
             index: true,
-            element: <></>
+            element: <RoleAndPermissionPage />
           },
         ]
       },
@@ -110,7 +125,7 @@ export const root = [
         children: [
           {
             index: true,
-            element: <></>
+            element: <CustomerPage />
           },
         ]
       },
@@ -119,7 +134,7 @@ export const root = [
         children: [
           {
             index: true,
-            element: <></>
+            element: <ShippingPage />
           },
         ]
       },
@@ -137,7 +152,7 @@ export const root = [
         children: [
           {
             index: true,
-            element: <></>
+            element: <OrderPage />
           },
         ]
       },
@@ -146,7 +161,7 @@ export const root = [
         children: [
           {
             index: true,
-            element: <></>
+            element: <NotificationPage />
           },
         ]
       },
@@ -164,7 +179,7 @@ export const root = [
         children: [
           {
             index: true,
-            element: <></>
+            element: <CouponPage />
           },
         ]
       },
@@ -182,7 +197,7 @@ export const root = [
         children: [
           {
             index: true,
-            element: <></>
+            element: <BannerPage />
           },
         ]
       },

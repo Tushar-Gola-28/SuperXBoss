@@ -28,6 +28,10 @@ export default function useColumns(handleEditData, handleOpenModal) {
             },
         },
         { id: "name", label: "Name" },
+        { id: "Mobile", label: "Mobile" },
+        { id: "Whatsapp", label: "Whatsapp" },
+        { id: "Email", label: "Email" },
+        { id: "Role", label: "Role" },
         {
             id: "user", label: "Create By", renderCell: (row) => {
                 return <div>{row?.user?.name}</div>

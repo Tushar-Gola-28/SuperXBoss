@@ -30,9 +30,9 @@ export function CategoriesPage() {
         queryFn: ({ signal }) => fetchCategories(signal, page + 1, page_size, search)
     })
     useEffect(() => {
-        if (data) {
-            setTotal_records(data?.count)
-            setTotalPages(data?.totalPages)
+        if (data?.pagination) {
+            setTotal_records(data?.pagination?.total)
+            setTotalPages(data?.pagination?.totalPages)
         }
     }, [data])
 
@@ -64,11 +64,11 @@ export function CategoriesPage() {
                 </Stack>
             </Stack>
             <CustomTable
-                rows={data?.rows}
+                rows={data?._payload}
                 columns={columns}
                 loading={isLoading}
             />
-            {data?.rows?.length > 0 && <CustomPagination  {...{ page, page_size, total_records, setPage, totalPages, handlePageSize }} />}
+            {data?._payload?.length > 0 && <CustomPagination  {...{ page, page_size, total_records, setPage, totalPages, handlePageSize }} />}
             {open && <CreateCategory open={open} close={handleCloseModal} refetch={refetch} editData={editData} />}
         </Box>
     )

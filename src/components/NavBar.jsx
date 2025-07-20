@@ -104,7 +104,7 @@ const Navbar = ({ open, handleDrawerToggle }) => {
                                 }}
                                 onClick={handleClick}
                             >
-                                <Avatar src={`${BASE_URL}/upload/user/${user.image}`} alt={user?.name} />
+                                <Avatar src={user.profile} alt={user?.name} />
                             </Stack>
                             <Menu
                                 id="basic-menu"

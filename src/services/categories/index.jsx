@@ -1,25 +1,20 @@
 import { api } from "../../AxiosInstants"
+import { config } from "../../constants";
 
-export const fetchCategories = async (signal, page, page_size, search) => {
-    const { data } = await api.get(`/api/retrieve/maincategories`, { signal, params: { page, limit: page_size, search } })
-    return data?.data
+export const fetchCategories = async (signal, page, page_size, search, parent) => {
+    const { data } = await api.get(`/category`, { signal, params: { page, limit: page_size, search, parent } })
+
+    return data
 }
 
 export const createCategory = async (values) => {
-    const data = await api.post('/api/create/createCategory', values)
+    const data = await api.post('/category', values, config)
     return data
 }
 
-export const editCategory = async (values) => {
-    const data = await api.post('/api/update/edit-Category', values)
+export const editCategory = async (values, id) => {
+    const data = await api.put(`/category/${id}`, values, config)
     return data
-}
-
-//  Sub Category
-
-export const fetchSubCategories = async (signal, id, page, page_size, search) => {
-    const { data } = await api.get(`/api/retrieve/subCategoriesRetrieve?catId=${+id}`, { signal, params: { page, limit: page_size, search } })
-    return data?.data
 }
 
 export const createSubCategory = async (values) => {

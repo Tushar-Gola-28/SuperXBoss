@@ -19,7 +19,9 @@ import PersonIcon from '@mui/icons-material/Person';
 import { useNavigate } from 'react-router';
 import { urls } from '../../routes';
 export const loginAdmin = Yup.object({
-    name: Yup.string().min(2, "Name must be at least 2 characters long").max(25, "Name can be at most 25 characters long").required("Username is required"),
+    email: Yup.string()
+        .email("Invalid email format")
+        .required("Email is required"),
     password: Yup.string().min(2, "Password must be at least 2 characters long").max(25, "Password can be at most 25 characters long").required("Password is required")
 });
 const LoginPage = () => {
@@ -30,7 +32,7 @@ const LoginPage = () => {
     const { handleAuthenticate, handleUserDetails } = useAuthValidator((state) => state)
     const { handleBlur, handleSubmit, handleChange, touched, values, errors } = useFormik({
         initialValues: {
-            name: '',
+            email: '',
             password: ''
         },
         validationSchema: loginAdmin
@@ -38,13 +40,13 @@ const LoginPage = () => {
         onSubmit: async (value, action) => {
             try {
                 setLoading(true)
-                const { data } = await axios.post(`${BASE_URL}/api/retrieve/authLogin`, { name: value?.name, password: value?.password })
+                const { data } = await axios.post(`${BASE_URL}/login`, { email: value?.email, password: value?.password })
                 console.log(data, "data");
-
+                const { access_token, ...rest } = data?._payload
                 if (data) {
-                    localStorage.setItem('accessToken', data?.token)
+                    localStorage.setItem('accessToken', access_token)
                     handleAuthenticate(true)
-                    handleUserDetails(data?.user)
+                    handleUserDetails(rest)
                     navigate(urls.DASHBOARD)
                     notify(data?.message, "success")
                 }
@@ -203,16 +205,16 @@ const LoginPage = () => {
                                         <form onSubmit={handleSubmit}>
                                             <Stack spacing={2}>
                                                 <Stack spacing={1}>
-                                                    <Typography variant="subtitle">Username</Typography>
+                                                    <Typography variant="subtitle">Email</Typography>
                                                     <TextField
                                                         fullWidth
                                                         variant="outlined"
                                                         placeholder="Enter Username"
                                                         onChange={handleChange}
-                                                        name='name'
+                                                        name='email'
                                                         onBlur={handleBlur}
-                                                        value={values?.name}
-                                                        error={errors?.name && touched?.name}
+                                                        value={values?.email}
+                                                        error={errors?.email && touched?.email}
                                                         InputProps={{
                                                             startAdornment: (
                                                                 <InputAdornment position="start">
@@ -221,7 +223,7 @@ const LoginPage = () => {
                                                             ),
                                                         }}
                                                         helperText={
-                                                            errors.name && touched.name ? errors.name : null
+                                                            errors.email && touched.email ? errors.email : null
                                                         }
                                                     />
                                                 </Stack>
@@ -339,16 +341,16 @@ const LoginPage = () => {
                                         <form onSubmit={handleSubmit}>
                                             <Stack spacing={1} >
                                                 <Stack spacing={1}>
-                                                    <Typography variant="subtitle">Username</Typography>
+                                                    <Typography variant="subtitle">Email</Typography>
                                                     <TextField
                                                         fullWidth
                                                         variant="outlined"
                                                         placeholder="Enter Username"
                                                         onChange={handleChange}
-                                                        name='name'
+                                                        name='email'
                                                         onBlur={handleBlur}
-                                                        value={values?.name}
-                                                        error={errors?.name && touched?.name}
+                                                        value={values?.email}
+                                                        error={errors?.email && touched?.email}
                                                         InputProps={{
                                                             startAdornment: (
                                                                 <InputAdornment position="start">
@@ -357,7 +359,7 @@ const LoginPage = () => {
                                                             ),
                                                         }}
                                                         helperText={
-                                                            errors.name && touched.name ? errors.name : null
+                                                            errors.email && touched.email ? errors.email : null
                                                         }
                                                     />
                                                 </Stack>

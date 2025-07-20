@@ -9,7 +9,7 @@ import { useModalControl } from '../../hooks/useModalControl';
 import { CustomPagination, CustomTable } from '../../components';
 import { useColumns } from './hooks/useColumns';
 import { useQuery } from '@tanstack/react-query';
-import { fetchSubCategories } from '../../services';
+import { fetchCategories } from '../../services';
 import { usePagination } from '../../hooks/usePagination';
 import useReload from '../../hooks/useReload';
 import { useEditData } from '../../hooks/useEdit';
@@ -29,13 +29,13 @@ export function SubCategoriesPage() {
 
     const { data, isLoading, refetch } = useQuery({
         queryKey: ['sub-categories', id, page, page_size, search, reload],
-        queryFn: ({ signal }) => fetchSubCategories(signal, id, page + 1, page_size, search),
+        queryFn: ({ signal }) => fetchCategories(signal, page, page_size, search, id),
         enabled: !!id
     })
     useEffect(() => {
-        if (data) {
-            setTotal_records(data?.count)
-            setTotalPages(data?.totalPages)
+        if (data?.pagination) {
+            setTotal_records(data?.pagination?.total)
+            setTotalPages(data?.pagination?.totalPages)
         }
     }, [data])
     return (
@@ -66,11 +66,11 @@ export function SubCategoriesPage() {
                 </Stack>
             </Stack>
             <CustomTable
-                rows={data?.rows}
+                rows={data?._payload}
                 columns={columns}
                 loading={isLoading}
             />
-            {data?.rows?.length > 0 && <CustomPagination  {...{ page, page_size, total_records, setPage, totalPages, handlePageSize }} />}
+            {data?._payload?.length > 0 && <CustomPagination  {...{ page, page_size, total_records, setPage, totalPages, handlePageSize }} />}
             {open && <CreateSubCategory open={open} close={handleCloseModal} refetch={refetch} editData={editData} />}
         </Box>
     )

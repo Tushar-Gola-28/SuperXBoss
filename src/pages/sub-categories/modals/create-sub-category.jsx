@@ -4,10 +4,9 @@ import { LoadingButton } from '@mui/lab';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useMutation } from '@tanstack/react-query';
-import { createCategory, createSubCategory, editCategory, editSubCategory } from '../../../services';
+import { createCategory, editCategory } from '../../../services';
 import ImageUpload from '../../../components/ui/ImageUpload';
 import { useEffect, useState } from 'react';
-import { BASE_URL } from '../../../../config-global';
 import { useParams } from 'react-router';
 
 export function CreateSubCategory({ open, close, refetch, editData }) {
@@ -23,29 +22,39 @@ export function CreateSubCategory({ open, close, refetch, editData }) {
             name: Yup.string().required('Name is required'),
             description: Yup.string().required('Description is required')
         }),
-        onSubmit: (values, { setSubmitting }) => {
-            // if (!images) {
-            //     return notify("Image is required.")
-            // }
-            let formData = new FormData()
-            // formData.append("file", images[0]?.file)
-            // formData.append("name", values.name)
-            // formData.append("description", values.description)
-            // formData.append("status", values.status)
-            createMutation.mutate({ ...values, parent: +id }, {
-                onSuccess: ({ data: data }) => {
-                    console.log(data, "Sub Category 1");
-                    if (data && data?.success) {
-                        refetch()
-                        close()
-                    } else {
-                        notify(data?.message)
-                    }
+        onSubmit: (values) => {
+            if (!images) {
+                return notify("Image is required.")
+            }
 
-                },
-                onError: (err) => {
-                    console.log(err);
-                    notify(err?.message)
+            let formData = new FormData()
+            if (images[0]?.file) {
+                formData.append("picture", images[0]?.file)
+            }
+            formData.append("name", values.name)
+            formData.append("description", values.description)
+            formData.append("status", values.status)
+            formData.append("parent", id)
+            if (editData) {
+                updateMutation.mutate(formData, {
+                    onSuccess: ({ data: data }) => {
+                        if (data) {
+                            refetch()
+                            notify("Sub Category Updated Successfully.", "success")
+                            close()
+                        }
+
+                    }
+                })
+                return
+            }
+            createMutation.mutate(formData, {
+                onSuccess: ({ data: data }) => {
+                    if (data) {
+                        refetch()
+                        notify("Sub Category Created Successfully.", "success")
+                        close()
+                    }
 
                 }
             })
@@ -54,18 +63,21 @@ export function CreateSubCategory({ open, close, refetch, editData }) {
     });
     const createMutation = useMutation({
         mutationFn: async (data) => {
-            return await createSubCategory(data)
+            return await createCategory(data)
         },
     })
+
     const updateMutation = useMutation({
         mutationFn: async (data) => {
-            return await editSubCategory(data)
+            return await editCategory(data, editData?._id)
         },
     })
     useEffect(() => {
         if (editData) {
-            formik.setValues({ name: editData?.name, description: editData?.description, status: String(editData?.status) })
-            setImages([`${BASE_URL}/upload/categories/${editData?.icon}`])
+            formik.setValues({ name: editData?.name, description: editData?.description, status: String(editData?.status), })
+            if (editData?.picture) {
+                setImages([editData?.picture])
+            }
         }
     }, [editData])
 
@@ -75,7 +87,7 @@ export function CreateSubCategory({ open, close, refetch, editData }) {
                 {...{
                     open,
                     close,
-                    heading: 'Create Category',
+                    heading: editData ? "Update Sub Category    " : 'Create Sub Category',
                     action: (
                         <LoadingButton
                             variant="contained"
@@ -83,7 +95,7 @@ export function CreateSubCategory({ open, close, refetch, editData }) {
                             disabled={createMutation.isSuccess}
                             onClick={formik.handleSubmit}
                         >
-                            Create
+                            {editData ? "Update" : "Create"}
                         </LoadingButton>
                     )
                 }}

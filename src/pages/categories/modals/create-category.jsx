@@ -1,4 +1,4 @@
-import { CustomInput, CustomModal, CustomPaper, CustomRadio, notify } from '../../../components';
+import { CustomInput, CustomModal, CustomRadio, notify } from '../../../components';
 import { Stack, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useFormik } from 'formik';
@@ -7,7 +7,6 @@ import { useMutation } from '@tanstack/react-query';
 import { createCategory, editCategory } from '../../../services';
 import ImageUpload from '../../../components/ui/ImageUpload';
 import { useEffect, useState } from 'react';
-import { BASE_URL } from '../../../../config-global';
 
 export function CreateCategory({ open, close, refetch, editData }) {
     const [images, setImages] = useState()
@@ -17,26 +16,43 @@ export function CreateCategory({ open, close, refetch, editData }) {
             name: '',
             description: '',
             status: "true",
-            featuredId: "true"
+            featured: "true"
         },
         validationSchema: Yup.object({
             name: Yup.string().required('Name is required'),
             description: Yup.string().required('Description is required')
         }),
-        onSubmit: (values, { setSubmitting }) => {
-            // if (!images) {
-            //     return notify("Image is required.")
-            // }
+        onSubmit: (values) => {
+            if (!images) {
+                return notify("Image is required.")
+            }
+
             let formData = new FormData()
-            // formData.append("file", images[0]?.file)
-            // formData.append("name", values.name)
-            // formData.append("description", values.description)
-            // formData.append("status", values.status)
-            createMutation.mutate(values, {
+            if (images[0]?.file) {
+                formData.append("picture", images[0]?.file)
+            }
+            formData.append("name", values.name)
+            formData.append("description", values.description)
+            formData.append("status", values.status)
+            formData.append("featured", values.featured)
+            if (editData) {
+                updateMutation.mutate(formData, {
+                    onSuccess: ({ data: data }) => {
+                        if (data) {
+                            refetch()
+                            notify("Category Updated Successfully.", "success")
+                            close()
+                        }
+
+                    }
+                })
+                return
+            }
+            createMutation.mutate(formData, {
                 onSuccess: ({ data: data }) => {
-                    console.log(data);
                     if (data) {
                         refetch()
+                        notify("Category Created Successfully.", "success")
                         close()
                     }
 
@@ -50,15 +66,18 @@ export function CreateCategory({ open, close, refetch, editData }) {
             return await createCategory(data)
         },
     })
+
     const updateMutation = useMutation({
         mutationFn: async (data) => {
-            return await editCategory(data)
+            return await editCategory(data, editData?._id)
         },
     })
     useEffect(() => {
         if (editData) {
-            formik.setValues({ name: editData?.name, description: editData?.description, status: String(editData?.status) })
-            setImages([`${BASE_URL}/upload/categories/${editData?.icon}`])
+            formik.setValues({ name: editData?.name, description: editData?.description, status: String(editData?.status), featured: String(editData?.featured) })
+            if (editData?.picture) {
+                setImages([editData?.picture])
+            }
         }
     }, [editData])
 
@@ -68,15 +87,15 @@ export function CreateCategory({ open, close, refetch, editData }) {
                 {...{
                     open,
                     close,
-                    heading: 'Create Category',
+                    heading: editData ? "Update Category" : 'Create Category',
                     action: (
                         <LoadingButton
                             variant="contained"
-                            loading={createMutation.isSuccess}
-                            disabled={createMutation.isSuccess}
+                            loading={createMutation.isPending || updateMutation?.isPending}
+                            disabled={createMutation.isSuccess || updateMutation?.isPending}
                             onClick={formik.handleSubmit}
                         >
-                            Create
+                            {editData ? "Update" : "Create"}
                         </LoadingButton>
                     )
                 }}
@@ -140,10 +159,10 @@ export function CreateCategory({ open, close, refetch, editData }) {
                         }
                     />
                     <CustomRadio
-                        name="featuredId"
+                        name="featured"
                         required
                         title="Featured"
-                        value={formik.values.featuredId}
+                        value={formik.values.featured}
                         handleChange={formik.handleChange}
                         options={
                             [

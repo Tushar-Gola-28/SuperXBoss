@@ -1,6 +1,4 @@
-import { Avatar, IconButton, Stack } from '@mui/material';
-import StarBorderIcon from "@mui/icons-material/StarBorder";
-import { BASE_URL } from '../../../../config-global';
+import { IconButton, Stack } from '@mui/material';
 import dayjs from 'dayjs';
 import EditIcon from '@mui/icons-material/Edit';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
@@ -20,7 +18,7 @@ export default function useColumns(handleEditData, handleOpenModal) {
             renderCell: (row) => {
                 return (
                     <HoverAvatar
-                        src={`${BASE_URL}/upload/categories/${row?.icon}`}
+                        src={row?.picture}
                         alt="_blank"
                     />
 
@@ -30,7 +28,12 @@ export default function useColumns(handleEditData, handleOpenModal) {
         { id: "name", label: "Name" },
         {
             id: "user", label: "Create By", renderCell: (row) => {
-                return <div>{row?.user?.name}</div>
+                return row?.createdBy?.name || "-"
+            },
+        },
+        {
+            id: "Update", label: "Update By", renderCell: (row) => {
+                return row?.updatedBy?.name || "-"
             },
         },
         {
@@ -38,6 +41,25 @@ export default function useColumns(handleEditData, handleOpenModal) {
             label: "CreateAt",
             renderCell: (row) => {
                 return dayjs(row?.createdAt).format("DD MMMM YYYY, h:mm A");
+            },
+            width: 200
+        },
+        {
+            id: "updateAt",
+            label: "UpdatedAt",
+            renderCell: (row) => {
+                return dayjs(row?.updatedAt).format("DD MMMM YYYY, h:mm A");
+            },
+        },
+        {
+            id: "Featured",
+            label: "Featured",
+            renderCell: (row) => {
+                return row?.featured ? (
+                    <div className="active">Yes</div>
+                ) : (
+                    <div className="pending">No</div>
+                );
             },
         },
         {
@@ -60,12 +82,13 @@ export default function useColumns(handleEditData, handleOpenModal) {
                         <IconButton color="primary" onClick={() => { handleEditData(row); handleOpenModal() }}>
                             <EditIcon />
                         </IconButton>
-                        <IconButton color="primary" onClick={() => navigate(`sub-categories/${row?.id}`)}>
+                        <IconButton color="primary" onClick={() => navigate(`sub-categories/${row?._id}`)}>
                             <PlaylistAddIcon />
                         </IconButton>
                     </Stack >
                 );
             },
+            sticky: true
         },
     ];
     return { columns }

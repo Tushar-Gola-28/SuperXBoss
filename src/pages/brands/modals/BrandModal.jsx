@@ -6,13 +6,11 @@ import * as Yup from 'yup';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import ImageUpload from '../../../components/ui/ImageUpload';
 import { useEffect, useState } from 'react';
-import { BASE_URL } from '../../../../config-global';
 import { fetchBrandType, fetchVehicleSegmentType } from '../../../services/for-all';
 import { handleKeyPress } from '../../../functions';
 import { createBrand, editBrand } from '../../../services/brands';
 
 export function BrandModal({ open, close, refetch, editData, handleEditData }) {
-    console.log(editData, "");
 
     const [images, setImages] = useState()
     const [brand, setBrand] = useState([])
@@ -170,7 +168,7 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                             />
                         }
                     />
-                    <CustomInput
+                    {/* <CustomInput
                         label="Brand Day Offer"
                         input={
                             <TextField
@@ -185,7 +183,7 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                                 helperText={formik.touched.brand_day_offer && formik.errors.brand_day_offer}
                             />
                         }
-                    />
+                    /> */}
                     <CustomInput
                         label="Type"
                         input={

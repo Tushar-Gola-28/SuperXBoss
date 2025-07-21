@@ -1,10 +1,20 @@
-import { Button, FormControl, Grid2, ListItemText, MenuItem, Select, Stack, TextField } from '@mui/material'
+import React, { useState } from 'react'
+import { Button, FormControl, Grid2, ListItemText, MenuItem, Select, Stack } from '@mui/material'
 import PageStructure from '../../components/PageStructure'
 import { CustomInput } from '../../components'
-import { DatePicker } from '@mui/x-date-pickers'
 import ImageUpload from '../../components/ui/ImageUpload'
+import { useQuery } from '@tanstack/react-query'
+import { fetchProducts } from '../../services/product'
 
 export function BannerHandler() {
+    const [prevImages, setPrevImages] = useState()
+    const [images, setImages] = useState();
+    const { data, isLoading, } = useQuery({
+        queryKey: ['fetchProducts'],
+        queryFn: ({ signal }) => fetchProducts(signal, false, 0, 15, "", true)
+    })
+    console.log(data);
+
     return (
         <div>
             <PageStructure title="Create Banner">
@@ -22,9 +32,9 @@ export function BannerHandler() {
                                             <MenuItem value={""}>
                                                 <em> <ListItemText primary={"Product Assign"} /></em>
                                             </MenuItem>
-                                            {[].map(({ label }) => (
-                                                <MenuItem key={label} value={label}>
-                                                    <ListItemText primary={label} />
+                                            {data?._payload?.map(({ _id, name }) => (
+                                                <MenuItem key={_id} value={_id}>
+                                                    <ListItemText primary={name} />
                                                 </MenuItem>
                                             ))}
                                         </Select>
@@ -34,7 +44,10 @@ export function BannerHandler() {
                         </Grid2>
                         <Grid2 size={{ xs: 12, }}>
                             <ImageUpload
-
+                                onImageChange={(images) => {
+                                    setImages(images)
+                                }}
+                                initialImages={prevImages}
                             />
                         </Grid2>
 

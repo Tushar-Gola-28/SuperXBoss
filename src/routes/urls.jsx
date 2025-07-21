@@ -6,6 +6,7 @@ export const urls = {
     BRAND: "/brands",
     PRODUCTS: "/products",
     PRODUCTS_HANDLER: "handler",
+    PRODUCTS_HANDLER_UPDATE: "handler/:product",
     USER_HANDLER: "handler",
     USER_HANDLER_UPDATE: "handler/:user",
     ROLE_HANDLER: "handler",

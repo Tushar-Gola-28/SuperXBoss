@@ -4,40 +4,32 @@ import searchIcon from '../../assets/search.svg'
 import AddIcon from '@mui/icons-material/Add';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
-// import { CreateCategory } from './modals/create-category';
-import { useModalControl } from '../../hooks/useModalControl';
 import { CustomPagination, CustomTable } from '../../components';
 import useColumns from './hooks/useColumns';
 import { useQuery } from '@tanstack/react-query';
-import { fetchCategories } from '../../services';
 import { usePagination } from '../../hooks/usePagination';
-import useReload from '../../hooks/useReload';
-import { useEditData } from '../../hooks/useEdit';
 import { useNavigate } from 'react-router';
 import { urls } from '../../routes';
-// import { BrandModal } from './modals/BrandModal';
+import { fetchProducts } from '../../services/product';
 
 export function ProductPage() {
     const navigate = useNavigate()
-    const { editData, handleEditData } = useEditData()
-    const { open, handleCloseModal, handleOpenModal } = useModalControl()
     const [search, setSearch] = useState("")
-    const { columns } = useColumns(handleEditData, handleOpenModal)
-    const { handleReload, reload } = useReload()
+    const { columns } = useColumns()
     const { page, setPage, page_size, total_records, setTotal_records, totalPages, setTotalPages, handlePageSize } = usePagination()
     const handleSearch = debounce((value) => {
         setSearch(value)
     }, 400)
 
 
-    const { data, isLoading, refetch } = useQuery({
-        queryKey: ['categories', page, page_size, search, reload],
-        queryFn: ({ signal }) => fetchCategories(signal, page + 1, page_size, search)
+    const { data, isLoading, } = useQuery({
+        queryKey: ['fetchProducts', page, page_size, search],
+        queryFn: ({ signal }) => fetchProducts(signal, true, page, page_size, search)
     })
     useEffect(() => {
-        if (data) {
-            setTotal_records(data?.count)
-            setTotalPages(data?.totalPages)
+        if (data?.pagination) {
+            setTotal_records(data?.pagination?.total)
+            setTotalPages(data?.pagination?.totalPages)
         }
     }, [data])
     return (
@@ -68,11 +60,11 @@ export function ProductPage() {
                 </Stack>
             </Stack>
             <CustomTable
-                rows={data?.rows}
+                rows={data?._payload}
                 columns={columns}
                 loading={isLoading}
             />
-            {data?.rows?.length > 0 && <CustomPagination  {...{ page, page_size, total_records, setPage, totalPages, handlePageSize }} />}
+            {data?._payload?.length > 0 && <CustomPagination  {...{ page, page_size, total_records, setPage, totalPages, handlePageSize }} />}
             {/* {open && <BrandModal open={open} close={handleCloseModal} refetch={refetch} editData={editData} />} */}
         </Box>
     )

@@ -106,6 +106,10 @@ export const root = [
             path: urls?.PRODUCTS_HANDLER,
             element: <ProductHandlePage />
           },
+          {
+            path: urls?.PRODUCTS_HANDLER_UPDATE,
+            element: <ProductHandlePage />
+          },
         ]
       },
       {

@@ -7,10 +7,12 @@ import {
     Select,
     Stack,
     TextField,
-    FormHelperText
+    FormHelperText,
+    IconButton,
+    InputAdornment
 } from '@mui/material'
 import PageStructure from '../../components/PageStructure'
-import { CustomInput, notify } from '../../components'
+import { CustomInput, CustomRadio, notify } from '../../components'
 import ImageUpload from '../../components/ui/ImageUpload'
 import { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
@@ -19,11 +21,17 @@ import { createUser, updateUser } from '../../services/users'
 import { CustomPhoneInput } from '../../components/ui/CustomPhoneInput copy'
 import { useMobileCode } from '../../hooks/useMobileCode'
 import { useLocation, useNavigate, useParams } from 'react-router'
-
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 export function UserHandle() {
     const [image, setImage] = useState()
     const [preview, setPreview] = useState()
     const { user } = useParams()
+    const [showPassword, setShowPassword] = useState(false);
+
+    const handleTogglePassword = () => {
+        setShowPassword((prev) => !prev);
+    };
+
     const location = useLocation()
     const navigate = useNavigate()
     const { code, setCode, phoneNumberLength, anchorEl, searchText, setSearchText, handleSearchTextChange, filteredMenuItems, handleCountryCode, handleMenuClose, handleCode, validCountryDataList } = useMobileCode()
@@ -114,9 +122,9 @@ export function UserHandle() {
                 status: String(status)
             })
             setPreview([profile])
+            setImage([profile])
         }
     }, [location.state])
-    console.log(image);
 
     return (
         <PageStructure title={user ? "Update User" : "Create User"}>
@@ -220,14 +228,14 @@ export function UserHandle() {
                                 }
                             />
                         </Grid2>
-                        <Grid2 size={{ xs: 12, md: 6 }}>
+                        <Grid2 size={{ xs: 12, }}>
                             <CustomInput
                                 label="Password"
                                 required={user ? false : true}
                                 input={
                                     <TextField
                                         name="password"
-                                        type="password"
+                                        type={showPassword ? 'text' : 'password'}
                                         value={values.password}
                                         onChange={handleChange}
                                         onBlur={handleBlur}
@@ -236,7 +244,30 @@ export function UserHandle() {
                                         required={user ? false : true}
                                         fullWidth
                                         placeholder="Enter Password"
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <IconButton onClick={handleTogglePassword} edge="center" color='primary'>
+                                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            )
+                                        }}
                                     />
+                                }
+                            />
+                        </Grid2>
+                        <Grid2 size={{ xs: 12, }}>
+                            <CustomRadio
+                                name="status"
+                                title="Status"
+                                value={values.status}
+                                handleChange={handleChange}
+                                options={
+                                    [
+                                        { value: "true", label: "Active" },
+                                        { value: "false", label: "In Active" },
+                                    ]
                                 }
                             />
                         </Grid2>

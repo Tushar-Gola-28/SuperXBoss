@@ -1,6 +1,6 @@
-"use client"
-import validCountryDataList from '@/utils/countryCodeAndName';
+
 import { useState } from 'react'
+import validCountryDataList from '../countryCodeAndName';
 
 export const useMobileCode = () => {
     const [code, setCode] = useState("91");
@@ -28,5 +28,5 @@ export const useMobileCode = () => {
     const handleSearchTextChange = (event) => {
         setSearchText(event.target.value);
     };
-    return { code, setCode, phoneNumberLength, setPhoneNumberLength, anchorEl, searchText, setSearchText, handleSearchTextChange, filteredMenuItems, handleCountryCode, handleMenuClose, handleCode }
+    return { code, setCode, phoneNumberLength, setPhoneNumberLength, anchorEl, searchText, setSearchText, handleSearchTextChange, filteredMenuItems, handleCountryCode, handleMenuClose, handleCode, validCountryDataList }
 }

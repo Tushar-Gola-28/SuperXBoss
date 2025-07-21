@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
     Box,
     Typography,
@@ -23,7 +23,9 @@ const ImageUpload = ({
 }) => {
     const [images, setImages] = useState(initialImages);
     const [previews, setPreviews] = useState(initialImages);
-
+    useEffect(() => {
+        setPreviews(initialImages)
+    }, [initialImages])
     const inputRef = React.useRef(null);
 
     const handleImageChange = useCallback((e) => {

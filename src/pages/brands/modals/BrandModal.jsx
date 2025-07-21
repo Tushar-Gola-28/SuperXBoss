@@ -1,54 +1,72 @@
-import { CustomInput, CustomModal, CustomPaper, CustomRadio, notify } from '../../../components';
+import { CustomInput, CustomModal, CustomRadio, notify } from '../../../components';
 import { Checkbox, FormControl, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, Stack, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { createCategory, editCategory } from '../../../services';
 import ImageUpload from '../../../components/ui/ImageUpload';
 import { useEffect, useState } from 'react';
 import { BASE_URL } from '../../../../config-global';
-import { fetchVehicleSegmentType } from '../../../services/for-all';
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
-export function BrandModal({ open, close, refetch, editData }) {
-    const [images, setImages] = useState()
+import { fetchBrandType, fetchVehicleSegmentType } from '../../../services/for-all';
+import { handleKeyPress } from '../../../functions';
+import { createBrand, editBrand } from '../../../services/brands';
 
+export function BrandModal({ open, close, refetch, editData, handleEditData }) {
+    console.log(editData, "");
+
+    const [images, setImages] = useState()
+    const [brand, setBrand] = useState([])
     const formik = useFormik({
         initialValues: {
             name: '',
             description: '',
             status: "true",
             type: "",
-            brand_day_offer: ""
+            brand_day_offer: "",
+            brand_day: "false"
 
         },
         validationSchema: Yup.object({
             name: Yup.string().required('Name is required'),
             description: Yup.string().required('Description is required')
         }),
-        onSubmit: (values, { setSubmitting }) => {
-            // if (!images) {
-            //     return notify("Image is required.")
-            // }
+        onSubmit: (values) => {
+            if (!images) {
+                return notify("Image is required.")
+            }
             let formData = new FormData()
-            // formData.append("file", images[0]?.file)
-            // formData.append("name", values.name)
-            // formData.append("description", values.description)
-            // formData.append("status", values.status)
-            createMutation.mutate(values, {
+            formData.append("name", values.name)
+            formData.append("type", values.type)
+            formData.append("brand_day_offer", values.brand_day_offer)
+            formData.append("brand_day", values.brand_day)
+            if (images[0]?.file) {
+                formData.append("logo", images[0]?.file)
+            }
+            formData.append("description", values.description)
+            formData.append("status", values.status)
+            brand.forEach(element => {
+                formData.append("brand_segment", element)
+            });
+            if (editData) {
+                updateMutation.mutate(formData, {
+                    onSuccess: ({ data: data }) => {
+                        if (data) {
+                            refetch()
+                            handleEditData(null)
+                            notify("Brand Update Successfully.", "success")
+                            close()
+                        }
+
+                    }
+                })
+                return
+            }
+            createMutation.mutate(formData, {
                 onSuccess: ({ data: data }) => {
-                    console.log(data);
                     if (data) {
                         refetch()
+                        handleEditData(null)
+                        notify("Brand Created Successfully.", "success")
                         close()
                     }
 
@@ -58,48 +76,47 @@ export function BrandModal({ open, close, refetch, editData }) {
         }
     });
 
-    const { data, isLoading } = useQuery({
+    const { data } = useQuery({
         queryKey: ['vehicleSegmentType',],
         queryFn: ({ signal }) => fetchVehicleSegmentType(signal)
+    })
+    const { data: brandTypes } = useQuery({
+        queryKey: ['brandTypes',],
+        queryFn: ({ signal }) => fetchBrandType(signal)
     })
 
     const createMutation = useMutation({
         mutationFn: async (data) => {
-            return await createCategory(data)
+            return await createBrand(data)
         },
     })
     const updateMutation = useMutation({
         mutationFn: async (data) => {
-            return await editCategory(data)
+            return await editBrand(data, editData?._id)
         },
     })
     useEffect(() => {
-        if (editData) {
-            formik.setValues({ name: editData?.name, description: editData?.description, status: String(editData?.status) })
-            setImages([`${BASE_URL}/upload/categories/${editData?.icon}`])
+        if (editData && data?._payload && brandTypes?._payload) {
+            formik.setValues({
+                name: editData?.name,
+                description: editData?.description,
+                status: String(editData?.status),
+                brand_day: String(editData?.brand_day),
+                brand_day_offer: editData?.brand_day_offer,
+                type: editData?.type,
+            })
+            setImages([editData?.logo])
+            setBrand(editData?.brand_segment?.map((it) => it._id))
         }
-    }, [editData])
-    const types = [
-        {
-            value: "vehicle",
-            label: "Vehicle"
+    }, [editData, data?._payload, brandTypes?._payload])
 
-        }, {
-            value: "Spare Parts",
-            label: "Spare Parts"
-        },
-        {
-            value: "vehicle_SpareParts",
-            label: "Vehicle + Spare Parts"
-        }
-    ];
     return (
         <div>
             <CustomModal
                 {...{
                     open,
                     close,
-                    heading: 'Create Brand',
+                    heading: editData ? "Update Brand" : 'Create Brand',
                     action: (
                         <LoadingButton
                             variant="contained"
@@ -107,7 +124,7 @@ export function BrandModal({ open, close, refetch, editData }) {
                             disabled={createMutation.isSuccess}
                             onClick={formik.handleSubmit}
                         >
-                            Create
+                            {editData ? "Update" : "Create"}
                         </LoadingButton>
                     )
                 }}
@@ -158,35 +175,34 @@ export function BrandModal({ open, close, refetch, editData }) {
                         input={
                             <TextField
                                 fullWidth
-                                name="description"
+                                name="brand_day_offer"
                                 placeholder="Enter brand day offer"
-                                value={formik.values.description}
+                                value={formik.values.brand_day_offer}
+                                onKeyDown={handleKeyPress}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                error={formik.touched.description && Boolean(formik.errors.description)}
-                                helperText={formik.touched.description && formik.errors.description}
+                                error={formik.touched.brand_day_offer && Boolean(formik.errors.brand_day_offer)}
+                                helperText={formik.touched.brand_day_offer && formik.errors.brand_day_offer}
                             />
                         }
                     />
                     <CustomInput
-                        label="Brand Day Offer"
+                        label="Type"
                         input={
                             <FormControl fullWidth>
-                                {/* <InputLabel id="demo-multiple-checkbox-label">Brand Day Offer</InputLabel> */}
                                 <Select
                                     value={formik.values.type}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     name="type"
                                     displayEmpty
-                                // input={<OutlinedInput label="Brand Day Offer" />}
                                 >
                                     <MenuItem value={""}>
-                                        <em> <ListItemText primary={"Brand Day Offer"} /></em>
+                                        <em> <ListItemText primary={"Type"} /></em>
                                     </MenuItem>
-                                    {types.map(({ label }) => (
-                                        <MenuItem key={label} value={label}>
-                                            <ListItemText primary={label} />
+                                    {brandTypes?._payload?.map(({ name, _id }) => (
+                                        <MenuItem key={name} value={_id}>
+                                            <ListItemText primary={name} />
                                         </MenuItem>
                                     ))}
                                 </Select>
@@ -197,24 +213,42 @@ export function BrandModal({ open, close, refetch, editData }) {
                         label="Vehicle Segment"
                         input={
                             <FormControl fullWidth>
-                                <InputLabel id="demo-multiple-checkbox-label">Vehicle Segment</InputLabel>
+                                <InputLabel >Vehicle Segment</InputLabel>
                                 <Select
                                     multiple
-                                    id="demo-multiple-checkbox-label"
-                                    value={[]}
-                                    // onChange={handleChange}
-
+                                    value={brand}
+                                    onChange={(e) => {
+                                        setBrand(e.target.value || []);
+                                    }}
                                     input={<OutlinedInput label="Vehicle Segment" />}
-                                    renderValue={(selected) => selected.join(', ')}
+                                    renderValue={(selected) =>
+                                        data?._payload
+                                            ?.filter(({ _id }) => selected.includes(_id))
+                                            .map(({ name }) => name)
+                                            .join(', ')
+                                    }
                                 >
-                                    {data?.map(({ id, name }) => (
-                                        <MenuItem key={name} value={name}>
-                                            <Checkbox />
+                                    {data?._payload?.map(({ _id, name }) => (
+                                        <MenuItem key={_id} value={_id}>
+                                            <Checkbox checked={brand.includes(_id)} />
                                             <ListItemText primary={name} />
                                         </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
+                        }
+                    />
+                    <CustomRadio
+                        name="brand_day"
+                        title="Brand Day"
+                        required
+                        value={formik.values.brand_day}
+                        handleChange={formik.handleChange}
+                        options={
+                            [
+                                { value: "true", label: "Yes" },
+                                { value: "false", label: "No" },
+                            ]
                         }
                     />
                     <CustomRadio

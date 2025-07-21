@@ -2,26 +2,24 @@ import { api } from "../../AxiosInstants"
 import { notify } from "../../components"
 import { config } from "../../constants"
 
-export const fetchBrands = async (signal, page, page_size, search) => {
-    const { data } = await api.get(`/brand`, { signal, params: { page, limit: page_size, search } })
+export const fetchUsers = async (signal, page, page_size, search) => {
+    const { data } = await api.get(`/users`, { signal, params: { page, limit: page_size, search } })
     return data
 }
-
-export const createBrand = async (values) => {
+export const createUser = async (values) => {
     try {
-        const data = await api.post('/brand', values, config)
+        const data = await api.post('/user', values, config)
         return data
     } catch (err) {
         console.log(err?.response?.data?.message);
         if (err?.response?.data?.message) {
             notify(err?.response?.data?.message)
         }
-
     }
 }
-export const editBrand = async (values, id) => {
+export const updateUser = async (values, user) => {
     try {
-        const data = await api.put(`/brand/${id}`, values, config)
+        const data = await api.put(`/user/${user}`, values, config)
         return data
     } catch (err) {
         console.log(err?.response?.data?.message);

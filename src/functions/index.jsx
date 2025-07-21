@@ -28,8 +28,20 @@ export const handleAdd = (setKeywordsData) => {
     });
 }
 
-export const handleRemove = (ind,setKeywordsData) => {
+export const handleRemove = (ind, setKeywordsData) => {
     setKeywordsData((prev) => {
         return prev.filter((_, index) => index != ind)
     })
 }
+
+export const handleKeyPress = (event) => {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (!((
+        (charCode >= 48 && charCode <= 57) || // Numbers 0-9
+        (charCode >= 96 && charCode <= 105) || // Numpad 0-9
+        [8, 9, 37, 39, 46].includes(charCode)
+    ) // Backspace, Tab, Left Arrow, Right Arrow, Delete
+    )) {
+        event.preventDefault();
+    }
+};

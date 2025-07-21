@@ -326,15 +326,15 @@ const Sidebar = ({
                     parent: null,
                     path: "/users",
                 },
-                {
+                // {
 
-                    icon: <AdminPanelSettingsIcon />,
-                    label: "Roles Permissions",
-                    order: 0,
-                    parent: null,
-                    path: "/role-permissions",
-                    children: []
-                },
+                //     icon: <AdminPanelSettingsIcon />,
+                //     label: "Roles Permissions",
+                //     order: 0,
+                //     parent: null,
+                //     path: "/role-permissions",
+                //     children: []
+                // },
             ]
         },
         {

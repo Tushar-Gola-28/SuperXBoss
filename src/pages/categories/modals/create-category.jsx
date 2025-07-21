@@ -8,7 +8,7 @@ import { createCategory, editCategory } from '../../../services';
 import ImageUpload from '../../../components/ui/ImageUpload';
 import { useEffect, useState } from 'react';
 
-export function CreateCategory({ open, close, refetch, editData }) {
+export function CreateCategory({ open, close, refetch, editData, handleEditData }) {
     const [images, setImages] = useState()
 
     const formik = useFormik({
@@ -41,6 +41,7 @@ export function CreateCategory({ open, close, refetch, editData }) {
                         if (data) {
                             refetch()
                             notify("Category Updated Successfully.", "success")
+                            handleEditData()
                             close()
                         }
 
@@ -52,6 +53,7 @@ export function CreateCategory({ open, close, refetch, editData }) {
                 onSuccess: ({ data: data }) => {
                     if (data) {
                         refetch()
+                        handleEditData()
                         notify("Category Created Successfully.", "success")
                         close()
                     }

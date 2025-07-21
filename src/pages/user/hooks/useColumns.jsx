@@ -7,7 +7,7 @@ import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import { useNavigate } from 'react-router';
 import { HoverAvatar } from '../../../components';
 import { urls } from '../../../routes/urls';
-export default function useColumns(handleEditData, handleOpenModal) {
+export default function useColumns() {
     const navigate = useNavigate()
     const columns = [
         {
@@ -21,7 +21,7 @@ export default function useColumns(handleEditData, handleOpenModal) {
             renderCell: (row) => {
                 return (
                     <HoverAvatar
-                        src={`${BASE_URL}/upload/categories/${row?.icon}`}
+                        src={row?.profile}
                         alt="_blank"
                     />
 
@@ -29,13 +29,18 @@ export default function useColumns(handleEditData, handleOpenModal) {
             },
         },
         { id: "name", label: "Name" },
-        { id: "Mobile", label: "Mobile" },
-        { id: "Whatsapp", label: "Whatsapp" },
-        { id: "Email", label: "Email" },
-        { id: "Role", label: "Role" },
+        { id: "mobile", label: "Mobile" },
+        { id: "whatsapp", label: "Whatsapp" },
+        { id: "email", label: "Email" },
+        { id: "role", label: "Role" },
         {
             id: "user", label: "Create By", renderCell: (row) => {
-                return <div>{row?.user?.name}</div>
+                return row?.createdBy?.name || "-"
+            },
+        },
+        {
+            id: "Update", label: "Update By", renderCell: (row) => {
+                return row?.updatedBy?.name || "-"
             },
         },
         {
@@ -43,6 +48,14 @@ export default function useColumns(handleEditData, handleOpenModal) {
             label: "CreateAt",
             renderCell: (row) => {
                 return dayjs(row?.createdAt).format("DD MMMM YYYY, h:mm A");
+            },
+            width: 200
+        },
+        {
+            id: "updateAt",
+            label: "UpdatedAt",
+            renderCell: (row) => {
+                return dayjs(row?.updatedAt).format("DD MMMM YYYY, h:mm A");
             },
         },
         {
@@ -62,15 +75,13 @@ export default function useColumns(handleEditData, handleOpenModal) {
             renderCell: (row) => {
                 return (
                     <Stack direction="row" justifyContent="center" gap="10px">
-                        <IconButton color="primary" onClick={() => { handleEditData(row); handleOpenModal() }}>
+                        <IconButton color="primary" onClick={() => navigate(`${urls.USER_HANDLER}/${row?._id}`, { state: row })}>
                             <EditIcon />
-                        </IconButton>
-                        <IconButton color="primary" onClick={() => navigate(`${urls.USER_HANDLER}/`)}>
-                            <PlaylistAddIcon />
                         </IconButton>
                     </Stack >
                 );
             },
+            sticky: true
         },
     ];
     return { columns }

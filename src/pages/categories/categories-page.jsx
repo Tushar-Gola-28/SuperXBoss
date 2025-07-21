@@ -11,14 +11,12 @@ import useColumns from './hooks/useColumns';
 import { useQuery } from '@tanstack/react-query';
 import { fetchCategories } from '../../services';
 import { usePagination } from '../../hooks/usePagination';
-import useReload from '../../hooks/useReload';
 import { useEditData } from '../../hooks/useEdit';
 export function CategoriesPage() {
     const { editData, handleEditData } = useEditData()
     const { open, handleCloseModal, handleOpenModal } = useModalControl()
     const [search, setSearch] = useState("")
     const { columns } = useColumns(handleEditData, handleOpenModal)
-    const { handleReload, reload } = useReload()
     const { page, setPage, page_size, total_records, setTotal_records, totalPages, setTotalPages, handlePageSize } = usePagination()
     const handleSearch = debounce((value) => {
         setSearch(value)
@@ -26,7 +24,7 @@ export function CategoriesPage() {
 
 
     const { data, isLoading, refetch } = useQuery({
-        queryKey: ['categories', page, page_size, search, reload],
+        queryKey: ['categories', page, page_size, search],
         queryFn: ({ signal }) => fetchCategories(signal, page + 1, page_size, search)
     })
     useEffect(() => {
@@ -69,7 +67,7 @@ export function CategoriesPage() {
                 loading={isLoading}
             />
             {data?._payload?.length > 0 && <CustomPagination  {...{ page, page_size, total_records, setPage, totalPages, handlePageSize }} />}
-            {open && <CreateCategory open={open} close={handleCloseModal} refetch={refetch} editData={editData} />}
+            {open && <CreateCategory open={open} close={() => { handleCloseModal(); handleEditData(null) }} refetch={refetch} editData={editData} handleEditData={handleEditData} />}
         </Box>
     )
 }

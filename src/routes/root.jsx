@@ -119,6 +119,10 @@ export const root = [
             path: urls.USER_HANDLER,
             element: <UserHandle />
           },
+          {
+            path: urls.USER_HANDLER_UPDATE,
+            element: <UserHandle />
+          },
         ]
       },
       {

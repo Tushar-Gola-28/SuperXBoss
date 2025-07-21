@@ -19,9 +19,8 @@ export default function useColumns(handleEditData, handleOpenModal) {
             label: "Photo",
             renderCell: (row) => {
                 return (
-
                     <HoverAvatar
-                        src={`${BASE_URL}/upload/brands/${row?.icon}`}
+                        src={row?.logo}
                         alt="_blank"
                     />
 
@@ -30,21 +29,19 @@ export default function useColumns(handleEditData, handleOpenModal) {
         },
         { id: "name", label: "Name" },
         {
-            id: "featured",
-            label: "Featured",
+            id: "brand_segment", label: "Brand Segment",
             renderCell: (row) => {
-                return (
-                    <StarBorderIcon
-                        sx={{ fontSize: 30 }}
-                        className={`featured-${row?.featured}`}
-                    // onClick={() => pagePost(parms?.id, parms?.featured)}
-                    />
-                );
+                return row?.brand_segment?.length >= 2 ? `${row?.brand_segment[0]?.name} +${row?.brand_segment?.length - 1} others` : row?.brand_segment[0]?.name
             },
         },
         {
             id: "user", label: "Create By", renderCell: (row) => {
-                return <div>{row?.user?.name}</div>
+                return row?.createdBy?.name || "-"
+            },
+        },
+        {
+            id: "Update", label: "Update By", renderCell: (row) => {
+                return row?.updatedBy?.name || "-"
             },
         },
         {
@@ -52,6 +49,25 @@ export default function useColumns(handleEditData, handleOpenModal) {
             label: "CreateAt",
             renderCell: (row) => {
                 return dayjs(row?.createdAt).format("DD MMMM YYYY, h:mm A");
+            },
+            width: 200
+        },
+        {
+            id: "updateAt",
+            label: "UpdatedAt",
+            renderCell: (row) => {
+                return dayjs(row?.updatedAt).format("DD MMMM YYYY, h:mm A");
+            },
+        },
+        {
+            id: "brand_day",
+            label: "Brand Day",
+            renderCell: (row) => {
+                return row?.brand_day ? (
+                    <div className="active">Yes</div>
+                ) : (
+                    <div className="pending">No</div>
+                );
             },
         },
         {
@@ -74,12 +90,10 @@ export default function useColumns(handleEditData, handleOpenModal) {
                         <IconButton color="primary" onClick={() => { handleEditData(row); handleOpenModal() }}>
                             <EditIcon />
                         </IconButton>
-                        <IconButton color="primary" onClick={() => navigate(`sub-categories/${row?.id}`)}>
-                            <PlaylistAddIcon />
-                        </IconButton>
                     </Stack >
                 );
             },
+            sticky: true
         },
     ];
     return { columns }

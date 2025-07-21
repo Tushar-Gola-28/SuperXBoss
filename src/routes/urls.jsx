@@ -7,6 +7,7 @@ export const urls = {
     PRODUCTS: "/products",
     PRODUCTS_HANDLER: "handler",
     USER_HANDLER: "handler",
+    USER_HANDLER_UPDATE: "handler/:user",
     ROLE_HANDLER: "handler",
     SHIPPING_HANDLER: "handler",
     COUPON_HANDLER: "handler",

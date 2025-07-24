@@ -11,6 +11,12 @@ import { useFormik } from 'formik'
 import { handleKeyPress } from '../../functions'
 import { createProduct, fetchProductsById, updateProduct } from '../../services/product'
 import { useNavigate, useParams } from 'react-router'
+import * as Yup from 'yup';
+import { BrandModal } from '../brands/modals/BrandModal'
+import { useModalControl } from '../../hooks/useModalControl'
+import { SegmentModal } from '../segment/modal/SegmentModal'
+import { fetchSegmentsAll } from '../../services/segments'
+
 export function ProductHandlePage() {
     const { product } = useParams()
     const [videos, setVideos] = useState()
@@ -37,11 +43,11 @@ export function ProductHandlePage() {
             return update
         })
     }
-    const { data } = useQuery({
-        queryKey: ['vehicleSegmentType',],
-        queryFn: ({ signal }) => fetchVehicleSegmentType(signal)
+    const { data, refetch: fetchSegment } = useQuery({
+        queryKey: ['fetchSegmentsAll',],
+        queryFn: ({ signal }) => fetchSegmentsAll(signal)
     })
-    const { data: active_brand } = useQuery({
+    const { data: active_brand, refetch: fetchBrand } = useQuery({
         queryKey: ['fetchActiveBrands',],
         queryFn: ({ signal }) => fetchActiveBrands(signal)
     })
@@ -50,12 +56,38 @@ export function ProductHandlePage() {
         queryFn: ({ signal }) => fetchProductsById(signal, product),
         enabled: !!product
     })
-    console.log(removeImages);
-
+    const validationSchema = Yup.object({
+        name: Yup.string().required('Name is required'),
+        point: Yup.number().typeError('Must be a number').min(0, 'Point must be at least 0').required('Point is required'),
+        new_arrival: Yup.string().oneOf(['true', 'false'], 'Invalid value').required(),
+        pop_item: Yup.string().oneOf(['true', 'false'], 'Invalid value').required(),
+        part_no: Yup.string().required('Part number is required'),
+        segment_type: Yup.array().of(Yup.string()),
+        customer_price: Yup.number().typeError('Must be a number').min(0, 'Minimum 0').required('Customer Price is required.'),
+        b2b_price: Yup.number().typeError('Must be a number').min(0, 'Minimum 0').required('B2B price is required.'),
+        min_qty: Yup.number().typeError('Must be a number').min(1, 'Minimum 1').required('Minimum qty is required.'),
+        wish_product: Yup.string().oneOf(['true', 'false'], 'Invalid value').required(),
+        any_discount: Yup.number().typeError('Must be a number')
+            .min(0, 'Minimum is 0%')
+            .max(100, 'Maximum is 100%').nullable(),
+        brand_id: Yup.string().required('Brand ID is required'),
+        item_stock: Yup.number().typeError('Must be a number').min(0, 'Minimum 0').required('Stock is required.'),
+        tax: Yup.number().typeError('Must be a number').min(0, 'Minimum is 0%')
+            .max(100, 'Maximum is 100%').required('Tax is required'),
+        sku_id: Yup.string().required('SKU ID is required'),
+        hsn_code: Yup.string().required('HSN Code is required'),
+        ship_days: Yup.number().typeError('Must be a number').min(0, 'Minimum 0').nullable(),
+        return_days: Yup.number().typeError('Must be a number').min(0, 'Minimum 0').nullable(),
+        return_policy: Yup.string().nullable(),
+        weight: Yup.number().typeError('Must be a number').min(0, 'Minimum 0').required("Product Unit is required."),
+        unit: Yup.string().required("Unit is required."),
+        status: Yup.string().oneOf(['true', 'false'], 'Invalid value').required(),
+        trend_part: Yup.string().oneOf(['true', 'false'], 'Invalid value').required(),
+    });
     const { handleBlur, handleChange, values, errors, touched, setValues, handleSubmit } = useFormik({
         initialValues: {
             name: '',
-            point: "",
+            point: "0",
             new_arrival: "false",
             pop_item: "false",
             part_no: "",
@@ -78,6 +110,7 @@ export function ProductHandlePage() {
             status: "false",
             trend_part: "false",
         },
+        validationSchema,
         onSubmit: (values) => {
             const formData = new FormData();
             if (!images?.length) {
@@ -138,7 +171,6 @@ export function ProductHandlePage() {
 
         }
     })
-    console.log(removeVideo);
 
 
     const createMutation = useMutation({
@@ -223,6 +255,10 @@ export function ProductHandlePage() {
             }
         }
     }, [product, product_data?._payload, active_brand?._payload, data?._payload])
+
+    const { open, handleCloseModal, handleOpenModal } = useModalControl()
+    const { open: isOpen, handleCloseModal: handleCloseSegmentModal, handleOpenModal: handleOpenSegmentModal } = useModalControl()
+
     if (isLoading) {
         return
     }
@@ -395,6 +431,11 @@ export function ProductHandlePage() {
                                                 </FormControl>
                                             }
                                         />
+                                        <Stack direction="row" justifyContent="flex-end" mt={1}>
+                                            <Button variant="outlined" onClick={handleOpenModal}>
+                                                Add Brand
+                                            </Button>
+                                        </Stack>
                                     </Grid2>
                                     <Grid2 size={{ xs: 12 }}>
                                         <CustomInput
@@ -427,6 +468,11 @@ export function ProductHandlePage() {
                                                 </FormControl>
                                             }
                                         />
+                                        <Stack direction="row" justifyContent="flex-end" mt={1}>
+                                            <Button variant="outlined" onClick={handleOpenSegmentModal}>
+                                                Add Segment
+                                            </Button>
+                                        </Stack>
                                     </Grid2>
                                     <Grid2 size={{ xs: 12 }}>
                                         <CustomPaper>
@@ -853,6 +899,8 @@ export function ProductHandlePage() {
                     </Stack>
                 </form>
             </Stack>
+            {open && <BrandModal open={open} close={() => { handleCloseModal(); }} refetch={fetchBrand} />}
+            {isOpen && <SegmentModal open={isOpen} close={() => { handleCloseSegmentModal(); }} refetch={fetchSegment} />}
         </PageStructure>
     )
 }

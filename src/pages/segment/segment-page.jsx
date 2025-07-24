@@ -1,18 +1,20 @@
+
+
 import { Box, Button, InputAdornment, Stack, TextField } from '@mui/material'
 import SectionHeader from '../../components/SectionHeader'
 import searchIcon from '../../assets/search.svg'
 import AddIcon from '@mui/icons-material/Add';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
-import { CreateCategory } from './modals/create-category';
 import { useModalControl } from '../../hooks/useModalControl';
 import { CustomPagination, CustomTable } from '../../components';
 import useColumns from './hooks/useColumns';
 import { useQuery } from '@tanstack/react-query';
-import { fetchCategories } from '../../services';
 import { usePagination } from '../../hooks/usePagination';
 import { useEditData } from '../../hooks/useEdit';
-export function CategoriesPage() {
+import { fetchSegments } from '../../services/segments';
+import { SegmentModal } from './modal/SegmentModal';
+export function SegmentPage() {
     const { editData, handleEditData } = useEditData()
     const { open, handleCloseModal, handleOpenModal } = useModalControl()
     const [search, setSearch] = useState("")
@@ -24,8 +26,8 @@ export function CategoriesPage() {
 
 
     const { data, isLoading, refetch } = useQuery({
-        queryKey: ['categories', page, page_size, search],
-        queryFn: ({ signal }) => fetchCategories(signal, page + 1, page_size, search)
+        queryKey: ['segments', page, page_size, search],
+        queryFn: ({ signal }) => fetchSegments(signal, page, page_size, search)
     })
     useEffect(() => {
         if (data?.pagination) {
@@ -33,10 +35,9 @@ export function CategoriesPage() {
             setTotalPages(data?.pagination?.totalPages)
         }
     }, [data])
-
     return (
         <Box>
-            <SectionHeader heading="Categories" icon="https://ticketsque-public.s3.ap-south-1.amazonaws.com/icons/Events.svg" />
+            <SectionHeader heading="Segments" icon="https://ticketsque-public.s3.ap-south-1.amazonaws.com/icons/Events.svg" />
             <Stack gap={1} sx={{ mb: 2 }} direction="row" justifyContent={{ xs: "flex-end       ", md: "space-between" }} alignItems="center" flexWrap="wrap">
                 <TextField
                     fullWidth
@@ -58,7 +59,7 @@ export function CategoriesPage() {
                     }}
                 />
                 <Stack>
-                    <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenModal} >Create Category</Button>
+                    <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenModal} >Create Segment</Button>
                 </Stack>
             </Stack>
             <CustomTable
@@ -67,7 +68,7 @@ export function CategoriesPage() {
                 loading={isLoading}
             />
             {data?._payload?.length > 0 && <CustomPagination  {...{ page, page_size, total_records, setPage, totalPages, handlePageSize }} />}
-            {open && <CreateCategory open={open} close={() => { handleCloseModal(); handleEditData(null) }} refetch={refetch} editData={editData} handleEditData={handleEditData} />}
+            {open && <SegmentModal open={open} close={() => { handleCloseModal(); handleEditData(null) }} refetch={refetch} editData={editData} handleEditData={handleEditData} />}
         </Box>
     )
 }

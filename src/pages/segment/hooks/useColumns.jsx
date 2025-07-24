@@ -1,9 +1,12 @@
-import { IconButton, Stack } from '@mui/material';
+import { Avatar, IconButton, Stack } from '@mui/material';
+import StarBorderIcon from "@mui/icons-material/StarBorder";
+import { BASE_URL } from '../../../../config-global';
 import dayjs from 'dayjs';
 import EditIcon from '@mui/icons-material/Edit';
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import { useNavigate } from 'react-router';
-import { urls } from '../../../routes';
-export default function useColumns() {
+import { HoverAvatar } from '../../../components';
+export default function useColumns(handleEditData, handleOpenModal) {
     const navigate = useNavigate()
     const columns = [
         {
@@ -11,25 +14,20 @@ export default function useColumns() {
                 return index + 1
             },
         },
-        { id: "code", label: "Code" },
-        { id: "amount", label: "Amount" },
-        { id: "min_cart_amt", label: "Minimum Amount" },
         {
-            id: "Start Date",
-            label: "Start Date",
+            id: "icon",
+            label: "Photo",
             renderCell: (row) => {
-                return dayjs(row?.start_date).format("DD MMMM YYYY, h:mm A");
+                return (
+                    <HoverAvatar
+                        src={row?.icon}
+                        alt="_blank"
+                    />
+
+                );
             },
-            width: 250
         },
-        {
-            id: "End Date",
-            label: "End Date",
-            renderCell: (row) => {
-                return dayjs(row?.start_date).format("DD MMMM YYYY, h:mm A");
-            },
-            width: 200
-        },
+        { id: "name", label: "Name" },
 
         {
             id: "user", label: "Create By", renderCell: (row) => {
@@ -73,12 +71,11 @@ export default function useColumns() {
             renderCell: (row) => {
                 return (
                     <Stack direction="row" justifyContent="center" gap="10px">
-                        <IconButton color="primary" onClick={() => navigate(`${urls.COUPON_HANDLER}/${row?._id}`, { state: row })}>
+                        <IconButton color="primary" onClick={() => { handleEditData(row); handleOpenModal() }}>
                             <EditIcon />
                         </IconButton>
                     </Stack >
                 );
-
             },
             sticky: true
         },

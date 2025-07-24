@@ -5,41 +5,43 @@ import dayjs from 'dayjs';
 import EditIcon from '@mui/icons-material/Edit';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import { useNavigate } from 'react-router';
+import { HoverAvatar } from '../../../components';
+import { urls } from '../../../routes';
 export default function useColumns(handleEditData, handleOpenModal) {
     const navigate = useNavigate()
     const columns = [
         {
+            id: "S No", label: "S No.", renderCell: (row, index) => {
+                return index + 1
+            },
+        },
+        {
             id: "icon",
-            label: "Photo",
+            label: "Banner Image",
             renderCell: (row) => {
                 return (
-                    <Stack direction="row" justifyContent="center">
-                        <Avatar className="modalImgBtn"
-                            src={`${BASE_URL}/upload/brands/${row?.icon}`}
-                            alt="_blank"
-                        />
-                    </Stack>
+                    <HoverAvatar
+                        src={row?.image}
+                        alt="_blank"
+                    />
 
                 );
             },
         },
-        { id: "name", label: "Name" },
         {
-            id: "featured",
-            label: "Featured",
+            id: "name", label: "Product Name",
             renderCell: (row) => {
-                return (
-                    <StarBorderIcon
-                        sx={{ fontSize: 30 }}
-                        className={`featured-${row?.featured}`}
-                    // onClick={() => pagePost(parms?.id, parms?.featured)}
-                    />
-                );
+                return <div>{row?.product?.name}</div>
             },
         },
         {
             id: "user", label: "Create By", renderCell: (row) => {
-                return <div>{row?.user?.name}</div>
+                return row?.createdBy?.name || "-"
+            },
+        },
+        {
+            id: "Update", label: "Update By", renderCell: (row) => {
+                return row?.updatedBy?.name || "-"
             },
         },
         {
@@ -47,6 +49,14 @@ export default function useColumns(handleEditData, handleOpenModal) {
             label: "CreateAt",
             renderCell: (row) => {
                 return dayjs(row?.createdAt).format("DD MMMM YYYY, h:mm A");
+            },
+            width: 200
+        },
+        {
+            id: "updateAt",
+            label: "UpdatedAt",
+            renderCell: (row) => {
+                return dayjs(row?.updatedAt).format("DD MMMM YYYY, h:mm A");
             },
         },
         {
@@ -56,7 +66,7 @@ export default function useColumns(handleEditData, handleOpenModal) {
                 return row?.status ? (
                     <div className="active">Active</div>
                 ) : (
-                    <div className="pending">Pending</div>
+                    <div className="pending">In Active</div>
                 );
             },
         },
@@ -66,11 +76,8 @@ export default function useColumns(handleEditData, handleOpenModal) {
             renderCell: (row) => {
                 return (
                     <Stack direction="row" justifyContent="center" gap="10px">
-                        <IconButton color="primary" onClick={() => { handleEditData(row); handleOpenModal() }}>
+                        <IconButton color="primary" onClick={() => { navigate(`${urls.BANNER_HANDLER}/${row?._id}`, { state: row }) }}>
                             <EditIcon />
-                        </IconButton>
-                        <IconButton color="primary" onClick={() => navigate(`sub-categories/${row?.id}`)}>
-                            <PlaylistAddIcon />
                         </IconButton>
                     </Stack >
                 );

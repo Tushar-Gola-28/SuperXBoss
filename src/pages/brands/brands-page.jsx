@@ -21,7 +21,7 @@ export function BrandsPage() {
     const { page, setPage, page_size, total_records, setTotal_records, totalPages, setTotalPages, handlePageSize } = usePagination()
     const handleSearch = debounce((value) => {
         setSearch(value)
-    }, 400)
+    }, 600)
 
 
     const { data, isLoading, refetch } = useQuery({

@@ -12,6 +12,7 @@ import CompanyLogo from "./CampanyLogo";
 import styled from "@emotion/styled";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import SegmentIcon from '@mui/icons-material/Segment';
 import {
     Box,
     Collapse,
@@ -406,6 +407,15 @@ const Sidebar = ({
             order: 0,
             parent: null,
             path: "/banner",
+            children: []
+        },
+        {
+
+            icon: <SegmentIcon />,
+            label: "Segments",
+            order: 0,
+            parent: null,
+            path: "/segments",
             children: []
         },
         {

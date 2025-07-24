@@ -65,7 +65,7 @@ export default function useColumns() {
                 return row?.status ? (
                     <div className="active">Active</div>
                 ) : (
-                    <div className="pending">Pending</div>
+                    <div className="pending">In Active</div>
                 );
             },
         },

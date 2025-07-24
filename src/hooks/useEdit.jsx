@@ -5,5 +5,5 @@ export function useEditData() {
     const handleEditData = (data) => {
         setEditData(data)
     }
-    return { editData, handleEditData }
+    return { editData, handleEditData, setEditData }
 }

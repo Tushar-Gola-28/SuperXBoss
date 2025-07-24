@@ -24,6 +24,7 @@ import { ShippingHandler } from '../pages/shipping/shipping-handler'
 import { CouponHandler } from '../pages/coupon/coupon-handler'
 import { BannerHandler } from '../pages/banner/banner-handler'
 import { NotificationHandler } from '../pages/notification/notification-handler'
+import { SegmentPage } from '../pages/segment/segment-page'
 
 export const root = [
   {
@@ -215,6 +216,10 @@ export const root = [
             path: urls.COUPON_HANDLER,
             element: <CouponHandler />
           },
+          {
+            path: urls.COUPON_HANDLER_UPDATE,
+            element: <CouponHandler />
+          },
         ]
       },
       {
@@ -227,6 +232,15 @@ export const root = [
         ]
       },
       {
+        path: urls.SEGMENT,
+        children: [
+          {
+            index: true,
+            element: <SegmentPage />
+          },
+        ]
+      },
+      {
         path: urls.BANNER,
         children: [
           {
@@ -235,6 +249,10 @@ export const root = [
           },
           {
             path: urls.BANNER_HANDLER,
+            element: <BannerHandler />
+          },
+          {
+            path: urls.BANNER_HANDLER_UPDATE,
             element: <BannerHandler />
           },
         ]

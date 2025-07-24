@@ -14,24 +14,11 @@ export default function useColumns(handleEditData, handleOpenModal) {
                 return index + 1
             },
         },
-        {
-            id: "icon",
-            label: "Photo",
-            renderCell: (row) => {
-                return (
-                    <HoverAvatar
-                        src={row?.logo}
-                        alt="_blank"
-                    />
-
-                );
-            },
-        },
         { id: "name", label: "Name" },
         {
             id: "brand_segment", label: "Brand Segment",
             renderCell: (row) => {
-                return row?.brand_segment?.length >= 2 ? `${row?.brand_segment[0]?.name} +${row?.brand_segment?.length - 1} others` : row?.brand_segment[0]?.name
+                return row?.brand_segment?.length >= 2 ? `${row?.brand_segment?.[0]?.name} +${row?.brand_segment?.length - 1} others` : row?.brand_segment?.[0]?.name
             },
         },
         {
@@ -77,7 +64,7 @@ export default function useColumns(handleEditData, handleOpenModal) {
                 return row?.status ? (
                     <div className="active">Active</div>
                 ) : (
-                    <div className="pending">Pending</div>
+                    <div className="pending">In Active</div>
                 );
             },
         },

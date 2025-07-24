@@ -19,12 +19,11 @@ export function ProductPage() {
     const { page, setPage, page_size, total_records, setTotal_records, totalPages, setTotalPages, handlePageSize } = usePagination()
     const handleSearch = debounce((value) => {
         setSearch(value)
-    }, 400)
-
+    }, 600)
 
     const { data, isLoading, } = useQuery({
         queryKey: ['fetchProducts', page, page_size, search],
-        queryFn: ({ signal }) => fetchProducts(signal, true, page, page_size, search)
+        queryFn: ({ signal }) => fetchProducts(signal, "", page, page_size, search)
     })
     useEffect(() => {
         if (data?.pagination) {
@@ -65,7 +64,6 @@ export function ProductPage() {
                 loading={isLoading}
             />
             {data?._payload?.length > 0 && <CustomPagination  {...{ page, page_size, total_records, setPage, totalPages, handlePageSize }} />}
-            {/* {open && <BrandModal open={open} close={handleCloseModal} refetch={refetch} editData={editData} />} */}
         </Box>
     )
 }

@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { fetchBrandType, fetchVehicleSegmentType } from '../../../services/for-all';
 import { handleKeyPress } from '../../../functions';
 import { createBrand, editBrand } from '../../../services/brands';
+import { fetchSegmentsAll } from '../../../services/segments';
 
 export function BrandModal({ open, close, refetch, editData, handleEditData }) {
 
@@ -20,7 +21,7 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
             description: '',
             status: "true",
             type: "",
-            brand_day_offer: "",
+            // brand_day_offer: "",
             brand_day: "false"
 
         },
@@ -35,7 +36,7 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
             let formData = new FormData()
             formData.append("name", values.name)
             formData.append("type", values.type)
-            formData.append("brand_day_offer", values.brand_day_offer)
+            // formData.append("brand_day_offer", values.brand_day_offer)
             formData.append("brand_day", values.brand_day)
             if (images[0]?.file) {
                 formData.append("logo", images[0]?.file)
@@ -63,7 +64,9 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                 onSuccess: ({ data: data }) => {
                     if (data) {
                         refetch()
-                        handleEditData(null)
+                        if (handleEditData) {
+                            handleEditData(null)
+                        }
                         notify("Brand Created Successfully.", "success")
                         close()
                     }
@@ -75,8 +78,8 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
     });
 
     const { data } = useQuery({
-        queryKey: ['vehicleSegmentType',],
-        queryFn: ({ signal }) => fetchVehicleSegmentType(signal)
+        queryKey: ['fetchSegmentsAll',],
+        queryFn: ({ signal }) => fetchSegmentsAll(signal)
     })
     const { data: brandTypes } = useQuery({
         queryKey: ['brandTypes',],

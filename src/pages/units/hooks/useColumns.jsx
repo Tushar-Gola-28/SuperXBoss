@@ -12,20 +12,9 @@ export default function useColumns(handleEditData, handleOpenModal) {
                 return index + 1
             },
         },
-        {
-            id: "icon",
-            label: "Photo",
-            renderCell: (row) => {
-                return (
-                    <HoverAvatar
-                        src={row?.picture}
-                        alt="_blank"
-                    />
-
-                );
-            },
-        },
         { id: "name", label: "Name" },
+        { id: "set", label: "Set" },
+        { id: "pc", label: "PC" },
         {
             id: "user", label: "Create By", renderCell: (row) => {
                 return row?.createdBy?.name || "-"
@@ -51,17 +40,7 @@ export default function useColumns(handleEditData, handleOpenModal) {
                 return dayjs(row?.updatedAt).format("DD MMMM YYYY, h:mm A");
             },
         },
-        {
-            id: "Featured",
-            label: "Featured",
-            renderCell: (row) => {
-                return row?.featured ? (
-                    <div className="active">Yes</div>
-                ) : (
-                    <div className="pending">No</div>
-                );
-            },
-        },
+
         {
             id: "status",
             label: "Status",

@@ -16,6 +16,8 @@ import { BrandModal } from '../brands/modals/BrandModal'
 import { useModalControl } from '../../hooks/useModalControl'
 import { SegmentModal } from '../segment/modal/SegmentModal'
 import { fetchSegmentsAll } from '../../services/segments'
+import { UnitModal } from '../units/modals/ModalUnit'
+import { fetchUnits } from '../../services/unit'
 
 export function ProductHandlePage() {
     const { product } = useParams()
@@ -46,6 +48,10 @@ export function ProductHandlePage() {
     const { data, refetch: fetchSegment } = useQuery({
         queryKey: ['fetchSegmentsAll',],
         queryFn: ({ signal }) => fetchSegmentsAll(signal)
+    })
+    const { data: unitData, refetch: fetchUnit } = useQuery({
+        queryKey: ['fetchUnits',],
+        queryFn: ({ signal }) => fetchUnits(signal, 0, 15, undefined, false, true)
     })
     const { data: active_brand, refetch: fetchBrand } = useQuery({
         queryKey: ['fetchActiveBrands',],
@@ -79,7 +85,6 @@ export function ProductHandlePage() {
         ship_days: Yup.number().typeError('Must be a number').min(0, 'Minimum 0').nullable(),
         return_days: Yup.number().typeError('Must be a number').min(0, 'Minimum 0').nullable(),
         return_policy: Yup.string().nullable(),
-        weight: Yup.number().typeError('Must be a number').min(0, 'Minimum 0').required("Product Unit is required."),
         unit: Yup.string().required("Unit is required."),
         status: Yup.string().oneOf(['true', 'false'], 'Invalid value').required(),
         trend_part: Yup.string().oneOf(['true', 'false'], 'Invalid value').required(),
@@ -105,7 +110,6 @@ export function ProductHandlePage() {
             ship_days: "",
             return_days: "",
             return_policy: "",
-            weight: "",
             unit: "",
             status: "false",
             trend_part: "false",
@@ -258,6 +262,7 @@ export function ProductHandlePage() {
 
     const { open, handleCloseModal, handleOpenModal } = useModalControl()
     const { open: isOpen, handleCloseModal: handleCloseSegmentModal, handleOpenModal: handleOpenSegmentModal } = useModalControl()
+    const { open: isOpen2, handleCloseModal: handleCloseUnitModal, handleOpenModal: handleOpenUnitModal } = useModalControl()
 
     if (isLoading) {
         return
@@ -601,28 +606,7 @@ export function ProductHandlePage() {
                                             }
                                         />
                                     </Grid2>
-                                    <Grid2 size={{ xs: 10, }}>
-                                        <CustomInput
-                                            label="Product Unit"
-                                            required
-                                            input={
-                                                <TextField
-                                                    fullWidth
-                                                    required
-                                                    onWheel={(e) => e.target.blur()}
-                                                    type="number"
-                                                    placeholder='Enter Product Unit'
-                                                    onChange={handleChange}
-                                                    name='weight'
-                                                    value={values.weight}
-                                                    onBlur={handleBlur}
-                                                    error={errors.weight && touched.weight}
-                                                    helperText={errors.weight && touched.weight ? errors.weight : null}
-                                                />
-                                            }
-                                        />
-                                    </Grid2>
-                                    <Grid2 size={{ xs: 2, }}>
+                                    <Grid2 size={{ xs: 12, md: 6 }}>
                                         <CustomInput
                                             label="Unit"
                                             required
@@ -638,17 +622,22 @@ export function ProductHandlePage() {
                                                         <MenuItem value={""}>
                                                             <em> <ListItemText primary={"Unit"} /></em>
                                                         </MenuItem>
-                                                        {units.map(({ label, value }) => (
-                                                            <MenuItem key={value} value={value}>
-                                                                <ListItemText primary={label} />
+                                                        {unitData?._payload?.map(({ _id, name, set, pc }) => (
+                                                            <MenuItem key={_id} value={_id}>
+                                                                <ListItemText primary={pc ? `${name}${set} (${pc})` : `${name}${set}`} />
                                                             </MenuItem>
                                                         ))}
                                                     </Select>
                                                 </FormControl>
                                             }
                                         />
+                                        <Stack direction="row" mt={2}>
+                                            <Button variant="outlined" onClick={handleOpenUnitModal}>
+                                                Add Unit
+                                            </Button>
+                                        </Stack>
                                     </Grid2>
-                                    <Grid2 size={{ xs: 12, }}>
+                                    <Grid2 size={{ xs: 12, md: 6 }}>
                                         <CustomInput
                                             label="Minimum Quantity"
                                             required
@@ -901,6 +890,7 @@ export function ProductHandlePage() {
             </Stack>
             {open && <BrandModal open={open} close={() => { handleCloseModal(); }} refetch={fetchBrand} />}
             {isOpen && <SegmentModal open={isOpen} close={() => { handleCloseSegmentModal(); }} refetch={fetchSegment} />}
+            {isOpen2 && <UnitModal open={isOpen2} close={() => { handleCloseUnitModal(); }} refetch={fetchUnit} />}
         </PageStructure>
     )
 }

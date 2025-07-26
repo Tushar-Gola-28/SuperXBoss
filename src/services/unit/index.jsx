@@ -2,14 +2,14 @@ import { api } from "../../AxiosInstants"
 import { notify } from "../../components";
 import { config } from "../../constants";
 
-export const fetchCategories = async (signal, page, page_size, search, parent, pagination) => {
-    const { data } = await api.get(`/category`, { signal, params: { page, page_size, search, parent, pagination } })
+export const fetchUnits = async (signal, page, page_size, search, pagination, active) => {
+    const { data } = await api.get(`/unit`, { signal, params: { page, page_size, search, pagination, active } })
     return data
 }
 
-export const createCategory = async (values) => {
+export const createUnit = async (values) => {
     try {
-        const data = await api.post('/category', values, config)
+        const data = await api.post('/unit', values)
         return data
     } catch (err) {
         console.log(err?.response?.data?.message);
@@ -19,9 +19,9 @@ export const createCategory = async (values) => {
     }
 }
 
-export const editCategory = async (values, id) => {
+export const updateUnit = async (values, id) => {
     try {
-        const data = await api.put(`/category/${id}`, values, config)
+        const data = await api.put(`/unit/${id}`, values)
         return data
     } catch (err) {
         console.log(err?.response?.data?.message);

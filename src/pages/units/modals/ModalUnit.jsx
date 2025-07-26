@@ -3,45 +3,38 @@ import { Stack, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useMutation } from '@tanstack/react-query';
-import { createCategory, editCategory } from '../../../services';
-import ImageUpload from '../../../components/ui/ImageUpload';
-import { useEffect, useState } from 'react';
+import { useMutation, } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { handleKeyPress } from '../../../functions';
+import { createUnit, updateUnit } from '../../../services/unit';
 
-export function CreateCategory({ open, close, refetch, editData, handleEditData }) {
-    const [images, setImages] = useState()
+export function UnitModal({ open, close, refetch, editData, handleEditData }) {
 
     const formik = useFormik({
         initialValues: {
             name: '',
-            description: '',
+            set: '',
+            pc: '',
             status: "true",
-            featured: "true"
         },
         validationSchema: Yup.object({
             name: Yup.string().required('Name is required'),
-            description: Yup.string().required('Description is required')
+            pc: Yup.string(), // optional field
+            set: Yup.number().required('Set is required'), // optional field
+
         }),
         onSubmit: (values) => {
-            if (!images) {
-                return notify("Image is required.")
-            }
+            if (!values.pc) {
+                delete values.pc
 
-            let formData = new FormData()
-            if (images[0]?.file) {
-                formData.append("picture", images[0]?.file)
             }
-            formData.append("name", values.name)
-            formData.append("description", values.description)
-            formData.append("status", values.status)
-            formData.append("featured", values.featured)
             if (editData) {
-                updateMutation.mutate(formData, {
+                updateMutation.mutate(values, {
                     onSuccess: ({ data: data }) => {
                         if (data) {
                             refetch()
-                            notify("Category Updated Successfully.", "success")
-                            handleEditData()
+                            handleEditData(null)
+                            notify("Unit Update Successfully.", "success")
                             close()
                         }
 
@@ -49,14 +42,15 @@ export function CreateCategory({ open, close, refetch, editData, handleEditData 
                 })
                 return
             }
-            createMutation.mutate(formData, {
-                onSuccess: ({ data: data }) => {
+            createMutation.mutate(values, {
+                onSuccess: (data) => {
+
                     if (data) {
                         refetch()
                         if (handleEditData) {
-                            handleEditData()
+                            handleEditData(null)
                         }
-                        notify("Category Created Successfully.", "success")
+                        notify("Unit Created Successfully.", "success")
                         close()
                     }
 
@@ -65,23 +59,27 @@ export function CreateCategory({ open, close, refetch, editData, handleEditData 
 
         }
     });
+
+
+
     const createMutation = useMutation({
         mutationFn: async (data) => {
-            return await createCategory(data)
+            return await createUnit(data)
         },
     })
-
     const updateMutation = useMutation({
         mutationFn: async (data) => {
-            return await editCategory(data, editData?._id)
+            return await updateUnit(data, editData?._id)
         },
     })
     useEffect(() => {
         if (editData) {
-            formik.setValues({ name: editData?.name, description: editData?.description, status: String(editData?.status), featured: String(editData?.featured) })
-            if (editData?.picture) {
-                setImages([editData?.picture])
-            }
+            formik.setValues({
+                name: editData?.name,
+                set: editData?.set,
+                pc: editData?.pc,
+                status: String(editData?.status),
+            })
         }
     }, [editData])
 
@@ -91,12 +89,12 @@ export function CreateCategory({ open, close, refetch, editData, handleEditData 
                 {...{
                     open,
                     close,
-                    heading: editData ? "Update Category" : 'Create Category',
+                    heading: editData ? "Update Unit" : 'Create Unit',
                     action: (
                         <LoadingButton
                             variant="contained"
-                            loading={createMutation.isPending || updateMutation?.isPending}
-                            disabled={createMutation.isSuccess || updateMutation?.isPending}
+                            loading={createMutation.isPending}
+                            disabled={createMutation.isPending}
                             onClick={formik.handleSubmit}
                         >
                             {editData ? "Update" : "Create"}
@@ -105,54 +103,57 @@ export function CreateCategory({ open, close, refetch, editData, handleEditData 
                 }}
             >
                 <Stack spacing={1}>
-                    <ImageUpload
-                        onImageChange={(images) => {
-                            setImages(images)
-                        }}
-                        initialImages={editData ? images : []}
-                        maxImages={1}
-                    />
                     <CustomInput
                         label="Name"
-                        required
                         input={
                             <TextField
-                                required
                                 fullWidth
                                 name="name"
                                 placeholder="Enter Name"
                                 value={formik.values.name}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
+
                                 error={formik.touched.name && Boolean(formik.errors.name)}
                                 helperText={formik.touched.name && formik.errors.name}
                             />
                         }
                     />
-
                     <CustomInput
-                        label="Description"
-                        required
+                        label="Set"
                         input={
                             <TextField
                                 fullWidth
-                                required
-                                multiline
-                                minRows={5}
-                                name="description"
-                                placeholder="Enter Description"
-                                value={formik.values.description}
+                                name="set"
+                                placeholder="Enter Name"
+                                value={formik.values.set}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                error={formik.touched.description && Boolean(formik.errors.description)}
-                                helperText={formik.touched.description && formik.errors.description}
+                                onKeyDown={handleKeyPress}
+                                error={formik.touched.set && Boolean(formik.errors.set)}
+                                helperText={formik.touched.set && formik.errors.set}
+                            />
+                        }
+                    />
+                    <CustomInput
+                        label="PC"
+                        input={
+                            <TextField
+                                fullWidth
+                                name="pc"
+                                placeholder="Enter Name"
+                                value={formik.values.pc}
+                                onChange={formik.handleChange}
+                                onKeyDown={handleKeyPress}
+                                onBlur={formik.handleBlur}
+                                error={formik.touched.pc && Boolean(formik.errors.pc)}
+                                helperText={formik.touched.pc && formik.errors.pc}
                             />
                         }
                     />
                     <CustomRadio
                         name="status"
                         title="Status"
-                        required
                         value={formik.values.status}
                         handleChange={formik.handleChange}
                         options={
@@ -162,21 +163,8 @@ export function CreateCategory({ open, close, refetch, editData, handleEditData 
                             ]
                         }
                     />
-                    <CustomRadio
-                        name="featured"
-                        required
-                        title="Featured"
-                        value={formik.values.featured}
-                        handleChange={formik.handleChange}
-                        options={
-                            [
-                                { value: "true", label: "Yes" },
-                                { value: "false", label: "No" },
-                            ]
-                        }
-                    />
                 </Stack>
             </CustomModal>
         </div>
-    );
+    )
 }

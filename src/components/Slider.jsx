@@ -46,7 +46,7 @@ import { useNavigate, useLocation } from "react-router";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { sideBarClose, sideBarOpen } from "../../config-global";
-
+import VaccinesIcon from '@mui/icons-material/Vaccines';
 const MenuItem = ({
     path,
     label,
@@ -306,6 +306,15 @@ const Sidebar = ({
                     order: 0,
                     parent: null,
                     path: "/products",
+                    children: []
+                },
+                {
+
+                    icon: <VaccinesIcon />,
+                    label: "Units",
+                    order: 0,
+                    parent: null,
+                    path: "/units",
                     children: []
                 },
             ]

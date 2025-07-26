@@ -25,6 +25,8 @@ import { CouponHandler } from '../pages/coupon/coupon-handler'
 import { BannerHandler } from '../pages/banner/banner-handler'
 import { NotificationHandler } from '../pages/notification/notification-handler'
 import { SegmentPage } from '../pages/segment/segment-page'
+import { VehiclesPage } from '../pages/brands/vehicle-page'
+import { UnitPage } from '../pages/units/unit-page'
 
 export const root = [
   {
@@ -87,11 +89,29 @@ export const root = [
         ]
       },
       {
+        path: urls.UNITS,
+        children: [
+          {
+            index: true,
+            element: <UnitPage />
+          },
+        ]
+      },
+      {
         path: urls.BRAND,
         children: [
           {
             index: true,
             element: <BrandsPage />
+          },
+
+          {
+            path: urls.VEHICLE,
+            element: <></>
+          },
+          {
+            path: urls.VEHICLE_HANDLE,
+            element: <VehiclesPage />
           },
         ]
       },

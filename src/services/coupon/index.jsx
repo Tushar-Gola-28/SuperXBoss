@@ -2,7 +2,7 @@ import { api } from "../../AxiosInstants"
 import { notify } from "../../components"
 
 export const fetchCoupon = async (signal, page, page_size, search) => {
-    const { data } = await api.get(`/coupon`, { signal, params: { page, limit: page_size, search } })
+    const { data } = await api.get(`/coupon`, { signal, params: { page, page_size, search } })
     return data
 }
 

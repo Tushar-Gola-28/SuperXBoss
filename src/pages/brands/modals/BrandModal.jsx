@@ -1,5 +1,5 @@
 import { CustomInput, CustomModal, CustomRadio, notify } from '../../../components';
-import { Checkbox, FormControl, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, Stack, TextField } from '@mui/material';
+import { Box, Button, Checkbox, FormControl, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, Stack, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -10,11 +10,18 @@ import { fetchBrandType, fetchVehicleSegmentType } from '../../../services/for-a
 import { handleKeyPress } from '../../../functions';
 import { createBrand, editBrand } from '../../../services/brands';
 import { fetchSegmentsAll } from '../../../services/segments';
+import { SegmentModal } from '../../segment/modal/SegmentModal';
+import { useModalControl } from '../../../hooks/useModalControl';
+import { VehicleModal } from './VehicleModal';
+import { fetchCategories } from '../../../services';
+import { CreateCategory } from '../../categories/modals/create-category';
 
 export function BrandModal({ open, close, refetch, editData, handleEditData }) {
 
     const [images, setImages] = useState()
     const [brand, setBrand] = useState([])
+    const { open: isOpen, handleCloseModal, handleOpenModal } = useModalControl()
+    const { open: isOpen2, handleCloseModal: handleCloseModal2, handleOpenModal: handleOpenModal2 } = useModalControl()
     const formik = useFormik({
         initialValues: {
             name: '',
@@ -22,6 +29,7 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
             status: "true",
             type: "",
             // brand_day_offer: "",
+            category: [],
             brand_day: "false"
 
         },
@@ -45,6 +53,9 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
             formData.append("status", values.status)
             brand.forEach(element => {
                 formData.append("brand_segment", element)
+            });
+            values.category.forEach(element => {
+                formData.append("categories", element)
             });
             if (editData) {
                 updateMutation.mutate(formData, {
@@ -77,7 +88,7 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
         }
     });
 
-    const { data } = useQuery({
+    const { data, refetch: segmentRefetch } = useQuery({
         queryKey: ['fetchSegmentsAll',],
         queryFn: ({ signal }) => fetchSegmentsAll(signal)
     })
@@ -96,6 +107,10 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
             return await editBrand(data, editData?._id)
         },
     })
+    const { data: category, refetch: categoryRefetch } = useQuery({
+        queryKey: ['categories',],
+        queryFn: ({ signal }) => fetchCategories(signal, 1, 15, undefined, undefined, "false")
+    })
     useEffect(() => {
         if (editData && data?._payload && brandTypes?._payload) {
             formik.setValues({
@@ -105,11 +120,16 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                 brand_day: String(editData?.brand_day),
                 brand_day_offer: editData?.brand_day_offer,
                 type: editData?.type,
+                category: editData?.categories?.length > 0 ? editData?.categories?.map((it) => it._id) : []
+
             })
             setImages([editData?.logo])
+
             setBrand(editData?.brand_segment?.map((it) => it._id))
         }
-    }, [editData, data?._payload, brandTypes?._payload])
+    }, [editData, data?._payload, brandTypes?._payload, category?._payload])
+
+
 
     return (
         <div>
@@ -210,33 +230,78 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                             </FormControl>
                         }
                     />
+                    {brandTypes?._payload?.find((it) => it._id == formik.values.type)?.name == "Spare Parts" && <CustomInput
+                        label="Categories"
+                        input={
+                            <Box>
+
+                                <FormControl fullWidth>
+                                    <Select
+                                        value={formik.values.category}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        name="category"
+                                        multiple
+                                        renderValue={(selected) =>
+                                            category?._payload
+                                                ?.filter(({ _id }) => selected.includes(_id))
+                                                .map(({ name }) => name)
+                                                .join(', ')
+                                        }
+                                    >
+                                        <MenuItem value={""}>
+                                            <em> <ListItemText primary={"Select Categories"} /></em>
+                                        </MenuItem>
+                                        {category?._payload?.map(({ name, _id }) => (
+                                            <MenuItem key={name} value={_id}>
+                                                <Checkbox checked={formik.values.category.includes(_id)} />
+                                                <ListItemText primary={name} />
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <Stack direction="row" justifyContent="flex-end" mt={1}>
+                                    <Button variant="outlined" onClick={handleOpenModal2}>
+                                        Add Category
+                                    </Button>
+
+                                </Stack>
+                            </Box>
+                        }
+                    />}
                     <CustomInput
                         label="Vehicle Segment"
                         input={
-                            <FormControl fullWidth>
-                                <InputLabel >Vehicle Segment</InputLabel>
-                                <Select
-                                    multiple
-                                    value={brand}
-                                    onChange={(e) => {
-                                        setBrand(e.target.value || []);
-                                    }}
-                                    input={<OutlinedInput label="Vehicle Segment" />}
-                                    renderValue={(selected) =>
-                                        data?._payload
-                                            ?.filter(({ _id }) => selected.includes(_id))
-                                            .map(({ name }) => name)
-                                            .join(', ')
-                                    }
-                                >
-                                    {data?._payload?.map(({ _id, name }) => (
-                                        <MenuItem key={_id} value={_id}>
-                                            <Checkbox checked={brand.includes(_id)} />
-                                            <ListItemText primary={name} />
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                            <Box>
+                                <FormControl fullWidth>
+                                    <InputLabel >Vehicle Segment</InputLabel>
+                                    <Select
+                                        multiple
+                                        value={brand}
+
+                                        onChange={(e) => {
+                                            setBrand(e.target.value || []);
+                                        }}
+                                        input={<OutlinedInput label="Vehicle Segment" />}
+                                        renderValue={(selected) =>
+                                            data?._payload
+                                                ?.filter(({ _id }) => selected.includes(_id))
+                                                .map(({ name }) => name)
+                                                .join(', ')
+                                        }
+                                    >
+                                        {data?._payload?.map(({ _id, name }) => (
+                                            <MenuItem key={_id} value={_id}>
+                                                <Checkbox checked={brand.includes(_id)} />
+                                                <ListItemText primary={name} />
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <Stack direction="row" justifyContent="flex-end" mt={1}>
+                                    <Button variant="outlined" onClick={handleOpenModal}>Add Segment</Button>
+                                </Stack>
+                            </Box>
                         }
                     />
                     <CustomRadio
@@ -265,6 +330,8 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                         }
                     />
                 </Stack>
+                {isOpen && <SegmentModal open={isOpen} close={() => { handleCloseModal(); }} refetch={segmentRefetch} />}
+                {isOpen2 && <CreateCategory open={isOpen2} close={() => { handleCloseModal2(); }} refetch={categoryRefetch} />}
             </CustomModal>
         </div>
     )

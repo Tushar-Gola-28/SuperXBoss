@@ -46,7 +46,9 @@ export function SegmentModal({ open, close, refetch, editData, handleEditData })
                 return
             }
             createMutation.mutate(formData, {
-                onSuccess: ({ data: data }) => {
+                onSuccess: (data) => {
+                    console.log(data, "data");
+
                     if (data) {
                         refetch()
                         if (handleEditData) {

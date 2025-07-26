@@ -1,18 +1,19 @@
+
 import { Box, Button, InputAdornment, Stack, TextField } from '@mui/material'
 import SectionHeader from '../../components/SectionHeader'
 import searchIcon from '../../assets/search.svg'
 import AddIcon from '@mui/icons-material/Add';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
-import { CreateCategory } from './modals/create-category';
 import { useModalControl } from '../../hooks/useModalControl';
 import { CustomPagination, CustomTable } from '../../components';
 import useColumns from './hooks/useColumns';
 import { useQuery } from '@tanstack/react-query';
-import { fetchCategories } from '../../services';
 import { usePagination } from '../../hooks/usePagination';
 import { useEditData } from '../../hooks/useEdit';
-export function CategoriesPage() {
+import { fetchUnits } from '../../services/unit';
+import { UnitModal } from './modals/ModalUnit';
+export function UnitPage() {
     const { editData, handleEditData } = useEditData()
     const { open, handleCloseModal, handleOpenModal } = useModalControl()
     const [search, setSearch] = useState("")
@@ -24,8 +25,8 @@ export function CategoriesPage() {
 
 
     const { data, isLoading, refetch } = useQuery({
-        queryKey: ['categories', page, page_size, search],
-        queryFn: ({ signal }) => fetchCategories(signal, page, page_size, search)
+        queryKey: ['units', page, page_size, search],
+        queryFn: ({ signal }) => fetchUnits(signal, page, page_size, search)
     })
     useEffect(() => {
         if (data?.pagination) {
@@ -36,7 +37,7 @@ export function CategoriesPage() {
 
     return (
         <Box>
-            <SectionHeader heading="Categories" icon="https://ticketsque-public.s3.ap-south-1.amazonaws.com/icons/Events.svg" />
+            <SectionHeader heading="Units" icon="https://ticketsque-public.s3.ap-south-1.amazonaws.com/icons/Events.svg" />
             <Stack gap={1} sx={{ mb: 2 }} direction="row" justifyContent={{ xs: "flex-end       ", md: "space-between" }} alignItems="center" flexWrap="wrap">
                 <TextField
                     fullWidth
@@ -58,7 +59,7 @@ export function CategoriesPage() {
                     }}
                 />
                 <Stack>
-                    <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenModal} >Create Category</Button>
+                    <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenModal} >Create Unit</Button>
                 </Stack>
             </Stack>
             <CustomTable
@@ -67,7 +68,7 @@ export function CategoriesPage() {
                 loading={isLoading}
             />
             {data?._payload?.length > 0 && <CustomPagination  {...{ page, page_size, total_records, setPage, totalPages, handlePageSize }} />}
-            {open && <CreateCategory open={open} close={() => { handleCloseModal(); handleEditData(null) }} refetch={refetch} editData={editData} handleEditData={handleEditData} />}
+            {open && <UnitModal open={open} close={() => { handleCloseModal(); handleEditData(null) }} refetch={refetch} editData={editData} handleEditData={handleEditData} />}
         </Box>
     )
 }

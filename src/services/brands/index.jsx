@@ -3,7 +3,7 @@ import { notify } from "../../components"
 import { config } from "../../constants"
 
 export const fetchBrands = async (signal, page, page_size, search) => {
-    const { data } = await api.get(`/brand`, { signal, params: { page, limit: page_size, search } })
+    const { data } = await api.get(`/brand`, { signal, params: { page, page_size, search } })
     return data
 }
 export const fetchActiveBrands = async (signal) => {

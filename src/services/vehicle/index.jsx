@@ -2,29 +2,32 @@ import { api } from "../../AxiosInstants"
 import { notify } from "../../components"
 import { config } from "../../constants"
 
-export const fetchUsers = async (signal, page, page_size, search) => {
-    const { data } = await api.get(`/users`, { signal, params: { page, page_size, search } })
+export const fetchVehicles = async (signal, page, page_size, search, brand_id) => {
+    const { data } = await api.get(`/vehicle/${brand_id}`, { signal, params: { page, page_size, search } })
     return data
 }
-export const createUser = async (values) => {
+
+export const createVehicle = async (values, brand_id) => {
     try {
-        const data = await api.post('/user', values, config)
+        const data = await api.post(`/vehicle/${brand_id}`, values, config)
         return data
     } catch (err) {
         console.log(err?.response?.data?.message);
         if (err?.response?.data?.message) {
             notify(err?.response?.data?.message)
         }
+
     }
 }
-export const updateUser = async (values, user) => {
+export const updateVehicle = async (values, vehicle_id, brand_id) => {
     try {
-        const data = await api.put(`/user/${user}`, values, config)
+        const data = await api.put(`/vehicle/${vehicle_id}/${brand_id}`, values, config)
         return data
     } catch (err) {
         console.log(err?.response?.data?.message);
         if (err?.response?.data?.message) {
             notify(err?.response?.data?.message)
         }
+
     }
 }

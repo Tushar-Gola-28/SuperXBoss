@@ -3,20 +3,24 @@ import { Stack, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useMutation } from '@tanstack/react-query';
-import { createCategory, editCategory } from '../../../services';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import ImageUpload from '../../../components/ui/ImageUpload';
 import { useEffect, useState } from 'react';
+import { SegmentModal } from '../../segment/modal/SegmentModal';
+import { useModalControl } from '../../../hooks/useModalControl';
+import { useParams } from 'react-router';
+import { createVehicle, updateVehicle } from '../../../services/vehicle';
 
-export function CreateCategory({ open, close, refetch, editData, handleEditData }) {
+export function VehicleModal({ open, close, refetch, editData, handleEditData }) {
+    const { brand_id } = useParams()
     const [images, setImages] = useState()
-
+    const { open: isOpen, handleCloseModal, handleOpenModal } = useModalControl()
     const formik = useFormik({
         initialValues: {
             name: '',
             description: '',
             status: "true",
-            featured: "true"
+
         },
         validationSchema: Yup.object({
             name: Yup.string().required('Name is required'),
@@ -26,22 +30,21 @@ export function CreateCategory({ open, close, refetch, editData, handleEditData 
             if (!images) {
                 return notify("Image is required.")
             }
-
             let formData = new FormData()
+            formData.append("name", values.name)
+            // formData.append("brand_day_offer", values.brand_day_offer)
             if (images[0]?.file) {
                 formData.append("picture", images[0]?.file)
             }
-            formData.append("name", values.name)
             formData.append("description", values.description)
             formData.append("status", values.status)
-            formData.append("featured", values.featured)
             if (editData) {
                 updateMutation.mutate(formData, {
                     onSuccess: ({ data: data }) => {
                         if (data) {
                             refetch()
-                            notify("Category Updated Successfully.", "success")
-                            handleEditData()
+                            handleEditData(null)
+                            notify("Vehicle Update Successfully.", "success")
                             close()
                         }
 
@@ -54,9 +57,9 @@ export function CreateCategory({ open, close, refetch, editData, handleEditData 
                     if (data) {
                         refetch()
                         if (handleEditData) {
-                            handleEditData()
+                            handleEditData(null)
                         }
-                        notify("Category Created Successfully.", "success")
+                        notify("Vehicle Created Successfully.", "success")
                         close()
                     }
 
@@ -65,25 +68,28 @@ export function CreateCategory({ open, close, refetch, editData, handleEditData 
 
         }
     });
+
     const createMutation = useMutation({
         mutationFn: async (data) => {
-            return await createCategory(data)
+            return await createVehicle(data, brand_id)
         },
     })
-
     const updateMutation = useMutation({
         mutationFn: async (data) => {
-            return await editCategory(data, editData?._id)
+            return await updateVehicle(data, editData?._id, brand_id)
         },
     })
     useEffect(() => {
         if (editData) {
-            formik.setValues({ name: editData?.name, description: editData?.description, status: String(editData?.status), featured: String(editData?.featured) })
-            if (editData?.picture) {
-                setImages([editData?.picture])
-            }
+            formik.setValues({
+                name: editData?.name,
+                description: editData?.description,
+                status: String(editData?.status),
+
+            })
+            setImages([editData?.logo])
         }
-    }, [editData])
+    }, [editData,])
 
     return (
         <div>
@@ -91,12 +97,12 @@ export function CreateCategory({ open, close, refetch, editData, handleEditData 
                 {...{
                     open,
                     close,
-                    heading: editData ? "Update Category" : 'Create Category',
+                    heading: editData ? "Update Vehicle" : 'Create Vehicle',
                     action: (
                         <LoadingButton
                             variant="contained"
-                            loading={createMutation.isPending || updateMutation?.isPending}
-                            disabled={createMutation.isSuccess || updateMutation?.isPending}
+                            loading={createMutation.isSuccess}
+                            disabled={createMutation.isSuccess}
                             onClick={formik.handleSubmit}
                         >
                             {editData ? "Update" : "Create"}
@@ -114,10 +120,8 @@ export function CreateCategory({ open, close, refetch, editData, handleEditData 
                     />
                     <CustomInput
                         label="Name"
-                        required
                         input={
                             <TextField
-                                required
                                 fullWidth
                                 name="name"
                                 placeholder="Enter Name"
@@ -132,11 +136,9 @@ export function CreateCategory({ open, close, refetch, editData, handleEditData 
 
                     <CustomInput
                         label="Description"
-                        required
                         input={
                             <TextField
                                 fullWidth
-                                required
                                 multiline
                                 minRows={5}
                                 name="description"
@@ -152,7 +154,6 @@ export function CreateCategory({ open, close, refetch, editData, handleEditData 
                     <CustomRadio
                         name="status"
                         title="Status"
-                        required
                         value={formik.values.status}
                         handleChange={formik.handleChange}
                         options={
@@ -162,21 +163,9 @@ export function CreateCategory({ open, close, refetch, editData, handleEditData 
                             ]
                         }
                     />
-                    <CustomRadio
-                        name="featured"
-                        required
-                        title="Featured"
-                        value={formik.values.featured}
-                        handleChange={formik.handleChange}
-                        options={
-                            [
-                                { value: "true", label: "Yes" },
-                                { value: "false", label: "No" },
-                            ]
-                        }
-                    />
                 </Stack>
+                {isOpen && <SegmentModal open={isOpen} close={() => { handleCloseModal(); }} refetch={segmentRefetch} />}
             </CustomModal>
         </div>
-    );
+    )
 }

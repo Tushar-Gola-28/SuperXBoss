@@ -26,6 +26,6 @@ export const updateBanner = async (values, banner) => {
 }
 
 export const fetchBanner = async (signal, page, page_size, search) => {
-    const { data } = await api.get(`/banner`, { signal, params: { page, limit: page_size, search } })
+    const { data } = await api.get(`/banner`, { signal, params: { page, page_size, search } })
     return data
 }

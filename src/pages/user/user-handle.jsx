@@ -22,6 +22,7 @@ import { CustomPhoneInput } from '../../components/ui/CustomPhoneInput copy'
 import { useMobileCode } from '../../hooks/useMobileCode'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { LoadingButton } from '@mui/lab'
 export function UserHandle() {
     const [image, setImage] = useState()
     const [preview, setPreview] = useState()
@@ -273,9 +274,12 @@ export function UserHandle() {
                         </Grid2>
                     </Grid2>
                     <Stack direction="row" gap="10px" mt={2}>
-                        <Button variant="contained" type="submit">
+                        <LoadingButton variant="contained" type="submit"
+                            loading={createMutation.isPending || updateMutation?.isPending}
+                            disabled={createMutation.isPending || updateMutation?.isPending}
+                        >
                             {user ? "Update" : "Create"}
-                        </Button>
+                        </LoadingButton>
                         <Button variant="outlined" type="button">
                             Cancel
                         </Button>

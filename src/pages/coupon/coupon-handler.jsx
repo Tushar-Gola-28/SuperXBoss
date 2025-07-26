@@ -8,11 +8,14 @@ import { CustomInput, CustomRadio, notify } from '../../components'
 import { LoadingButton } from '@mui/lab'
 import { useMutation } from '@tanstack/react-query'
 import { createCoupon, updateCoupon } from '../../services/coupon'
-import { useNavigate, useParams } from 'react-router'
+import { useLocation, useNavigate, useParams } from 'react-router'
+import { useEffect } from 'react'
+import dayjs from 'dayjs'
 
 export function CouponHandler() {
     const { coupon } = useParams()
     const navigate = useNavigate()
+    const location = useLocation()
     const formik = useFormik({
         initialValues: {
             start_date: null,
@@ -26,10 +29,10 @@ export function CouponHandler() {
         validationSchema: Yup.object({
             start_date: Yup.date().nullable().required('Start date is required'),
             end_date: Yup.date().nullable().required('End date is required'),
-            code: Yup.string().required('Code is required'),
+            code: Yup.string().optional(),
             amount: Yup.number().required('Amount is required'),
             min_cart_amt: Yup.number().required('Minimum amount is required'),
-            description: Yup.string().required('Description is required'),
+            description: Yup.string().optional(),
         }),
         onSubmit: (values) => {
             if (coupon) {
@@ -65,6 +68,7 @@ export function CouponHandler() {
         handleBlur,
         handleSubmit,
         setFieldValue,
+        setValues
     } = formik
     const createMutation = useMutation({
         mutationFn: async (data) => {
@@ -76,6 +80,19 @@ export function CouponHandler() {
             return await updateCoupon(data, coupon)
         },
     })
+
+    useEffect(() => {
+        if (location.state) {
+            const { code, amount, min_cart_amt, start_date, end_date, status, description } = location.state
+            setValues({
+                code, amount, min_cart_amt,
+                start_date: dayjs(start_date),
+                end_date: dayjs(end_date),
+                status,
+                description
+            })
+        }
+    }, [location.state])
     return (
         <div>
             <PageStructure title="Create Coupon">
@@ -137,8 +154,8 @@ export function CouponHandler() {
                                                 setFieldValue('code', upperCased)
                                             }}
                                             onBlur={handleBlur}
-                                            error={touched.code && Boolean(errors.code)}
-                                            helperText={touched.code && errors.code}
+                                            error={true}
+                                            helperText={"*Leave blank to auto-generate a coupon code"}
                                             placeholder='Enter Code'
                                         />
                                     }
@@ -219,7 +236,10 @@ export function CouponHandler() {
                         </Grid2>
 
                         <Stack direction="row" gap="10px" mt={2}>
-                            <LoadingButton variant="contained" type="submit">
+                            <LoadingButton variant="contained" type="submit"
+                                loading={createMutation.isPending || updateMutation?.isPending}
+                                disabled={createMutation.isPending || updateMutation?.isPending}
+                            >
                                 Create
                             </LoadingButton>
                             <Button variant="outlined" type="button">

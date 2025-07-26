@@ -96,8 +96,8 @@ export function SegmentModal({ open, close, refetch, editData, handleEditData })
                     action: (
                         <LoadingButton
                             variant="contained"
-                            loading={createMutation.isSuccess}
-                            disabled={createMutation.isSuccess}
+                            loading={createMutation.isPending || updateMutation?.isPending}
+                            disabled={createMutation.isPending || updateMutation?.isPending}
                             onClick={formik.handleSubmit}
                         >
                             {editData ? "Update" : "Create"}

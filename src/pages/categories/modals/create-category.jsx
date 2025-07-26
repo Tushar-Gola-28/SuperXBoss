@@ -20,7 +20,6 @@ export function CreateCategory({ open, close, refetch, editData, handleEditData 
         },
         validationSchema: Yup.object({
             name: Yup.string().required('Name is required'),
-            description: Yup.string().required('Description is required')
         }),
         onSubmit: (values) => {
             if (!images) {
@@ -96,7 +95,7 @@ export function CreateCategory({ open, close, refetch, editData, handleEditData 
                         <LoadingButton
                             variant="contained"
                             loading={createMutation.isPending || updateMutation?.isPending}
-                            disabled={createMutation.isSuccess || updateMutation?.isPending}
+                            disabled={createMutation.isPending || updateMutation?.isPending}
                             onClick={formik.handleSubmit}
                         >
                             {editData ? "Update" : "Create"}
@@ -132,7 +131,6 @@ export function CreateCategory({ open, close, refetch, editData, handleEditData 
 
                     <CustomInput
                         label="Description"
-                        required
                         input={
                             <TextField
                                 fullWidth

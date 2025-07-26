@@ -22,7 +22,7 @@ export function CouponPage() {
     }, 400)
 
 
-    const { data, isLoading, refetch } = useQuery({
+    const { data, isLoading, } = useQuery({
         queryKey: ['fetchCoupon', page, page_size, search],
         queryFn: ({ signal }) => fetchCoupon(signal, page, page_size, search)
     })

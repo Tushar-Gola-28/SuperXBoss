@@ -9,7 +9,7 @@ import ImageUpload from '../../../components/ui/ImageUpload';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 
-export function CreateSubCategory({ open, close, refetch, editData }) {
+export function CreateSubCategory({ open, close, refetch, editData, handleEditData }) {
     const [images, setImages] = useState()
     let { id } = useParams();
     const formik = useFormik({
@@ -20,7 +20,7 @@ export function CreateSubCategory({ open, close, refetch, editData }) {
         },
         validationSchema: Yup.object({
             name: Yup.string().required('Name is required'),
-            description: Yup.string().required('Description is required')
+            // description: Yup.string().required('Description is required')
         }),
         onSubmit: (values) => {
             if (!images) {
@@ -40,6 +40,7 @@ export function CreateSubCategory({ open, close, refetch, editData }) {
                     onSuccess: ({ data: data }) => {
                         if (data) {
                             refetch()
+                            handleEditData(null)
                             notify("Sub Category Updated Successfully.", "success")
                             close()
                         }
@@ -52,6 +53,7 @@ export function CreateSubCategory({ open, close, refetch, editData }) {
                 onSuccess: ({ data: data }) => {
                     if (data) {
                         refetch()
+                        handleEditData()
                         notify("Sub Category Created Successfully.", "success")
                         close()
                     }
@@ -87,12 +89,12 @@ export function CreateSubCategory({ open, close, refetch, editData }) {
                 {...{
                     open,
                     close,
-                    heading: editData ? "Update Sub Category    " : 'Create Sub Category',
+                    heading: editData ? "Update Sub Category" : 'Create Sub Category',
                     action: (
                         <LoadingButton
                             variant="contained"
-                            loading={createMutation.isSuccess}
-                            disabled={createMutation.isSuccess}
+                            loading={createMutation.isPending || updateMutation?.isPending}
+                            disabled={createMutation.isPending || updateMutation?.isPending}
                             onClick={formik.handleSubmit}
                         >
                             {editData ? "Update" : "Create"}

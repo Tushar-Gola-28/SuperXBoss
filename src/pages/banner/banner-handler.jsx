@@ -146,7 +146,10 @@ export function BannerHandler() {
 
                     </Grid2>
                     <Stack direction="row" gap="10px" mt={2}>
-                        <LoadingButton onClick={handleSubmit} variant="contained">
+                        <LoadingButton onClick={handleSubmit} variant="contained"
+                            loading={createMutation.isPending || updateMutation?.isPending}
+                            disabled={createMutation.isPending || updateMutation?.isPending}
+                        >
                             {banner ? "Update" : "Create"}
                         </LoadingButton>
                         <Button variant="outlined">

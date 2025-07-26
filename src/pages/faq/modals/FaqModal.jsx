@@ -61,7 +61,11 @@ export function FaqModal({ open, close, refetch, editData }) {
 
     return (
         <CustomModal heading="Create FAQ" open={open} close={close}
-            action={<LoadingButton type="submit" variant="contained" form="faq"  >
+            action={<LoadingButton type="submit" variant="contained" form="faq"
+
+                loading={createMutation.isPending || uploadMutation?.isPending}
+                disabled={createMutation.isPending || uploadMutation?.isPending}
+            >
                 Create
             </LoadingButton>}
         >

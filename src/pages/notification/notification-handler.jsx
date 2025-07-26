@@ -3,6 +3,7 @@ import PageStructure from '../../components/PageStructure'
 import { CustomInput } from '../../components'
 import { DatePicker } from '@mui/x-date-pickers'
 import ImageUpload from '../../components/ui/ImageUpload'
+import { LoadingButton } from '@mui/lab'
 
 export function NotificationHandler() {
     return (
@@ -64,9 +65,12 @@ export function NotificationHandler() {
                     </Grid2>
 
                     <Stack direction="row" gap="10px" mt={2}>
-                        <Button variant="contained">
+                        <LoadingButton variant="contained"
+                        // loading={createMutation.isPending || updateMutation?.isPending}
+                        // disabled={createMutation.isPending || updateMutation?.isPending}
+                        >
                             Create
-                        </Button>
+                        </LoadingButton>
                         <Button variant="outlined">
                             Cancel
                         </Button>

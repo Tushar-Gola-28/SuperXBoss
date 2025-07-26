@@ -71,7 +71,7 @@ export function SubCategoriesPage() {
                 loading={isLoading}
             />
             {data?._payload?.length > 0 && <CustomPagination  {...{ page, page_size, total_records, setPage, totalPages, handlePageSize }} />}
-            {open && <CreateSubCategory open={open} close={handleCloseModal} refetch={refetch} editData={editData} />}
+            {open && <CreateSubCategory open={open} close={() => { handleCloseModal(); handleEditData(null) }} refetch={refetch} editData={editData} handleEditData={handleEditData} />}
         </Box>
     )
 }

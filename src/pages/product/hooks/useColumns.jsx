@@ -81,8 +81,12 @@ export default function useColumns(handleEditData, handleOpenModal) {
         },
         { id: "item_stock", label: "Item Stock" },
         { id: "tax", label: "Tax Rate" },
-        { id: "weight", label: "Weight" },
-        { id: "unit", label: "Unit" },
+        {
+            id: "unit", label: "Unit",
+            renderCell: (row) => {
+                return row?.unit?.pc ? `${row?.unit?.name} ${row?.unit?.set} (${row?.unit?.pc})` : `${row?.unit?.name} ${row?.unit?.set}`
+            },
+        },
         { id: "hsn_code", label: "HSN Code" },
         { id: "point", label: "Points" },
         {

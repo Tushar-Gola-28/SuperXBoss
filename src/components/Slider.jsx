@@ -364,15 +364,15 @@ const Sidebar = ({
                     path: "/customers",
                     children: []
                 },
-                {
+                // {
 
-                    icon: <LocalShippingIcon />,
-                    label: "Shipping",
-                    order: 0,
-                    parent: null,
-                    path: "/shipping",
-                    children: []
-                },
+                //     icon: <LocalShippingIcon />,
+                //     label: "Shipping",
+                //     order: 0,
+                //     parent: null,
+                //     path: "/shipping",
+                //     children: []
+                // },
 
                 {
 

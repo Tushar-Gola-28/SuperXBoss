@@ -18,6 +18,7 @@ import { SegmentModal } from '../segment/modal/SegmentModal'
 import { fetchSegmentsAll } from '../../services/segments'
 import { UnitModal } from '../units/modals/ModalUnit'
 import { fetchUnits } from '../../services/unit'
+import { LoadingButton } from '@mui/lab'
 
 export function ProductHandlePage() {
     const { product } = useParams()
@@ -240,7 +241,7 @@ export function ProductHandlePage() {
                 hsn_code,
                 ship_days,
                 return_days,
-                weight, unit,
+                unit,
                 status,
                 trend_part,
                 brand_id: brand?._id,
@@ -624,7 +625,7 @@ export function ProductHandlePage() {
                                                         </MenuItem>
                                                         {unitData?._payload?.map(({ _id, name, set, pc }) => (
                                                             <MenuItem key={_id} value={_id}>
-                                                                <ListItemText primary={pc ? `${name}${set} (${pc})` : `${name}${set}`} />
+                                                                <ListItemText primary={pc ? `${name} ${set} (${pc})` : `${name} ${set}`} />
                                                             </MenuItem>
                                                         ))}
                                                     </Select>
@@ -879,9 +880,12 @@ export function ProductHandlePage() {
                         </Grid2>
                     </Grid2>
                     <Stack direction="row" gap="10px" mt={2}>
-                        <Button variant="contained" type='submit'>
+                        <LoadingButton variant="contained" type='submit'
+                            loading={createMutation.isPending || updateMutation?.isPending}
+                            disabled={createMutation.isPending || updateMutation?.isPending}
+                        >
                             {product ? "Update" : "Create"}
-                        </Button>
+                        </LoadingButton>
                         <Button variant="outlined">
                             Cancel
                         </Button>

@@ -35,6 +35,12 @@ export default function useColumns(handleEditData, handleOpenModal) {
             },
         },
         {
+            id: "position", label: "Banner Position",
+            renderCell: (row) => {
+                return <div>{row?.position == "top" ? "Top Section" : row?.position == "mid" ? "Mid Section" : row?.position == "bottom" ? "Bottom Section" : ""}</div>
+            },
+        },
+        {
             id: "user", label: "Create By", renderCell: (row) => {
                 return row?.createdBy?.name || "-"
             },

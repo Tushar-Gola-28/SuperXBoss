@@ -65,6 +65,7 @@ export function ProductHandlePage() {
     })
     const validationSchema = Yup.object({
         name: Yup.string().required('Name is required'),
+        description: Yup.string().required('Description is required'),
         point: Yup.number().typeError('Must be a number').min(0, 'Point must be at least 0').required('Point is required'),
         new_arrival: Yup.string().oneOf(['true', 'false'], 'Invalid value').required(),
         pop_item: Yup.string().oneOf(['true', 'false'], 'Invalid value').required(),
@@ -114,6 +115,7 @@ export function ProductHandlePage() {
             unit: "",
             status: "false",
             trend_part: "false",
+            description: ""
         },
         validationSchema,
         onSubmit: (values) => {
@@ -550,6 +552,30 @@ export function ProductHandlePage() {
                                             </Stack>
 
                                         </CustomPaper>
+                                    </Grid2>
+                                    <Grid2 size={{ xs: 12, }}>
+                                        <CustomInput
+                                            label="Description"
+                                            required
+                                            input={
+                                                <TextField
+                                                    type="number"
+                                                    required
+                                                    multiline
+                                                    minRows={8}
+                                                    maxRows={20}
+                                                    fullWidth
+                                                    placeholder='Enter description'
+                                                    onWheel={(e) => e.target.blur()}
+                                                    onChange={handleChange}
+                                                    name='description'
+                                                    value={values.description}
+                                                    onBlur={handleBlur}
+                                                    error={errors.description && touched.description}
+                                                    helperText={errors.description && touched.description ? errors.description : null}
+                                                />
+                                            }
+                                        />
                                     </Grid2>
 
                                 </Grid2>

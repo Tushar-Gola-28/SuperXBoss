@@ -1,13 +1,7 @@
-import { Avatar, IconButton, Stack } from '@mui/material';
-import StarBorderIcon from "@mui/icons-material/StarBorder";
-import { BASE_URL } from '../../../../config-global';
+import { FormControlLabel, Stack, Switch } from '@mui/material';
 import dayjs from 'dayjs';
-import EditIcon from '@mui/icons-material/Edit';
-import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
-import { useNavigate } from 'react-router';
 import { HoverAvatar } from '../../../components';
-export default function useColumns(handleEditData, handleOpenModal) {
-    const navigate = useNavigate()
+export default function useColumns() {
     const columns = [
         {
             id: "S No", label: "S No.", renderCell: (row, index) => {
@@ -20,32 +14,29 @@ export default function useColumns(handleEditData, handleOpenModal) {
             renderCell: (row) => {
                 return (
                     <HoverAvatar
-                        src={`${BASE_URL}/upload/brands/${row?.icon}`}
+                        src={row?.profile}
                         alt="_blank"
                     />
 
                 );
             },
         },
-        { id: "name", label: "Name" },
-        { id: "Mobile", label: "Mobile" },
-        { id: "State", label: "State" },
-        { id: "Type", label: "Type" },
+        { id: "first_name", label: "First Name" },
+        { id: "last_name", label: "Last Name" },
+        { id: "email", label: "Email" },
+        { id: "state", label: "State" },
         { id: "Gst No", label: "Gst No" },
-        { id: "Business type", label: "Business type" },
-        { id: "Business name", label: "Business name" },
-        { id: "Business contact no", label: "Business contact no" },
-        {
-            id: "user", label: "Create By", renderCell: (row) => {
-                return <div>{row?.user?.name}</div>
-            },
-        },
+        { id: "wallet_amount", label: "Wallet Amount" },
+        { id: "business_type", label: "Business type" },
+        { id: "business_name", label: "Business name", width: 150 },
+        { id: "business_contact_no", label: "Business contact no", width: 150 },
         {
             id: "createdAt",
             label: "CreateAt",
             renderCell: (row) => {
                 return dayjs(row?.createdAt).format("DD MMMM YYYY, h:mm A");
             },
+            width: 150
         },
         {
             id: "status",
@@ -63,16 +54,12 @@ export default function useColumns(handleEditData, handleOpenModal) {
             label: "Action",
             renderCell: (row) => {
                 return (
-                    <Stack direction="row" justifyContent="center" gap="10px">
-                        <IconButton color="primary" onClick={() => { handleEditData(row); handleOpenModal() }}>
-                            <EditIcon />
-                        </IconButton>
-                        <IconButton color="primary" onClick={() => navigate(`sub-categories/${row?.id}`)}>
-                            <PlaylistAddIcon />
-                        </IconButton>
+                    <Stack direction="row" justifyContent="center" >
+                        <FormControlLabel control={<Switch defaultChecked />} />
                     </Stack >
                 );
             },
+            sticky: true
         },
     ];
     return { columns }

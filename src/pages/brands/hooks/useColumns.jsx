@@ -119,6 +119,8 @@ export default function useColumns(handleEditData, handleOpenModal) {
             },
         },
         { id: "name", label: "Name" },
+        { id: "start_year", label: "Start year" },
+        { id: "end_year", label: "End year" },
 
         {
             id: "Brand Name", label: "Brand Name", renderCell: (row) => {

@@ -1,12 +1,17 @@
-import { IconButton, Stack, Typography } from '@mui/material';
+import { IconButton, Stack } from '@mui/material';
 import dayjs from 'dayjs';
 import EditIcon from '@mui/icons-material/Edit';
-import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import { useNavigate } from 'react-router';
 import { HoverAvatar } from '../../../components';
 import { urls } from '../../../routes';
-export default function useColumns(handleEditData, handleOpenModal) {
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import CustomMenus from '../../../components/ui/CustomMenus';
+import useMenu from '../../../hooks/useMenu';
+import { useState } from 'react';
+export default function useColumns() {
     const navigate = useNavigate()
+    const { open, anchorEl, handleClick, handleClose } = useMenu()
+    const [check, setCheck] = useState("")
     const columns = [
         {
             id: "S No", label: "S No.", renderCell: (row, index) => {
@@ -41,7 +46,14 @@ export default function useColumns(handleEditData, handleOpenModal) {
         },
         { id: "customer_price", label: "Customer Price" },
         { id: "b2b_price", label: "B2B_Price" },
-        { id: "any_discount", label: "Any Discount" },
+        { id: "discount_customer_price", label: "Discounted Customer Price" },
+        { id: "discount_b2b_price", label: "Discounted B2B Price" },
+        {
+            id: "any_discount", label: "Any Discount",
+            renderCell: (row) => {
+                return row?.any_discount || 0
+            },
+        },
         {
             id: "Bulk Discount", label: "Bulk Discount",
             renderCell: (row) => {
@@ -145,11 +157,24 @@ export default function useColumns(handleEditData, handleOpenModal) {
                         <IconButton color="primary" onClick={() => navigate(`${urls?.PRODUCTS_HANDLER}/${row?._id}`, { state: row })}>
                             <EditIcon />
                         </IconButton>
+                        <IconButton color="primary" onClick={(e) => { handleClick(e); setCheck(row?._id) }}>
+                            <MoreVertIcon />
+                        </IconButton>
+                        {row?._id == check && <CustomMenus
+                            open={open}
+                            anchorEl={anchorEl}
+                            handleClose={handleClose}
+                            menuList={[
+                                {
+                                    label: "Brand Assign", onClick: () => navigate(`${urls?.ASSIGN_VEHICLE}/${row?._id}`)
+                                }
+                            ]}
+                        />}
                     </Stack >
                 );
             },
             sticky: true,
-            width: 80
+            width: 120
         },
     ];
     return { columns }

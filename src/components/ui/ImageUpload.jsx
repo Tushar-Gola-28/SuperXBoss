@@ -263,7 +263,7 @@ const ImageUpload = forwardRef(({
         if (files.length === 0) return;
 
         // Validate file types
-        const validTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+        const validTypes = ['image/png'];
         const invalidFiles = files.filter(file => !validTypes.includes(file.type));
 
         if (invalidFiles.length > 0) {
@@ -372,7 +372,7 @@ const ImageUpload = forwardRef(({
                 type="file"
                 ref={inputRef}
                 onChange={handleImageChange}
-                accept="image/png, image/jpeg, image/jpg"
+                accept="image/png"
                 style={{ display: 'none' }}
                 multiple={maxImages !== 1}
             />

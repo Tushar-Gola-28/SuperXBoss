@@ -15,6 +15,7 @@ export function BannerHandler() {
     const navigate = useNavigate()
     const [prevImages, setPrevImages] = useState()
     const [status, setStatus] = useState("true")
+    const [position, setPosition] = useState("top")
     const [images, setImages] = useState();
     const [product, setProduct] = useState("")
     const { data, isLoading, } = useQuery({
@@ -37,6 +38,7 @@ export function BannerHandler() {
         }
         formdata.append("product_id", product)
         formdata.append("status", status)
+        formdata.append("position", position)
         if (banner) {
 
             updateMutation.mutate(formdata, {
@@ -76,8 +78,9 @@ export function BannerHandler() {
 
     useEffect(() => {
         if (location.state && data?._payload) {
-            const { image, product, status } = location.state
+            const { image, product, status, position: ptn } = location.state
             setStatus(String(status))
+            setPosition(ptn || "top")
             setProduct(product._id)
             setImages([image])
             setPrevImages([image])
@@ -139,6 +142,23 @@ export function BannerHandler() {
                                     [
                                         { value: "true", label: "Active" },
                                         { value: "false", label: "In Active" },
+                                    ]
+                                }
+                            />
+                        </Grid2>
+                        <Grid2 size={{ xs: 12, }}>
+                            <CustomRadio
+                                name="status"
+                                title="Position"
+                                value={position}
+                                handleChange={(e) => {
+                                    setPosition(e.target.value)
+                                }}
+                                options={
+                                    [
+                                        { value: "top", label: "Top Section" },
+                                        { value: "mid", label: "Mid Section" },
+                                        { value: "bottom", label: "Bottom Section" },
                                     ]
                                 }
                             />

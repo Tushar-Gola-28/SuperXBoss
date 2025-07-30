@@ -4,34 +4,28 @@ import SectionHeader from '../../components/SectionHeader'
 import searchIcon from '../../assets/search.svg'
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
-import { useModalControl } from '../../hooks/useModalControl';
 import { CustomPagination, CustomTable } from '../../components';
 import useColumns from './hooks/useColumns';
 import { useQuery } from '@tanstack/react-query';
-import { fetchCategories } from '../../services';
 import { usePagination } from '../../hooks/usePagination';
-import useReload from '../../hooks/useReload';
-import { useEditData } from '../../hooks/useEdit';
+import { fetchCustomers } from '../../services/customers';
 export function CustomerPage() {
-    const { editData, handleEditData } = useEditData()
-    const { open, handleCloseModal, handleOpenModal } = useModalControl()
     const [search, setSearch] = useState("")
-    const { columns } = useColumns(handleEditData, handleOpenModal)
-    const { handleReload, reload } = useReload()
+    const { columns } = useColumns()
     const { page, setPage, page_size, total_records, setTotal_records, totalPages, setTotalPages, handlePageSize } = usePagination()
     const handleSearch = debounce((value) => {
         setSearch(value)
     }, 400)
 
 
-    const { data, isLoading, refetch } = useQuery({
-        queryKey: ['categories', page, page_size, search, reload],
-        queryFn: ({ signal }) => fetchCategories(signal, page + 1, page_size, search)
+    const { data, isLoading } = useQuery({
+        queryKey: ['customers', page, page_size, search],
+        queryFn: ({ signal }) => fetchCustomers(signal, page, page_size, search)
     })
     useEffect(() => {
-        if (data) {
-            setTotal_records(data?.count)
-            setTotalPages(data?.totalPages)
+        if (data?.pagination) {
+            setTotal_records(data?.pagination?.total)
+            setTotalPages(data?.pagination?.totalPages)
         }
     }, [data])
     return (
@@ -60,11 +54,11 @@ export function CustomerPage() {
 
             </Stack>
             <CustomTable
-                rows={data?.rows}
+                rows={data?._payload}
                 columns={columns}
                 loading={isLoading}
             />
-            {data?.rows?.length > 0 && <CustomPagination  {...{ page, page_size, total_records, setPage, totalPages, handlePageSize }} />}
+            {data?._payload?.length > 0 && <CustomPagination  {...{ page, page_size, total_records, setPage, totalPages, handlePageSize }} />}
         </Box>
     )
 }

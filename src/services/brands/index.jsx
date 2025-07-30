@@ -10,6 +10,15 @@ export const fetchActiveBrands = async (signal) => {
     const { data } = await api.get(`/brand/active`, { signal, })
     return data
 }
+export const fetchVehicleBrand = async (signal, type) => {
+    const { data } = await api.get(`/brand/vehicle`, { signal, params: { type } })
+    return data
+}
+export const fetchBrandCategory = async (signal, type) => {
+    const { data } = await api.get(`/brand/nested`, { signal, params: { type } })
+    return data
+}
+
 
 export const createBrand = async (values) => {
     try {

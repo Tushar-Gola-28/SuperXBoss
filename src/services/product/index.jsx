@@ -14,6 +14,30 @@ export const createProduct = async (values) => {
 
     }
 }
+export const createVehicleAssign = async (values) => {
+    try {
+        const data = await api.post('/product/vehicle-assign', values)
+        return data
+    } catch (err) {
+        console.log(err?.response?.data?.message);
+        if (err?.response?.data?.message) {
+            notify(err?.response?.data?.message)
+        }
+
+    }
+}
+export const getVehicleAssign = async (signal, product_id) => {
+    try {
+        const data = await api.get(`/product/vehicle-assign/${product_id}`, { signal })
+        return data?.data
+    } catch (err) {
+        console.log(err?.response?.data?.message);
+        if (err?.response?.data?.message) {
+            notify(err?.response?.data?.message)
+        }
+
+    }
+}
 export const updateProduct = async (values, product) => {
     try {
         const data = await api.put(`/product/${product}`, values, config)

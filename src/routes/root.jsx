@@ -27,6 +27,7 @@ import { NotificationHandler } from '../pages/notification/notification-handler'
 import { SegmentPage } from '../pages/segment/segment-page'
 import { VehiclesPage } from '../pages/brands/vehicle-page'
 import { UnitPage } from '../pages/units/unit-page'
+import { VehicleAssignPage } from '../pages/product/vehicle-assign-page'
 
 export const root = [
   {
@@ -130,6 +131,10 @@ export const root = [
           {
             path: urls?.PRODUCTS_HANDLER_UPDATE,
             element: <ProductHandlePage />
+          },
+          {
+            path: urls?.ASSIGN_VEHICLE_HANDLE,
+            element: <VehicleAssignPage />
           },
         ]
       },

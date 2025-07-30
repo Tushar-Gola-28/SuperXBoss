@@ -6,6 +6,8 @@ export const urls = {
     SUB_CATEGORIES: "sub-categories/:id",
     BRAND: "brands",
     VEHICLE: "vehicle",
+    ASSIGN_VEHICLE: "assign-vehicle",
+    ASSIGN_VEHICLE_HANDLE: "assign-vehicle/:product",
     UNITS: "units",
     VEHICLE_HANDLE: "vehicle/:brand_id",
     PRODUCTS: "/products",

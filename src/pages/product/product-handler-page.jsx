@@ -74,7 +74,6 @@ export function ProductHandlePage() {
         customer_price: Yup.number().typeError('Must be a number').min(0, 'Minimum 0').required('Customer Price is required.'),
         b2b_price: Yup.number().typeError('Must be a number').min(0, 'Minimum 0').required('B2B price is required.'),
         min_qty: Yup.number().typeError('Must be a number').min(1, 'Minimum 1').required('Minimum qty is required.'),
-        wish_product: Yup.string().oneOf(['true', 'false'], 'Invalid value').required(),
         any_discount: Yup.number().typeError('Must be a number')
             .min(0, 'Minimum is 0%')
             .max(100, 'Maximum is 100%').nullable(),
@@ -102,7 +101,6 @@ export function ProductHandlePage() {
             customer_price: '',
             b2b_price: '',
             min_qty: '1',
-            wish_product: 'false',
             any_discount: '',
             brand_id: '',
             item_stock: '',
@@ -207,7 +205,6 @@ export function ProductHandlePage() {
     //         customer_price: '1000',
     //         b2b_price: '1000',
     //         min_qty: '1',
-    //         wish_product: 'false',
     //         any_discount: '0',
     //         brand_id: '',
     //         item_stock: '100',
@@ -225,7 +222,7 @@ export function ProductHandlePage() {
     // }, [])
     useEffect(() => {
         if (product && product_data?._payload) {
-            const { name, video, b2b_price, point, new_arrival, pop_item, part_no, customer_price, min_qty, wish_product, any_discount, item_stock, sku_id, tax, hsn_code, ship_days, return_days, weight, unit, status, trend_part, brand, images, bulk_discount, segment_type, return_policy } = product_data?._payload
+            const { name, video, b2b_price, point, new_arrival, pop_item, part_no, customer_price, min_qty, description, any_discount, item_stock, sku_id, tax, hsn_code, ship_days, return_days, weight, unit, status, trend_part, brand, images, bulk_discount, segment_type, return_policy } = product_data?._payload
             setValues({
                 name,
                 b2b_price,
@@ -235,7 +232,6 @@ export function ProductHandlePage() {
                 part_no,
                 customer_price,
                 min_qty,
-                wish_product,
                 any_discount,
                 item_stock,
                 sku_id,
@@ -831,21 +827,6 @@ export function ProductHandlePage() {
                                             title="Popular Item"
                                             required
                                             value={values.pop_item}
-                                            handleChange={handleChange}
-                                            options={
-                                                [
-                                                    { value: "true", label: "Yes" },
-                                                    { value: "false", label: "No" },
-                                                ]
-                                            }
-                                        />
-                                    </Grid2>
-                                    <Grid2 size={{ xs: 12, }}>
-                                        <CustomRadio
-                                            name="wish_product"
-                                            title="Wish Product"
-                                            required
-                                            value={values.wish_product}
                                             handleChange={handleChange}
                                             options={
                                                 [

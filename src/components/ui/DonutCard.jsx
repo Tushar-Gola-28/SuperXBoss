@@ -7,6 +7,7 @@ const DonutCard = ({ children }) => {
       sx={{
         display: "flex",
         justifyContent: "center",
+        flexDirection: "column",
         alignItems: "center",
         height: "100%",
         boxShadow: 0,

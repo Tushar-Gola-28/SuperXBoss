@@ -1,12 +1,9 @@
-import { Avatar, IconButton, Stack } from '@mui/material';
-import StarBorderIcon from "@mui/icons-material/StarBorder";
-import { BASE_URL } from '../../../../config-global';
+import { IconButton, Stack } from '@mui/material';
 import dayjs from 'dayjs';
-import EditIcon from '@mui/icons-material/Edit';
-import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import { useNavigate } from 'react-router';
-import { HoverAvatar } from '../../../components';
-export default function useColumns(handleEditData, handleOpenModal) {
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import { urls } from '../../../routes';
+export default function useColumns() {
     const navigate = useNavigate()
     const columns = [
         {
@@ -15,52 +12,105 @@ export default function useColumns(handleEditData, handleOpenModal) {
             },
         },
         {
-            id: "icon",
-            label: "Photo",
-            renderCell: (row) => {
-                return (
-                    <HoverAvatar
-                        src={`${BASE_URL}/upload/brands/${row?.icon}`}
-                        alt="_blank"
-                    />
-
-                );
-            },
+            id: "orderNo",
+            label: "Order No",
+            width: 170
         },
-        { id: "name", label: "Name" },
-        { id: "Order Id", label: "Order Id" },
-        { id: "Mobile", label: "Mobile" },
-        { id: "Pin code", label: "Pin code" },
-        { id: "Address", label: "Address" },
-        { id: "City", label: "City" },
-        { id: "State", label: "State" },
-        { id: "Address Type", label: "Address Type" },
-        { id: "Transaction Id", label: "Transaction Id" },
-        { id: "User Id", label: "User Id" },
-        { id: "Discount", label: "Discount" },
-        { id: "Total Amount", label: "Total Amount" },
-        { id: "Ship Charge	", label: "Ship Charge	" },
         {
-            id: "user", label: "Create By", renderCell: (row) => {
-                return <div>{row?.user?.name}</div>
+            id: "Total Products",
+            label: "Total Products",
+            renderCell: (row, index) => {
+                return row?.items?.length
             },
         },
+        {
+            id: "name", label: "Name",
+            renderCell: (row, index) => {
+                return row?.customer?.first_name + " " + row?.customer?.last_name
+            },
+        },
+        {
+            id: "Mobile", label: "Mobile",
+            renderCell: (row, index) => {
+                return row?.customer?.mobile
+            },
+        },
+        {
+            id: "Pin code", label: "Pin code",
+            renderCell: (row, index) => {
+                return row?.customer?.pin_code || "-"
+            },
+        },
+        { id: "customerType", label: "Customer Type" },
+        { id: "Address", label: "Address" },
+        {
+            id: "City", label: "City",
+            renderCell: (row, index) => {
+                return row?.customer?.city || "-"
+            },
+        },
+        {
+            id: "state", label: "State",
+            renderCell: (row,) => {
+                return row?.customer?.state || "-"
+            },
+        },
+        { id: "Transaction Id", label: "Transaction Id" },
+        {
+            id: "totalDiscount", label: "Total Discount",
+            renderCell: (row,) => {
+                return row?.totalDiscount || "-"
+            },
+        },
+        {
+            id: "Coupon Applied", label: "Coupon Applied",
+            renderCell: (row,) => {
+                return row?.coupon_applied?.code || "-"
+            },
+        },
+        {
+            id: "Grand Total", label: "Grand Total",
+            renderCell: (row,) => {
+                return row?.summary?.grandTotal || "-"
+            },
+        },
+
+        {
+            id: "Total With tax", label: "Total With tax",
+            renderCell: (row,) => {
+                return row?.summary?.taxTotal || "-"
+            },
+        },
+
+        {
+            id: "Sub Total", label: "Sub Total",
+            renderCell: (row,) => {
+                return row?.summary?.subtotal || "-"
+            },
+        },
+        {
+            id: "Total Quantity", label: "Total Quantity",
+            renderCell: (row,) => {
+                return row?.summary?.totalQty || "-"
+            },
+        },
+        { id: "walletAmountUse", label: "Wallet Amount used" },
+        { id: "pointUse", label: "Point used" },
+        { id: "earnPoints", label: "Earn Points" },
+        { id: "Ship Charge	", label: "Ship Charge" },
         {
             id: "createdAt",
             label: "CreateAt",
             renderCell: (row) => {
                 return dayjs(row?.createdAt).format("DD MMMM YYYY, h:mm A");
             },
+            width: 180
         },
         {
             id: "status",
             label: "Status",
             renderCell: (row) => {
-                return row?.status ? (
-                    <div className="active">Active</div>
-                ) : (
-                    <div className="pending">Pending</div>
-                );
+                return row?.status
             },
         },
         {
@@ -69,15 +119,14 @@ export default function useColumns(handleEditData, handleOpenModal) {
             renderCell: (row) => {
                 return (
                     <Stack direction="row" justifyContent="center" gap="10px">
-                        <IconButton color="primary" onClick={() => { handleEditData(row); handleOpenModal() }}>
-                            <EditIcon />
+                        <IconButton color="primary" onClick={() => navigate(`details/${row._id}`)}>
+                            <RemoveRedEyeIcon />
                         </IconButton>
-                        <IconButton color="primary" onClick={() => navigate(`sub-categories/${row?.id}`)}>
-                            <PlaylistAddIcon />
-                        </IconButton>
+
                     </Stack >
                 );
             },
+            sticky: true
         },
     ];
     return { columns }

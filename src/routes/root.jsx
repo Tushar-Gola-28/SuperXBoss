@@ -28,6 +28,7 @@ import { SegmentPage } from '../pages/segment/segment-page'
 import { VehiclesPage } from '../pages/brands/vehicle-page'
 import { UnitPage } from '../pages/units/unit-page'
 import { VehicleAssignPage } from '../pages/product/vehicle-assign-page'
+import { OrderDetailsPage } from '../pages/order/order-details-page'
 
 export const root = [
   {
@@ -205,6 +206,10 @@ export const root = [
           {
             index: true,
             element: <OrderPage />
+          },
+          {
+            path: urls.ORDERS_ID,
+            element: <OrderDetailsPage />
           },
         ]
       },

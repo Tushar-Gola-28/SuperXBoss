@@ -36,7 +36,7 @@ export function CouponHandler() {
         }),
         onSubmit: (values) => {
             if (coupon) {
-                updateMutation.mutate(values, {
+                updateMutation.mutate({ ...values, start_date: dayjs(values.start_date).startOf("day").format(), end_date: dayjs(values.end_date).endOf("day").format() }, {
                     onSuccess: (data) => {
                         if (data) {
                             notify("Coupon Update Successfully.", "success")

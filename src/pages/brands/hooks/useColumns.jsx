@@ -22,12 +22,12 @@ export default function useColumns(handleEditData, handleOpenModal) {
                 return row?.brand_type?.name || "-"
             },
         },
-        {
-            id: "brand_segment", label: "Brand Segment",
-            renderCell: (row) => {
-                return row?.brand_segment?.length >= 2 ? `${row?.brand_segment?.[0]?.name} +${row?.brand_segment?.length - 1} others` : row?.brand_segment?.[0]?.name
-            },
-        },
+        // {
+        //     id: "brand_segment", label: "Brand Segment",
+        //     renderCell: (row) => {
+        //         return row?.brand_segment?.length >= 2 ? `${row?.brand_segment?.[0]?.name} +${row?.brand_segment?.length - 1} others` : row?.brand_segment?.[0]?.name
+        //     },
+        // },
         {
             id: "Total Categories", label: "Total Categories",
             renderCell: (row) => {

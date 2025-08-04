@@ -1,5 +1,5 @@
 
-import { Box, InputAdornment, Stack, TextField } from '@mui/material'
+import { Backdrop, Box, CircularProgress, InputAdornment, MenuItem, Select, Stack, TextField } from '@mui/material'
 import SectionHeader from '../../components/SectionHeader'
 import searchIcon from '../../assets/search.svg'
 import { debounce } from 'lodash';
@@ -12,14 +12,15 @@ import { fetchOrders } from '../../services/order';
 export function OrderPage() {
     const [search, setSearch] = useState("")
     const { columns } = useColumns()
+    const [orderStatus, setOrderStatus] = useState("")
     const { page, setPage, page_size, total_records, setTotal_records, totalPages, setTotalPages, handlePageSize } = usePagination()
     const handleSearch = debounce((value) => {
         setSearch(value)
     }, 400)
 
-    const { data, isLoading, refetch } = useQuery({
-        queryKey: ['orders', page, page_size, search],
-        queryFn: ({ signal }) => fetchOrders(signal, page, page_size, search)
+    const { data, isLoading } = useQuery({
+        queryKey: ['orders', page, page_size, search, orderStatus],
+        queryFn: ({ signal }) => fetchOrders(signal, page, page_size, search, { status: orderStatus })
     })
 
     useEffect(() => {
@@ -28,6 +29,16 @@ export function OrderPage() {
             setTotalPages(data?.pagination?.totalPages)
         }
     }, [data])
+    const ORDER_STATUSES = [
+        { label: 'Order Status', value: '', color: 'primary.main' },
+        // { label: 'Pending', value: 'pending', color: 'orange' },
+        { label: 'Confirmed', value: 'confirmed', color: 'blue' },
+        { label: 'Cancelled', value: 'cancelled', color: 'red' },
+        { label: 'Shipped', value: 'shipped', color: 'purple' },
+        { label: 'Completed', value: 'completed', color: 'green' },
+        { label: 'Refunded', value: 'refunded', color: 'gray' },
+    ]
+
     return (
         <Box>
             <SectionHeader heading="Orders" icon="https://ticketsque-public.s3.ap-south-1.amazonaws.com/icons/Events.svg" />
@@ -51,6 +62,25 @@ export function OrderPage() {
                         ),
                     }}
                 />
+                <Stack >
+                    <Select select sx={{ width: "200px" }} size='small'
+                        value={orderStatus}
+                        onChange={(e) => setOrderStatus(e.target.value)}
+                        displayEmpty
+                    >
+                        {
+                            ORDER_STATUSES?.map(({ label, value, color }) => {
+                                return (
+                                    <MenuItem value={value} key={value}>
+                                        <span style={{ color }}>{label}</span>
+                                    </MenuItem>
+                                )
+                            })
+                        }
+
+
+                    </Select>
+                </Stack>
 
             </Stack>
             <CustomTable

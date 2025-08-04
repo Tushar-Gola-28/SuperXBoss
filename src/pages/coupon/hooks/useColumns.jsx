@@ -26,7 +26,7 @@ export default function useColumns() {
             id: "End Date",
             label: "End Date",
             renderCell: (row) => {
-                return dayjs(row?.start_date).format("DD MMMM YYYY, h:mm A");
+                return dayjs(row?.end_date).format("DD MMMM YYYY, h:mm A");
             },
             width: 200
         },

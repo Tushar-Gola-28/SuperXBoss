@@ -125,6 +125,7 @@ export default function useColumns() {
             renderCell: (row) => {
                 return dayjs(row?.updatedAt).format("DD MMMM YYYY, h:mm A");
             },
+            width: 250
         },
         {
             id: "Video",
@@ -166,7 +167,7 @@ export default function useColumns() {
                             handleClose={handleClose}
                             menuList={[
                                 {
-                                    label: "Brand Assign", onClick: () => navigate(`${urls?.ASSIGN_VEHICLE}/${row?._id}`)
+                                    label: "Assign", onClick: () => navigate(`${urls?.ASSIGN_VEHICLE}/${row?._id}`)
                                 }
                             ]}
                         />}

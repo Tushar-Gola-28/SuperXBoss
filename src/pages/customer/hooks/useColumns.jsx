@@ -1,7 +1,7 @@
 import { FormControlLabel, Stack, Switch } from '@mui/material';
 import dayjs from 'dayjs';
-import { HoverAvatar } from '../../../components';
-export default function useColumns() {
+import { HoverAvatar, notify } from '../../../components';
+export default function useColumns(updateMutation, refetch) {
     const columns = [
         {
             id: "S No", label: "S No.", renderCell: (row, index) => {
@@ -55,7 +55,16 @@ export default function useColumns() {
             renderCell: (row) => {
                 return (
                     <Stack direction="row" justifyContent="center" >
-                        <FormControlLabel control={<Switch defaultChecked />} />
+                        <FormControlLabel control={<Switch checked={row.status} onChange={(e) => {
+                            updateMutation.mutate({ customer: row._id, status: e.target.checked }, {
+                                onSuccess: (res) => {
+                                    console.log(res);
+                                    refetch()
+                                    notify("Customer Status Successfully.", "success")
+
+                                }
+                            })
+                        }} />} />
                     </Stack >
                 );
             },

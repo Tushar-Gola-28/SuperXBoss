@@ -179,8 +179,10 @@ export function UserHandle() {
                                 input={
                                     <TextField
                                         name="whatsapp"
+                                        type='number'
                                         value={values.whatsapp}
                                         onChange={handleChange}
+                                        onWheel={(e) => e.target.blur()}
                                         onBlur={handleBlur}
                                         error={touched.whatsapp && Boolean(errors.whatsapp)}
                                         helperText={touched.whatsapp && errors.whatsapp}

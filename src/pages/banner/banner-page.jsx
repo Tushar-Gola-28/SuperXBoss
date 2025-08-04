@@ -38,6 +38,7 @@ export function BannerPage() {
             setTotalPages(data?.pagination?.totalPages)
         }
     }, [data])
+
     return (
         <Box>
             <SectionHeader heading="Banners" icon="https://ticketsque-public.s3.ap-south-1.amazonaws.com/icons/Events.svg" />

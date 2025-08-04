@@ -1,9 +1,9 @@
 import PageStructure from '../../components/PageStructure'
-import { Box, MenuItem, Stack, TextField, Typography } from '@mui/material'
+import { Backdrop, Box, CircularProgress, MenuItem, Stack, TextField, Typography } from '@mui/material'
 import { CustomPaper } from '../../components'
-import { fetchOrders } from '../../services/order'
+import { fetchOrders, updateOrder } from '../../services/order'
 import { useParams } from 'react-router'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 
 export function OrderDetailsPage() {
@@ -14,16 +14,37 @@ export function OrderDetailsPage() {
         enabled: !!order_id
     })
     const ORDER_STATUSES = [
-        { label: 'Pending', value: 'pending' },
-        { label: 'Confirmed', value: 'confirmed' },
-        { label: 'Cancelled', value: 'cancelled' },
-        { label: 'Shipped', value: 'shipped' },
-        { label: 'Completed', value: 'completed' },
-        { label: 'Refunded', value: 'refunded' },
-    ];
-    console.log(data);
+        // { label: 'Pending', value: 'pending', color: 'orange' },
+        { label: 'Confirmed', value: 'confirmed', color: 'blue' },
+        { label: 'Cancelled', value: 'cancelled', color: 'red' },
+        { label: 'Shipped', value: 'shipped', color: 'purple' },
+        { label: 'Completed', value: 'completed', color: 'green' },
+        { label: 'Refunded', value: 'refunded', color: 'gray' },
+    ]
+    const updateMutation = useMutation({
+        mutationFn: async (data) => {
+            return await updateOrder(data)
+        },
+    })
 
+    const handleStatus = (order_id, status) => {
+        updateMutation.mutate({ order_id, status }, {
+            onSuccess: (res) => {
+                if (res) {
+                    refetch()
+                }
 
+            }
+        })
+    }
+    if (isLoading) {
+        return <Backdrop
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={true}
+        >
+            <CircularProgress color="inherit" />
+        </Backdrop>
+    }
 
     return (
         <PageStructure title="Order Details">
@@ -43,12 +64,14 @@ export function OrderDetailsPage() {
                                             <Typography variant="body1">
                                                 Order Status
                                             </Typography>
-                                            <TextField select sx={{ width: "200px" }} size='small' value={item.status}>
+                                            <TextField select sx={{ width: "200px" }} size='small' value={item.status}
+                                                onChange={(e) => handleStatus(item._id, e.target.value)}
+                                            >
                                                 {
-                                                    ORDER_STATUSES?.map(({ label, value }) => {
+                                                    ORDER_STATUSES?.map(({ label, value, color }) => {
                                                         return (
                                                             <MenuItem value={value} key={value}>
-                                                                {label}
+                                                                <span style={{ color }}>{label}</span>
                                                             </MenuItem>
                                                         )
                                                     })
@@ -121,6 +144,31 @@ export function OrderDetailsPage() {
                                                 {item?.customer?.state}
                                             </Typography>
                                         </Stack>
+                                        <Stack direction="row" justifyContent="space-between">
+                                            <Typography variant="body1">
+                                                Order Status UpdateBy
+                                            </Typography>
+                                            <Typography variant="body1">
+                                                {item?.updatedBy?.name}
+                                            </Typography>
+                                        </Stack>
+                                        <Stack direction="row" justifyContent="space-between">
+                                            <Typography variant="body1">
+                                                Total Discount
+                                            </Typography>
+                                            <Typography variant="h5" sx={{ color: "primary.main" }}>
+                                                ₹{item?.totalDiscount}
+                                            </Typography>
+                                        </Stack>
+                                        <Stack direction="row" justifyContent="space-between">
+                                            <Typography variant="body1">
+                                                Total Customer Paid
+                                            </Typography>
+                                            <Typography variant="h5" sx={{ color: "primary.main" }}>
+                                                ₹{item?.summary?.grandTotal}
+                                            </Typography>
+                                        </Stack>
+
                                     </Stack>
                                 </Stack>
                             </CustomPaper>

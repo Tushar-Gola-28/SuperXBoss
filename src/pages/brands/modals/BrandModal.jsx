@@ -268,7 +268,7 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                             </Box>
                         }
                     />}
-                    <CustomInput
+                    {/* <CustomInput
                         label="Vehicle Segment"
                         input={
                             <Box>
@@ -302,7 +302,7 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                                 </Stack>
                             </Box>
                         }
-                    />
+                    /> */}
                     <CustomRadio
                         name="brand_day"
                         title="Brand Day"

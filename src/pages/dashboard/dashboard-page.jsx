@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react';
 import {
-    Box, Typography, Card, useTheme, useMediaQuery, Grid2
+    Box, Typography, Card, useTheme, useMediaQuery, Grid2,
+    Backdrop,
+    CircularProgress
 } from '@mui/material';
 import Chart from "react-apexcharts";
 import DonutCard from '../../components/ui/DonutCard';
@@ -56,7 +58,7 @@ export const DashboardPage = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const { data } = useQuery({
+    const { data, isLoading } = useQuery({
         queryKey: ["fetchOverView"],
         queryFn: ({ signal }) => fetchOverView(signal)
     });
@@ -217,7 +219,7 @@ export const DashboardPage = () => {
             {
                 title: "Total Orders",
                 series: [data.orders?.completed || 0, data.orders?.pending || 0, data.orders?.cancelled || 0, data.orders?.shipped || 0, data.orders?.completed || 0, data.orders?.refunded || 0],
-                labels: ["Completed Orders", "Pending Orders", "Confirmed Orders", "Cancelled Orders", "Shipped Orders", "Refunded Orders"],
+                labels: ["Completed Orders", "Pending Orders", "Cancelled Orders", "Shipped Orders", "Confirmed Orders", "Refunded Orders"],
                 render: () => {
                     const orderKeys = Object.keys(data.orders || {});
                     return (
@@ -241,6 +243,14 @@ export const DashboardPage = () => {
             },
         ];
     }, [data]);
+    if (isLoading) {
+        return <Backdrop
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={true}
+        >
+            <CircularProgress color="inherit" />
+        </Backdrop>
+    }
 
     return (
         <Box sx={{ p: isMobile ? 2 : 3 }}>

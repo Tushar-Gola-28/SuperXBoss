@@ -250,7 +250,7 @@ const ImageUpload = forwardRef(({
 
     useEffect(() => {
         if (initialImages?.length) {
-            setPreviews(initialImages);
+            setPreviews(initialImages.map((it) => typeof it == "string" ? it : it.preview));
             setImages(initialImages);
         }
     }, [initialImages]);

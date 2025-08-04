@@ -427,15 +427,15 @@ const Sidebar = ({
             path: "/segments",
             children: []
         },
-        {
+        // {
 
-            icon: <NotificationAddIcon />,
-            label: "Notification",
-            order: 0,
-            parent: null,
-            path: "/notification",
-            children: []
-        },
+        //     icon: <NotificationAddIcon />,
+        //     label: "Notification",
+        //     order: 0,
+        //     parent: null,
+        //     path: "/notification",
+        //     children: []
+        // },
         {
 
             icon: <InfoIcon />,

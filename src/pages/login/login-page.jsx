@@ -41,7 +41,6 @@ const LoginPage = () => {
             try {
                 setLoading(true)
                 const { data } = await axios.post(`${BASE_URL}/login`, { email: value?.email, password: value?.password })
-                console.log(data, "data");
                 const { access_token, ...rest } = data?._payload
                 if (data) {
                     localStorage.setItem('accessToken', access_token)
@@ -51,6 +50,8 @@ const LoginPage = () => {
                     notify(data?.message, "success")
                 }
             } catch (err) {
+                console.log(err, "err");
+
                 notify(err?.response?.data?.message)
             } finally {
                 setLoading(false)
@@ -101,7 +102,7 @@ const LoginPage = () => {
                                     sx={{ fontSize: "2rem", fontFamily: "Poppins" }}
                                     color="white"
                                 >
-                                    Welcome To TicketsQue
+                                    Welcome To SuperXBoss
                                 </Typography>
                                 <Typography
                                     color="rgba(255, 255, 255, 0.85)"
@@ -124,13 +125,10 @@ const LoginPage = () => {
                             justifyContent="space-around"
                             alignItems="center"
                         >
-                            <Typography color="white" variant="body1">
-                                © 2023 TicketsQue Solutions Pvt. Ltd.
-                            </Typography>
-                            <Typography color="white" href="https://business.ticketsque.com/terms-and-conditions" component="a">
+                            <Typography color="white" href="" component="a">
                                 Terms & Conditions
                             </Typography>
-                            <Typography variant="body1" color="white" component="a" href="https://business.ticketsque.com/privacy-policy">
+                            <Typography variant="body1" color="white" component="a" href="">
                                 Privacy Policy
                             </Typography>
                         </Stack>
@@ -173,7 +171,7 @@ const LoginPage = () => {
                                         >
                                             <Box
                                                 component="img"
-                                                src={TicketsQueLogo}
+                                                src={"/logo.svg"}
                                                 alt="Logo"
                                                 width={"100%"}
                                                 maxWidth={{ xs: "290px", sm: "200px" }}
@@ -187,7 +185,7 @@ const LoginPage = () => {
                                                     mb={2}
                                                 >
                                                     <Typography textAlign="center" variant="h3">
-                                                        Welcome To TicketsQue
+                                                        Welcome To SuperXBoss
                                                     </Typography>
                                                     <Typography textAlign="center" variant="body2">
                                                         Log in with your registered number to unlock SEO benefits.
@@ -199,7 +197,7 @@ const LoginPage = () => {
                                         <Stack spacing={1}>
                                             <Typography variant="h3">Sign in to continue</Typography>
                                             <Typography variant="body2">
-                                                Please log in using your registered mobile number and password.
+                                                Please log in using your registered email and password.
                                             </Typography>
                                         </Stack>
                                         <form onSubmit={handleSubmit}>
@@ -306,14 +304,14 @@ const LoginPage = () => {
                                         <Stack
                                             width="100%"
                                             alignItems={matches ? "center" : "normal"}
-                                            justifyContent={matches ? "center" : "normal"}
+                                            justifyContent={matches ? "center" : "start"}
                                         >
                                             <Box
                                                 component="img"
-                                                src={TicketsQueLogo}
+                                                src={"/logo.svg"}
                                                 alt="Logo"
                                                 width={"100%"}
-                                                maxWidth={{ xs: "290px", sm: "200px" }}
+                                                maxWidth={{ xs: "290px", sm: "250px" }}
                                             />
                                         </Stack>
 
@@ -325,7 +323,7 @@ const LoginPage = () => {
                                                 spacing={2}
                                             >
                                                 <Typography textAlign="center" variant="h3">
-                                                    Welcome To TicketsQue
+                                                    Welcome To SuperXBoss
                                                 </Typography>
                                                 <Typography textAlign="center" variant="body2">
                                                     Log in with your registered number to unlock the dashboard.
@@ -335,7 +333,7 @@ const LoginPage = () => {
                                         <Stack spacing={1}>
                                             <Typography variant="h3">Sign in to continue</Typography>
                                             <Typography variant="body2">
-                                                Please log in using your registered mobile number and password.
+                                                Please log in using your registered email and password.
                                             </Typography>
                                         </Stack>
                                         <form onSubmit={handleSubmit}>

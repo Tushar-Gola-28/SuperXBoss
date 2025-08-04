@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import PageStructure from '../../components/ui/PageStructure'
-import { Button, Checkbox, FormControl, Grid2, IconButton, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, Stack, TextField, Typography } from '@mui/material'
+import { Backdrop, Button, Checkbox, CircularProgress, FormControl, Grid2, IconButton, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, Stack, TextField, Typography } from '@mui/material'
 import ImageUpload from '../../components/ui/ImageUpload'
 import { CustomInput, CustomPaper, CustomRadio, notify, VideoUpload } from '../../components'
 import CloseIcon from '@mui/icons-material/Close';
@@ -46,15 +46,15 @@ export function ProductHandlePage() {
             return update
         })
     }
-    const { data, refetch: fetchSegment } = useQuery({
+    const { data, refetch: fetchSegment, isLoading: isLoading4 } = useQuery({
         queryKey: ['fetchSegmentsAll',],
         queryFn: ({ signal }) => fetchSegmentsAll(signal)
     })
-    const { data: unitData, refetch: fetchUnit } = useQuery({
+    const { data: unitData, refetch: fetchUnit, isLoading: isLoading3 } = useQuery({
         queryKey: ['fetchUnits',],
         queryFn: ({ signal }) => fetchUnits(signal, 0, 15, undefined, false, true)
     })
-    const { data: active_brand, refetch: fetchBrand } = useQuery({
+    const { data: active_brand, refetch: fetchBrand, isLoading: isLoading2 } = useQuery({
         queryKey: ['fetchActiveBrands',],
         queryFn: ({ signal }) => fetchActiveBrands(signal)
     })
@@ -188,11 +188,6 @@ export function ProductHandlePage() {
             return await updateProduct(data, product)
         },
     })
-    const units = [
-        { value: "grams", label: "Grams" },
-        { value: "kilograms", label: "Kilograms" },
-        { value: "liter", label: "Liter" },
-    ]
 
     // useEffect(() => {
     //     setValues({
@@ -263,8 +258,13 @@ export function ProductHandlePage() {
     const { open: isOpen, handleCloseModal: handleCloseSegmentModal, handleOpenModal: handleOpenSegmentModal } = useModalControl()
     const { open: isOpen2, handleCloseModal: handleCloseUnitModal, handleOpenModal: handleOpenUnitModal } = useModalControl()
 
-    if (isLoading) {
-        return
+    if (isLoading || isLoading2, isLoading3 || isLoading4) {
+        return <Backdrop
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={true}
+        >
+            <CircularProgress color="inherit" />
+        </Backdrop>
     }
     return (
         <PageStructure title={product ? "Update Product" : "Create Product"}>

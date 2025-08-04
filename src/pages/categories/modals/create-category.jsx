@@ -83,6 +83,8 @@ export function CreateCategory({ open, close, refetch, editData, handleEditData 
             }
         }
     }, [editData])
+    console.log(images, "images");
+
 
     return (
         <div>

@@ -1,33 +1,51 @@
 
-import { Box, InputAdornment, Stack, TextField } from '@mui/material'
+import { Backdrop, Box, CircularProgress, InputAdornment, Stack, TextField } from '@mui/material'
 import SectionHeader from '../../components/SectionHeader'
 import searchIcon from '../../assets/search.svg'
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
 import { CustomPagination, CustomTable } from '../../components';
 import useColumns from './hooks/useColumns';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { usePagination } from '../../hooks/usePagination';
-import { fetchCustomers } from '../../services/customers';
+import { fetchCustomers, updateCustomerStatus } from '../../services/customers';
 export function CustomerPage() {
     const [search, setSearch] = useState("")
-    const { columns } = useColumns()
     const { page, setPage, page_size, total_records, setTotal_records, totalPages, setTotalPages, handlePageSize } = usePagination()
+    const updateMutation = useMutation({
+        mutationFn: async (data) => {
+            return await updateCustomerStatus(data)
+        },
+    })
+    const { data, isLoading, refetch } = useQuery({
+        queryKey: ['customers', page, page_size, search],
+        queryFn: ({ signal }) => fetchCustomers(signal, page, page_size, search)
+    })
+    const { columns } = useColumns(updateMutation, refetch)
     const handleSearch = debounce((value) => {
         setSearch(value)
     }, 400)
 
 
-    const { data, isLoading } = useQuery({
-        queryKey: ['customers', page, page_size, search],
-        queryFn: ({ signal }) => fetchCustomers(signal, page, page_size, search)
-    })
+
     useEffect(() => {
         if (data?.pagination) {
             setTotal_records(data?.pagination?.total)
             setTotalPages(data?.pagination?.totalPages)
         }
     }, [data])
+
+
+    if (updateMutation.isPending) {
+        return <Backdrop
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={true}
+        >
+            <CircularProgress color="inherit" />
+        </Backdrop>
+    }
+
+
     return (
         <Box>
             <SectionHeader heading="Customers" icon="https://ticketsque-public.s3.ap-south-1.amazonaws.com/icons/Events.svg" />

@@ -21,8 +21,7 @@ export default function useColumns(updateMutation, refetch) {
                 );
             },
         },
-        { id: "first_name", label: "First Name" },
-        { id: "last_name", label: "Last Name" },
+        { id: "name", label: "Name" },
         { id: "email", label: "Email" },
         { id: "state", label: "State" },
         { id: "Gst No", label: "Gst No" },

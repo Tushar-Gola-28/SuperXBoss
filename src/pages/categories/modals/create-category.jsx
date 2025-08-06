@@ -162,7 +162,7 @@ export function CreateCategory({ open, close, refetch, editData, handleEditData 
                             ]
                         }
                     />
-                    <CustomRadio
+                    {/* <CustomRadio
                         name="featured"
                         required
                         title="Featured"
@@ -174,7 +174,7 @@ export function CreateCategory({ open, close, refetch, editData, handleEditData 
                                 { value: "false", label: "No" },
                             ]
                         }
-                    />
+                    /> */}
                 </Stack>
             </CustomModal>
         </div>

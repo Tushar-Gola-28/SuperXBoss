@@ -51,17 +51,17 @@ export default function useColumns(handleEditData, handleOpenModal) {
                 return dayjs(row?.updatedAt).format("DD MMMM YYYY, h:mm A");
             },
         },
-        {
-            id: "Featured",
-            label: "Featured",
-            renderCell: (row) => {
-                return row?.featured ? (
-                    <div className="active">Yes</div>
-                ) : (
-                    <div className="pending">No</div>
-                );
-            },
-        },
+        // {
+        //     id: "Featured",
+        //     label: "Featured",
+        //     renderCell: (row) => {
+        //         return row?.featured ? (
+        //             <div className="active">Yes</div>
+        //         ) : (
+        //             <div className="pending">No</div>
+        //         );
+        //     },
+        // },
         {
             id: "status",
             label: "Status",

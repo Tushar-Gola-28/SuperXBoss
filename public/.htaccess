@@ -1,0 +1,16 @@
+# Enable mod_rewrite
+RewriteEngine On
+
+# Rewrite rules to handle client-side routing
+RewriteBase /
+
+# Redirect all requests to the index.html (single page app routing)
+RewriteRule ^$ /index.html [L]
+RewriteRule ^(.*)$ /index.html [L]
+
+# Optional: If you want to force HTTPS (uncomment the following lines)
+# RewriteCond %{HTTPS} off
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Optional: Set custom error pages
+# ErrorDocument 404 /404.html

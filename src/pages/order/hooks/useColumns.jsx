@@ -26,7 +26,7 @@ export default function useColumns() {
         {
             id: "name", label: "Name",
             renderCell: (row, index) => {
-                return row?.customer?.first_name + " " + row?.customer?.last_name
+                return row?.customer?.name
             },
         },
         {

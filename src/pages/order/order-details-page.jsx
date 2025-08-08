@@ -27,8 +27,8 @@ export function OrderDetailsPage() {
         },
     })
 
-    const handleStatus = (order_id, status) => {
-        updateMutation.mutate({ order_id, status }, {
+    const handleStatus = (order_id, status, customer) => {
+        updateMutation.mutate({ order_id, status, customer }, {
             onSuccess: (res) => {
                 if (res) {
                     refetch()
@@ -65,7 +65,7 @@ export function OrderDetailsPage() {
                                                 Order Status
                                             </Typography>
                                             <TextField select sx={{ width: "200px" }} size='small' value={item.status}
-                                                onChange={(e) => handleStatus(item._id, e.target.value)}
+                                                onChange={(e) => handleStatus(item._id, e.target.value, item.customer_id)}
                                             >
                                                 {
                                                     ORDER_STATUSES?.map(({ label, value, color }) => {
@@ -117,7 +117,7 @@ export function OrderDetailsPage() {
                                                 Customer Name
                                             </Typography>
                                             <Typography variant="body1">
-                                                {item?.customer?.first_name + " " + item?.customer?.last_name}
+                                                {item?.customer?.name}
                                             </Typography>
                                         </Stack>
                                         <Stack direction="row" justifyContent="space-between">

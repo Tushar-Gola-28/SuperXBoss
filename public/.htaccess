@@ -1,16 +1,10 @@
-# Enable mod_rewrite
 RewriteEngine On
 
-# Rewrite rules to handle client-side routing
-RewriteBase /
+# Ensure that URL requests are routed to index.html for React Router
+RewriteBase /my-react-app/
+RewriteRule ^$ /my-react-app/index.html [L]
+RewriteRule ^(.*)$ /my-react-app/index.html [L]
 
-# Redirect all requests to the index.html (single page app routing)
-RewriteRule ^$ /index.html [L]
-RewriteRule ^(.*)$ /index.html [L]
-
-# Optional: If you want to force HTTPS (uncomment the following lines)
+# Optional: Force HTTPS if needed (uncomment if required)
 # RewriteCond %{HTTPS} off
 # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-
-# Optional: Set custom error pages
-# ErrorDocument 404 /404.html

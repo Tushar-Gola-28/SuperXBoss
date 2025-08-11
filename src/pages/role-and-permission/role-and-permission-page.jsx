@@ -30,7 +30,7 @@ export function RoleAndPermissionPage() {
 
 
     const { data, isLoading, refetch } = useQuery({
-        queryKey: ['categories', page, page_size, search, reload],
+        queryKey: ['categories', page + 1, page_size, search, reload],
         queryFn: ({ signal }) => fetchCategories(signal, page + 1, page_size, search)
     })
     useEffect(() => {

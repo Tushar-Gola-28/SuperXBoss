@@ -172,7 +172,7 @@ export function BannerHandler() {
                         >
                             {banner ? "Update" : "Create"}
                         </LoadingButton>
-                        <Button variant="outlined">
+                        <Button variant="outlined" onClick={() => navigate(-1)}>
                             Cancel
                         </Button>
                     </Stack>

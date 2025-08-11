@@ -18,8 +18,8 @@ export function CustomerPage() {
         },
     })
     const { data, isLoading, refetch } = useQuery({
-        queryKey: ['customers', page, page_size, search],
-        queryFn: ({ signal }) => fetchCustomers(signal, page, page_size, search)
+        queryKey: ['customers', page + 1, page_size, search],
+        queryFn: ({ signal }) => fetchCustomers(signal, page + 1, page_size, search)
     })
     const { columns } = useColumns(updateMutation, refetch)
     const handleSearch = debounce((value) => {

@@ -16,6 +16,8 @@ export function InformationPage() {
         queryKey: ['rating-info',],
         queryFn: ({ signal }) => fetchRatingInfo(signal)
     })
+    console.log(information);
+
 
     const handleChange = (e) => {
         const { value, name } = e.target

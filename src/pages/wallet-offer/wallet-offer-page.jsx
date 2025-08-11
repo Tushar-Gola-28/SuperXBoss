@@ -24,8 +24,8 @@ export function WalletOfferPage() {
 
 
     const { data, isLoading, refetch } = useQuery({
-        queryKey: ['recharges', page, page_size, search],
-        queryFn: ({ signal }) => fetchRecharge(signal, page, page_size, search)
+        queryKey: ['recharges', page + 1, page_size, search],
+        queryFn: ({ signal }) => fetchRecharge(signal, page + 1, page_size, search)
     })
     useEffect(() => {
         if (data?.pagination) {

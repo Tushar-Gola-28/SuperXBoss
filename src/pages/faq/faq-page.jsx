@@ -16,8 +16,8 @@ export function FaqPage() {
     const { open, handleCloseModal, handleOpenModal } = useModalControl()
     const { page, setPage, page_size, total_records, setTotal_records, totalPages, setTotalPages, handlePageSize } = usePagination()
     const { data, isLoading, refetch } = useQuery({
-        queryKey: ['fetchFaq', page, page_size],
-        queryFn: ({ signal }) => fetchFaq(signal, page, page_size)
+        queryKey: ['fetchFaq', page + 1, page_size],
+        queryFn: ({ signal }) => fetchFaq(signal, page + 1, page_size)
     })
     useEffect(() => {
         if (data?.pagination) {

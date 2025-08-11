@@ -23,8 +23,8 @@ export function CouponPage() {
 
 
     const { data, isLoading, } = useQuery({
-        queryKey: ['fetchCoupon', page, page_size, search],
-        queryFn: ({ signal }) => fetchCoupon(signal, page, page_size, search)
+        queryKey: ['fetchCoupon', page + 1, page_size, search],
+        queryFn: ({ signal }) => fetchCoupon(signal, page + 1, page_size, search)
     })
     useEffect(() => {
         if (data?.pagination) {

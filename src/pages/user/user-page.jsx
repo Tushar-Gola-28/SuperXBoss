@@ -22,8 +22,8 @@ export function UserPage() {
 
 
     const { data, isLoading } = useQuery({
-        queryKey: ['users', page, page_size, search],
-        queryFn: ({ signal }) => fetchUsers(signal, page, page_size, search)
+        queryKey: ['users', page + 1, page_size, search],
+        queryFn: ({ signal }) => fetchUsers(signal, page + 1, page_size, search)
     })
     useEffect(() => {
         if (data?.pagination) {

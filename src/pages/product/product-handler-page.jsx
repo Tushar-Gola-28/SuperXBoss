@@ -130,6 +130,22 @@ export function ProductHandlePage() {
                     }
                 }
             });
+            let isValid = true;
+
+            for (const { count, discount } of discounts) {
+                const hasAnyValue = count !== "" || discount !== "";
+                const hasBothValues = count !== "" && discount !== "";
+
+                if (hasAnyValue && !hasBothValues) {
+                    isValid = false;
+                    break;
+                }
+            }
+
+            if (!isValid) {
+                notify("If you enter count or discount, both fields are required.");
+                return;
+            }
 
             if (removeVideo?.length) {
                 formData.append("videoRemove", "true");
@@ -392,7 +408,7 @@ export function ProductHandlePage() {
                                     </Grid2>
                                     <Grid2 size={{ xs: 12, md: 6 }}>
                                         <CustomInput
-                                            label="Any Discount? (Optional)"
+                                            label="Any Discount(%)? (Optional)"
 
                                             input={
                                                 <TextField
@@ -511,17 +527,23 @@ export function ProductHandlePage() {
                                                                 </Grid2>
                                                                 <Grid2 size={{ xs: 11, md: 5 }}>
                                                                     <CustomInput
-                                                                        label="Discount Price"
+                                                                        label="Discount Price(%)"
                                                                         input={
                                                                             <TextField
                                                                                 fullWidth
-                                                                                placeholder='Enter Discount Price'
+                                                                                placeholder='Enter Discount Price In Percentage'
                                                                                 name="discount"
                                                                                 type="number"
                                                                                 onWheel={(e) => e.target.blur()}
                                                                                 value={it.discount}
                                                                                 onChange={(e) => {
-                                                                                    handleAddDiscountValue(index, e.target.value, e.target.name)
+                                                                                    let value = parseFloat(e.target.value);
+
+                                                                                    if (value > 100) {
+                                                                                        value = 100; // Auto set to 100 if exceeded
+                                                                                    }
+
+                                                                                    handleAddDiscountValue(index, value, e.target.name);
                                                                                 }}
                                                                             />
                                                                         }
@@ -617,8 +639,6 @@ export function ProductHandlePage() {
                                                     required
                                                     fullWidth
                                                     placeholder='Enter SKU ID'
-                                                    type="number"
-                                                    onWheel={(e) => e.target.blur()}
                                                     onChange={handleChange}
                                                     name='sku_id'
                                                     value={values.sku_id}

@@ -100,16 +100,16 @@ export function OrderDetailsPage() {
                                             <Typography variant="body1">
                                                 Earn Points
                                             </Typography>
-                                            <Typography variant="body1">
-                                                {item?.earnPoints}
+                                            <Typography variant="body1" sx={{ color: "green" }}>
+                                                +{item?.earnPoints} (₹{item?.earnPoints * 0.90})
                                             </Typography>
                                         </Stack>
                                         <Stack direction="row" justifyContent="space-between">
                                             <Typography variant="body1">
-                                                Wallet Amount
+                                                Wallet Amount Use
                                             </Typography>
-                                            <Typography variant="body1">
-                                                ₹{item?.customer?.wallet_amount}
+                                            <Typography variant="body1" sx={{ color: "red" }}>
+                                                -₹{item?.customer?.wallet_amount}
                                             </Typography>
                                         </Stack>
                                         <Stack direction="row" justifyContent="space-between">
@@ -136,14 +136,7 @@ export function OrderDetailsPage() {
                                                 {item?.customer?.email}
                                             </Typography>
                                         </Stack>
-                                        <Stack direction="row" justifyContent="space-between">
-                                            <Typography variant="body1">
-                                                State
-                                            </Typography>
-                                            <Typography variant="body1">
-                                                {item?.customer?.state}
-                                            </Typography>
-                                        </Stack>
+
                                         <Stack direction="row" justifyContent="space-between">
                                             <Typography variant="body1">
                                                 Order Status UpdateBy
@@ -156,8 +149,8 @@ export function OrderDetailsPage() {
                                             <Typography variant="body1">
                                                 Total Discount
                                             </Typography>
-                                            <Typography variant="h5" sx={{ color: "primary.main" }}>
-                                                ₹{item?.totalDiscount}
+                                            <Typography variant="h5" sx={{ color: "red" }}>
+                                                -₹{item?.totalDiscount}
                                             </Typography>
                                         </Stack>
                                         <Stack direction="row" justifyContent="space-between">
@@ -170,6 +163,80 @@ export function OrderDetailsPage() {
                                         </Stack>
 
                                     </Stack>
+                                </Stack>
+                            </CustomPaper>
+                            <CustomPaper>
+                                <Stack spacing={1}>
+                                    <Stack sx={{ borderBottom: 1, borderColor: "divider", pb: .5 }}>
+                                        <Typography variant="subtitle2" sx={{ color: "primary.main" }}>
+                                            Delivery Address Information
+                                        </Typography>
+                                    </Stack>
+                                    <Stack direction="row" justifyContent="space-between">
+                                        <Typography variant="body1">
+                                            Name
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            {item?.address?.name || "-"}
+                                        </Typography>
+                                    </Stack>
+                                    <Stack direction="row" justifyContent="space-between">
+                                        <Typography variant="body1">
+                                            Mobile
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            {item?.address?.mobile || "-"}
+                                        </Typography>
+                                    </Stack>
+                                    <Stack direction="row" justifyContent="space-between">
+                                        <Typography variant="body1">
+                                            Shipping Charges
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            ₹{item?.shippingChargesAmount?.toFixed(2)}
+                                        </Typography>
+                                    </Stack>
+                                    <Stack direction="row" justifyContent="space-between">
+                                        <Typography variant="body1">
+                                            State
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            {item?.address?.state}
+                                        </Typography>
+                                    </Stack>
+                                    <Stack direction="row" justifyContent="space-between">
+                                        <Typography variant="body1">
+                                            City
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            {item?.address?.city}
+                                        </Typography>
+                                    </Stack>
+                                    <Stack direction="row" justifyContent="space-between">
+                                        <Typography variant="body1">
+                                            Address
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            {item?.address?.address}
+                                        </Typography>
+                                    </Stack>
+                                    <Stack direction="row" justifyContent="space-between">
+                                        <Typography variant="body1">
+                                            Address Label
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            {item?.address?.label}
+                                        </Typography>
+                                    </Stack>
+                                    <Stack direction="row" justifyContent="space-between">
+                                        <Typography variant="body1">
+                                            Pin Code
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            {item?.address?.pinCode || "-"}
+                                        </Typography>
+                                    </Stack>
+
                                 </Stack>
                             </CustomPaper>
                             <CustomPaper>
@@ -350,7 +417,7 @@ export function OrderDetailsPage() {
                                                             ₹{Number(it?.effectiveUnitPrice).toFixed(2)} × {it.qty}
                                                         </Typography>
                                                         <Typography variant="body2" width="20%" textAlign="right">
-                                                            ₹{Number(it?.taxAmount).toFixed(2)}
+                                                            ₹{Number(it?.taxAmount).toFixed(2)} ({it.taxPct}% Tax)
                                                         </Typography>
                                                         <Typography variant="body2" width="15%" textAlign="right">
                                                             ₹{Number(it?.lineSubtotal).toFixed(2)}
@@ -361,32 +428,9 @@ export function OrderDetailsPage() {
                                                     </Stack>
                                                 ))}
                                             </Stack>
-                                            <Stack direction="row" justifyContent="space-between" px={3} mt={1} pt={1} borderTop="1px solid #ccc">
-                                                <Typography variant="body1" fontWeight="bold" width="20%">
-                                                    Tax
-                                                </Typography>
-                                                <Typography variant="body1" fontWeight="bold" width="10%" textAlign="right" />
-                                                <Typography variant="body1" fontWeight="bold" width="10%" textAlign="center" />
-                                                <Typography variant="body1" fontWeight="bold" width="20%" textAlign="right" />
-                                                <Typography variant="body1" fontWeight="bold" width="20%" textAlign="right" />
-                                                <Typography variant="body1" fontWeight="bold" width="15%" textAlign="right" />
-                                                <Typography variant="body1" fontWeight="bold" width="15%" textAlign="right">
-                                                    ₹{item?.summary?.taxTotal?.toFixed(2)}
-                                                </Typography>
-                                            </Stack>
-                                            <Stack direction="row" justifyContent="space-between" px={3} mt={1} pt={1} borderTop="1px solid #ccc">
-                                                <Typography variant="body1" fontWeight="bold" width="20%">
-                                                    Discount
-                                                </Typography>
-                                                <Typography variant="body1" fontWeight="bold" width="10%" textAlign="right" />
-                                                <Typography variant="body1" fontWeight="bold" width="10%" textAlign="center" />
-                                                <Typography variant="body1" fontWeight="bold" width="20%" textAlign="right" />
-                                                <Typography variant="body1" fontWeight="bold" width="20%" textAlign="right" />
-                                                <Typography variant="body1" fontWeight="bold" width="15%" textAlign="right" />
-                                                <Typography variant="body1" fontWeight="bold" width="15%" textAlign="right">
-                                                    ₹{item?.coupon_applied.code ? item?.coupon_applied?.amount : item?.totalDiscount || 0}
-                                                </Typography>
-                                            </Stack>
+
+
+
                                             <Stack direction="row" justifyContent="space-between" px={3} mt={1} pt={1} borderTop="1px solid #ccc">
                                                 <Typography variant="body1" fontWeight="bold" width="20%">
                                                     Earn Points
@@ -396,8 +440,8 @@ export function OrderDetailsPage() {
                                                 <Typography variant="body1" fontWeight="bold" width="20%" textAlign="right" />
                                                 <Typography variant="body1" fontWeight="bold" width="20%" textAlign="right" />
                                                 <Typography variant="body1" fontWeight="bold" width="15%" textAlign="right" />
-                                                <Typography variant="body1" fontWeight="bold" width="15%" textAlign="right">
-                                                    {item?.earnPoints}
+                                                <Typography variant="body1" fontWeight="bold" width="15%" textAlign="right" sx={{ color: "green" }}>
+                                                    +{item?.earnPoints} (₹{item?.earnPoints * 0.90})
                                                 </Typography>
                                             </Stack>
                                             <Stack direction="row" justifyContent="space-between" px={3} mt={1} pt={1} borderTop="1px solid #ccc">
@@ -409,8 +453,8 @@ export function OrderDetailsPage() {
                                                 <Typography variant="body1" fontWeight="bold" width="20%" textAlign="right" />
                                                 <Typography variant="body1" fontWeight="bold" width="20%" textAlign="right" />
                                                 <Typography variant="body1" fontWeight="bold" width="15%" textAlign="right" />
-                                                <Typography variant="body1" fontWeight="bold" width="15%" textAlign="right">
-                                                    {item?.pointUse}
+                                                <Typography variant="body1" fontWeight="bold" width="15%" textAlign="right" sx={{ color: "red" }}>
+                                                    -{item?.pointUse} (₹{item?.pointUse * 0.90})
                                                 </Typography>
                                             </Stack>
                                             <Stack direction="row" justifyContent="space-between" px={3} mt={1} pt={1} borderTop="1px solid #ccc">
@@ -428,6 +472,59 @@ export function OrderDetailsPage() {
                                             </Stack>
                                             <Stack direction="row" justifyContent="space-between" px={3} mt={1} pt={1} borderTop="1px solid #ccc">
                                                 <Typography variant="body1" fontWeight="bold" width="20%">
+                                                    Total Discount
+                                                </Typography>
+                                                <Typography variant="body1" fontWeight="bold" width="10%" textAlign="right" />
+                                                <Typography variant="body1" fontWeight="bold" width="10%" textAlign="center" />
+                                                <Typography variant="body1" fontWeight="bold" width="20%" textAlign="right" />
+                                                <Typography variant="body1" fontWeight="bold" width="20%" textAlign="right" />
+                                                <Typography variant="body1" fontWeight="bold" width="15%" textAlign="right" />
+                                                <Typography variant="body1" fontWeight="bold" width="15%" textAlign="right" sx={{ color: "red" }}>
+                                                    -₹{item?.coupon_applied.code ? item?.coupon_applied?.amount : item?.totalDiscount || 0}
+                                                </Typography>
+                                            </Stack>
+                                            <Stack direction="row" justifyContent="space-between" px={3} mt={1} pt={1} borderTop="1px solid #ccc">
+                                                <Typography variant="body1" fontWeight="bold" width="20%">
+                                                    Total Tax
+                                                </Typography>
+                                                <Typography variant="body1" fontWeight="bold" width="10%" textAlign="right" />
+                                                <Typography variant="body1" fontWeight="bold" width="10%" textAlign="center" />
+                                                <Typography variant="body1" fontWeight="bold" width="20%" textAlign="right" />
+                                                <Typography variant="body1" fontWeight="bold" width="20%" textAlign="right" />
+                                                <Typography variant="body1" fontWeight="bold" width="15%" textAlign="right" />
+                                                <Typography variant="body1" fontWeight="bold" width="15%" textAlign="right">
+                                                    ₹{item?.summary?.taxTotal?.toFixed(2)}
+                                                </Typography>
+                                            </Stack>
+                                            <Stack direction="row" justifyContent="space-between" px={3} mt={1} pt={1} borderTop="1px solid #ccc">
+                                                <Typography variant="body1" fontWeight="bold" width="40%">
+                                                    Total Product Amount After Discount (Including Tax)
+                                                </Typography>
+                                                {/* <Typography variant="body1" fontWeight="bold" width="10%" textAlign="right" /> */}
+                                                {/* <Typography variant="body1" fontWeight="bold" width="10%" textAlign="center" /> */}
+                                                <Typography variant="body1" fontWeight="bold" width="20%" textAlign="right" />
+                                                <Typography variant="body1" fontWeight="bold" width="20%" textAlign="right" />
+                                                <Typography variant="body1" fontWeight="bold" width="15%" textAlign="right" />
+                                                <Typography variant="body1" fontWeight="bold" width="15%" textAlign="right">
+                                                    ₹{item.items?.reduce((acc, curr) => acc + (curr.lineTotal), 0)}
+                                                </Typography>
+                                            </Stack>
+                                            <Stack direction="row" justifyContent="space-between" px={3} mt={1} pt={1} borderTop="1px solid #ccc">
+                                                <Typography variant="body1" fontWeight="bold" width="20%">
+                                                    Shipping Charges
+                                                </Typography>
+                                                <Typography variant="body1" fontWeight="bold" width="10%" textAlign="right" />
+                                                <Typography variant="body1" fontWeight="bold" width="10%" textAlign="center" />
+                                                <Typography variant="body1" fontWeight="bold" width="20%" textAlign="right" />
+                                                <Typography variant="body1" fontWeight="bold" width="20%" textAlign="right" />
+                                                <Typography variant="body1" fontWeight="bold" width="15%" textAlign="right" />
+                                                <Typography variant="body1" fontWeight="bold" width="15%" textAlign="right">
+                                                    ₹{item?.shippingChargesAmount?.toFixed(2)}
+                                                </Typography>
+                                            </Stack>
+
+                                            <Stack direction="row" justifyContent="space-between" px={3} mt={1} pt={1} borderTop="1px solid #ccc">
+                                                <Typography variant="body1" fontWeight="bold" width="20%">
                                                     Sub Total
                                                 </Typography>
                                                 <Typography variant="body1" fontWeight="bold" width="10%" textAlign="right" />
@@ -436,7 +533,20 @@ export function OrderDetailsPage() {
                                                 <Typography variant="body1" fontWeight="bold" width="20%" textAlign="right" />
                                                 <Typography variant="body1" fontWeight="bold" width="15%" textAlign="right" />
                                                 <Typography variant="body1" fontWeight="bold" width="15%" textAlign="right">
-                                                    ₹{item?.summary?.subtotal?.toFixed(2)}
+                                                    ₹{(item?.summary?.subtotal + item?.shippingChargesAmount || 0).toFixed(2)}
+                                                </Typography>
+                                            </Stack>
+                                            <Stack direction="row" justifyContent="space-between" px={3} mt={1} pt={1} borderTop="1px solid #ccc">
+                                                <Typography variant="body1" fontWeight="bold" width="20%">
+                                                    Platform Charges
+                                                </Typography>
+                                                <Typography variant="body1" fontWeight="bold" width="10%" textAlign="right" />
+                                                <Typography variant="body1" fontWeight="bold" width="10%" textAlign="center" />
+                                                <Typography variant="body1" fontWeight="bold" width="20%" textAlign="right" />
+                                                <Typography variant="body1" fontWeight="bold" width="20%" textAlign="right" />
+                                                <Typography variant="body1" fontWeight="bold" width="15%" textAlign="right" />
+                                                <Typography variant="body1" fontWeight="bold" width="15%" textAlign="right">
+                                                    ₹{item?.platformCharge?.toFixed(2)}
                                                 </Typography>
                                             </Stack>
                                             <Stack direction="row" justifyContent="space-between" px={3} mt={1} pt={2} pb={2} borderTop="1px solid #ccc">

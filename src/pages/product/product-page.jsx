@@ -22,8 +22,8 @@ export function ProductPage() {
     }, 600)
 
     const { data, isLoading, } = useQuery({
-        queryKey: ['fetchProducts', page, page_size, search],
-        queryFn: ({ signal }) => fetchProducts(signal, "", page, page_size, search)
+        queryKey: ['fetchProducts', page + 1, page_size, search],
+        queryFn: ({ signal }) => fetchProducts(signal, "", page + 1, page_size, search)
     })
     useEffect(() => {
         if (data?.pagination) {

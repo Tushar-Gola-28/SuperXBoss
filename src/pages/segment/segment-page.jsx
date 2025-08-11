@@ -26,8 +26,8 @@ export function SegmentPage() {
 
 
     const { data, isLoading, refetch } = useQuery({
-        queryKey: ['segments', page, page_size, search],
-        queryFn: ({ signal }) => fetchSegments(signal, page, page_size, search)
+        queryKey: ['segments', page + 1, page_size, search],
+        queryFn: ({ signal }) => fetchSegments(signal, page + 1, page_size, search)
     })
     useEffect(() => {
         if (data?.pagination) {

@@ -35,5 +35,6 @@ export const urls = {
     INFORMATION: "/information",
     BANNER: "/banner",
     LOGIN: "/login",
+    CHARGES: "/charges",
 
 }

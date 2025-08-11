@@ -1,4 +1,4 @@
-import { Box, Button, InputAdornment, Stack, TextField } from '@mui/material'
+import { Box, Button, InputAdornment, MenuItem, Select, Stack, TextField } from '@mui/material'
 import SectionHeader from '../../components/SectionHeader'
 import searchIcon from '../../assets/search.svg'
 import AddIcon from '@mui/icons-material/Add';
@@ -17,6 +17,7 @@ export function BrandsPage() {
     const { editData, handleEditData } = useEditData()
     const { open, handleCloseModal, handleOpenModal } = useModalControl()
     const [search, setSearch] = useState("")
+    const [type, setType] = useState("")
     const { columns } = useColumns(handleEditData, handleOpenModal)
     const { page, setPage, page_size, total_records, setTotal_records, totalPages, setTotalPages, handlePageSize } = usePagination()
     const handleSearch = debounce((value) => {
@@ -25,8 +26,8 @@ export function BrandsPage() {
 
 
     const { data, isLoading, refetch } = useQuery({
-        queryKey: ['brands', page, page_size, search],
-        queryFn: ({ signal }) => fetchBrands(signal, page, page_size, search)
+        queryKey: ['brands', page, page_size, search, type],
+        queryFn: ({ signal }) => fetchBrands(signal, page, page_size, search, type)
     })
     useEffect(() => {
         if (data?.pagination) {
@@ -34,6 +35,11 @@ export function BrandsPage() {
             setTotalPages(data?.pagination?.totalPages)
         }
     }, [data])
+    const dataMenu = [
+        { value: "", name: "All Brands" },
+        { value: "Vehicle", name: "Vehicle" },
+        { value: "Spare Parts", name: "Spare Parts" },
+    ];
     return (
         <Box>
             <SectionHeader heading="Brands" icon="https://ticketsque-public.s3.ap-south-1.amazonaws.com/icons/Events.svg" />
@@ -57,8 +63,29 @@ export function BrandsPage() {
                         ),
                     }}
                 />
-                <Stack>
-                    <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenModal} >Create Brand</Button>
+                <Stack direction="row" gap="10px" alignItems="center">
+                    <Stack >
+                        <Select select sx={{ width: "200px" }} size='small'
+                            value={type}
+                            onChange={(e) => setType(e.target.value)}
+                            displayEmpty
+                        >
+                            {
+                                dataMenu?.map(({ name, value }) => {
+                                    return (
+                                        <MenuItem value={value} key={value}>
+                                            <span >{name}</span>
+                                        </MenuItem>
+                                    )
+                                })
+                            }
+
+
+                        </Select>
+                    </Stack>
+                    <Stack>
+                        <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenModal} >Create Brand</Button>
+                    </Stack>
                 </Stack>
             </Stack>
             <CustomTable

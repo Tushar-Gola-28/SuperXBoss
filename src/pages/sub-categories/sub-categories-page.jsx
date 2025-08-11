@@ -28,8 +28,8 @@ export function SubCategoriesPage() {
 
 
     const { data, isLoading, refetch } = useQuery({
-        queryKey: ['sub-categories', id, page, page_size, search, reload],
-        queryFn: ({ signal }) => fetchCategories(signal, page, page_size, search, id),
+        queryKey: ['sub-categories', id, page + 1, page_size, search, reload],
+        queryFn: ({ signal }) => fetchCategories(signal, page + 1, page_size, search, id),
         enabled: !!id
     })
     useEffect(() => {

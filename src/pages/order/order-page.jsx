@@ -19,8 +19,8 @@ export function OrderPage() {
     }, 400)
 
     const { data, isLoading } = useQuery({
-        queryKey: ['orders', page, page_size, search, orderStatus],
-        queryFn: ({ signal }) => fetchOrders(signal, page, page_size, search, { status: orderStatus })
+        queryKey: ['orders', page + 1, page_size, search, orderStatus],
+        queryFn: ({ signal }) => fetchOrders(signal, page + 1, page_size, search, { status: orderStatus })
     })
 
     useEffect(() => {

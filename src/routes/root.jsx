@@ -29,6 +29,7 @@ import { VehiclesPage } from '../pages/brands/vehicle-page'
 import { UnitPage } from '../pages/units/unit-page'
 import { VehicleAssignPage } from '../pages/product/vehicle-assign-page'
 import { OrderDetailsPage } from '../pages/order/order-details-page'
+import { ChargesPage } from '../pages/Charges/charges-page'
 
 export const root = [
   {
@@ -258,6 +259,15 @@ export const root = [
           {
             index: true,
             element: <InformationPage />
+          },
+        ]
+      },
+      {
+        path: urls.CHARGES,
+        children: [
+          {
+            index: true,
+            element: <ChargesPage />
           },
         ]
       },

@@ -156,7 +156,7 @@ export function CustomTable({
     </TableContainer> : <Stack mt={2}>
       <Paper sx={{ padding: "40px 0 40px 0" }}>
         <Stack sx={{ maxWidth: "400px", margin: "auto" }}>
-          <img src={imageUrl ? imageUrl : "https://ticketsque-public.s3.ap-south-1.amazonaws.com/no_data/data_not_found/no_report.svg"} width={380} height={300} alt="Empty Data" loading="lazy" />
+          <img src={imageUrl ? imageUrl : "https://ticketsque-public.s3.ap-south-1.amazonaws.com/no_data/data_not_found/no_report.svg"} maxWidth={300} height={300} alt="Empty Data" loading="lazy" />
           <Typography variant="h4" sx={{ color: "primary.main", textAlign: "center", mt: 4 }}> {empty ? empty : "No data found..."}</Typography>
         </Stack>
       </Paper>

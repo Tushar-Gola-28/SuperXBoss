@@ -64,25 +64,23 @@ export function BrandsPage() {
                     }}
                 />
                 <Stack direction="row" gap="10px" alignItems="center">
-                    <Stack >
-                        <Select select sx={{ width: "200px" }} size='small'
-                            value={type}
-                            onChange={(e) => setType(e.target.value)}
-                            displayEmpty
-                        >
-                            {
-                                dataMenu?.map(({ name, value }) => {
-                                    return (
-                                        <MenuItem value={value} key={value}>
-                                            <span >{name}</span>
-                                        </MenuItem>
-                                    )
-                                })
-                            }
+                    <Select select sx={{ width: { xs: "140px", md: "150px" } }} size='small'
+                        value={type}
+                        onChange={(e) => setType(e.target.value)}
+                        displayEmpty
+                    >
+                        {
+                            dataMenu?.map(({ name, value }) => {
+                                return (
+                                    <MenuItem value={value} key={value}>
+                                        <span >{name}</span>
+                                    </MenuItem>
+                                )
+                            })
+                        }
 
 
-                        </Select>
-                    </Stack>
+                    </Select>
                     <Stack>
                         <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenModal} >Create Brand</Button>
                     </Stack>

@@ -44,9 +44,9 @@ const LoginPage = () => {
                 const { access_token, ...rest } = data?._payload
                 if (data) {
                     localStorage.setItem('accessToken', access_token)
-                    handleAuthenticate(true)
                     handleUserDetails(rest)
                     navigate(urls.DASHBOARD)
+                    handleAuthenticate(true)
                     notify(data?.message, "success")
                 }
             } catch (err) {

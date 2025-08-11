@@ -39,7 +39,7 @@ export const root = [
   {
     path: urls.LOGIN,
     element: (
-      <AuthGuard url={urls.BASE_URL} requiresAuth={false}>
+      <AuthGuard url={urls.DASHBOARD} requiresAuth={false}>
         <Outlet />
       </AuthGuard>
     ),

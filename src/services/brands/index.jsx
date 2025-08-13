@@ -6,8 +6,8 @@ export const fetchBrands = async (signal, page, page_size, search, type) => {
     const { data } = await api.get(`/brand`, { signal, params: { page, page_size, search, type } })
     return data
 }
-export const fetchActiveBrands = async (signal) => {
-    const { data } = await api.get(`/brand/active`, { signal, })
+export const fetchActiveBrands = async (signal, status) => {
+    const { data } = await api.get(`/brand/active`, { signal, params: { status } })
     return data
 }
 export const fetchVehicleBrand = async (signal, type) => {

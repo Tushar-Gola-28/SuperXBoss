@@ -36,6 +36,7 @@ export function CouponHandler() {
         }),
         onSubmit: (values) => {
             if (coupon) {
+
                 updateMutation.mutate({ ...values, start_date: dayjs(values.start_date).startOf("day").format(), end_date: dayjs(values.end_date).endOf("day").format() }, {
                     onSuccess: (data) => {
                         if (data) {
@@ -48,7 +49,7 @@ export function CouponHandler() {
                 return
             }
 
-            createMutation.mutate(values, {
+            createMutation.mutate({ ...values, start_date: dayjs(values.start_date).startOf("day").format(), end_date: dayjs(values.end_date).endOf("day").format() }, {
                 onSuccess: (data) => {
                     if (data) {
                         notify("Coupon Created Successfully.", "success")
@@ -80,6 +81,8 @@ export function CouponHandler() {
             return await updateCoupon(data, coupon)
         },
     })
+    console.log({ start_date: dayjs(values.start_date).startOf("day").format(), end_date: dayjs(values.end_date).endOf("day").format() });
+
 
     useEffect(() => {
         if (location.state) {
@@ -242,7 +245,7 @@ export function CouponHandler() {
                             >
                                 Create
                             </LoadingButton>
-                            <Button variant="outlined" type="button">
+                            <Button variant="outlined" type="button" onClick={() => navigate(-1)}>
                                 Cancel
                             </Button>
                         </Stack>

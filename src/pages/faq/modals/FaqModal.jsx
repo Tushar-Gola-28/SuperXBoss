@@ -118,7 +118,7 @@ export function FaqModal({ open, close, refetch, editData }) {
                                     { value: "false", label: "No" },
                                 ]}
                             />
-                            <CustomRadio
+                            {/* <CustomRadio
                                 name="type"
                                 required
                                 title="Type"
@@ -129,7 +129,7 @@ export function FaqModal({ open, close, refetch, editData }) {
                                     { value: "technical", label: "Technical" },
                                     { value: "account", label: "Account" },
                                 ]}
-                            />
+                            /> */}
                         </Stack>
                     </CustomPaper>
                 </Stack>

@@ -282,7 +282,7 @@ export function UserHandle() {
                         >
                             {user ? "Update" : "Create"}
                         </LoadingButton>
-                        <Button variant="outlined" type="button">
+                        <Button variant="outlined" type="button" onClick={() => navigate(-1)}>
                             Cancel
                         </Button>
                     </Stack>

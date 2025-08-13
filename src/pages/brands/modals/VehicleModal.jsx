@@ -106,7 +106,7 @@ export function VehicleModal({ open, close, refetch, editData, handleEditData })
                 status: String(editData?.status),
 
             })
-            setImages([editData?.logo])
+            setImages([{ preview: editData?.logo }])
         }
     }, [editData,])
 

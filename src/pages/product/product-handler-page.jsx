@@ -48,15 +48,15 @@ export function ProductHandlePage() {
     }
     const { data, refetch: fetchSegment, isLoading: isLoading4 } = useQuery({
         queryKey: ['fetchSegmentsAll',],
-        queryFn: ({ signal }) => fetchSegmentsAll(signal)
+        queryFn: ({ signal }) => fetchSegmentsAll(signal, product ? false : true)
     })
     const { data: unitData, refetch: fetchUnit, isLoading: isLoading3 } = useQuery({
         queryKey: ['fetchUnits',],
-        queryFn: ({ signal }) => fetchUnits(signal, 0, 15, undefined, false, true)
+        queryFn: ({ signal }) => fetchUnits(signal, 0, 15, undefined, false)
     })
     const { data: active_brand, refetch: fetchBrand, isLoading: isLoading2 } = useQuery({
         queryKey: ['fetchActiveBrands',],
-        queryFn: ({ signal }) => fetchActiveBrands(signal)
+        queryFn: ({ signal }) => fetchActiveBrands(signal, product ? false : true)
     })
     const { data: product_data, isLoading } = useQuery({
         queryKey: ['fetchProductsById',],
@@ -71,8 +71,8 @@ export function ProductHandlePage() {
         pop_item: Yup.string().oneOf(['true', 'false'], 'Invalid value').required(),
         part_no: Yup.string().required('Part number is required'),
         segment_type: Yup.array().of(Yup.string()),
-        customer_price: Yup.number().typeError('Must be a number').min(0, 'Minimum 0').required('Customer Price is required.'),
-        b2b_price: Yup.number().typeError('Must be a number').min(0, 'Minimum 0').required('B2B price is required.'),
+        customer_price: Yup.number().typeError('Must be a number').min(1, 'Minimum 1').required('Customer Price is required.'),
+        b2b_price: Yup.number().typeError('Must be a number').min(1, 'Minimum 1').required('B2B price is required.'),
         min_qty: Yup.number().typeError('Must be a number').min(1, 'Minimum 1').required('Minimum qty is required.'),
         any_discount: Yup.number().typeError('Must be a number')
             .min(0, 'Minimum is 0%')
@@ -111,12 +111,14 @@ export function ProductHandlePage() {
             return_days: "",
             return_policy: "",
             unit: "",
-            status: "false",
+            status: "true",
             trend_part: "false",
             description: ""
         },
         validationSchema,
         onSubmit: (values) => {
+            console.log(values, "values");
+
             const formData = new FormData();
             if (!images?.length) {
                 return notify("Image is required.")
@@ -250,12 +252,13 @@ export function ProductHandlePage() {
                 hsn_code,
                 ship_days,
                 return_days,
-                unit,
+                unit: unit._id,
                 status,
                 trend_part,
                 brand_id: brand?._id,
                 segment_type: segment_type.map((it) => it._id),
-                return_policy
+                return_policy,
+                description
             })
             if (images) {
                 setPrevImages(images)
@@ -913,7 +916,7 @@ export function ProductHandlePage() {
                         >
                             {product ? "Update" : "Create"}
                         </LoadingButton>
-                        <Button variant="outlined">
+                        <Button variant="outlined" onClick={() => navigate(-1)}>
                             Cancel
                         </Button>
                     </Stack>

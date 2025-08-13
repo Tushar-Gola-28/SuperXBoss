@@ -252,7 +252,8 @@ const VideoUpload = ({
     initialVideos = [],
     maxVideos = 1,
     acceptedFormats = ['video/mp4', 'video/quicktime'],
-    removePath = false
+    removePath = false,
+    MAX_SIZE_MB = 5
 }) => {
     const [videos, setVideos] = useState(initialVideos);
     const [previews, setPreviews] = useState(initialVideos);
@@ -277,6 +278,15 @@ const VideoUpload = ({
 
         if (invalidFiles.length > 0) {
             alert(`Please upload only ${acceptedFormats.map(f => f.split('/')[1]).join(', ')} format videos.`);
+            return;
+        }
+
+        const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
+        // Validate file sizes
+        const oversizedFiles = files.filter(file => file.size > MAX_SIZE_BYTES);
+        if (oversizedFiles.length > 0) {
+            const fileNames = oversizedFiles.map(file => file.name).join(', ');
+            notify(`These files exceed the ${MAX_SIZE_MB}MB limit: ${fileNames}`);
             return;
         }
 

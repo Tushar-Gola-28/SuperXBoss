@@ -16,6 +16,19 @@ export default function useColumns(handleEditData, handleOpenModal) {
                 return index + 1
             },
         },
+        {
+            id: "icon",
+            label: "Photo",
+            renderCell: (row) => {
+                return (
+                    <HoverAvatar
+                        src={row?.logo}
+                        alt="_blank"
+                    />
+
+                );
+            },
+        },
         { id: "name", label: "Name" },
         {
             id: "Type", label: "Type", renderCell: (row) => {

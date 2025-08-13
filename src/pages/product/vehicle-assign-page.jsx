@@ -105,7 +105,6 @@ export function VehicleAssignPage() {
 
         return (
             <div
-                role="tabpanel"
                 hidden={value !== index}
                 {...other}
             >
@@ -174,10 +173,12 @@ export function VehicleAssignPage() {
                                                                 maxHeight: 300,
                                                             },
                                                         },
+                                                        disableAutoFocusItem: true,   // prevent focus stealing
+                                                        disableCloseOnSelect: true
                                                     }}
                                                 >
                                                     {brand.vehicles?.map((vehicle) => (
-                                                        <MenuItem key={vehicle._id} value={vehicle._id} onClick={(event) => event.stopPropagation()} >
+                                                        <MenuItem key={vehicle._id} value={vehicle._id}  >
                                                             <Checkbox checked={selectedVehicles.includes(vehicle._id)} />
                                                             <ListItemText primary={`${vehicle.name} (${vehicle.start_year} - ${vehicle.end_year})`} />
                                                         </MenuItem>

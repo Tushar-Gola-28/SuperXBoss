@@ -6,8 +6,8 @@ export const fetchSegments = async (signal, page, page_size, search) => {
     const { data } = await api.get(`/vehicleSegmentType`, { signal, params: { page, page_size, search } })
     return data
 }
-export const fetchSegmentsAll = async (signal) => {
-    const { data } = await api.get(`/vehicleSegmentType/without-page`, { signal, })
+export const fetchSegmentsAll = async (signal, status = true) => {
+    const { data } = await api.get(`/vehicleSegmentType/without-page`, { signal, params: { status } })
     return data
 }
 

@@ -40,6 +40,9 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
             if (!images) {
                 return notify("Image is required.")
             }
+            if (!formik.values.type) {
+                return notify("Brand Type is required.")
+            }
             let formData = new FormData()
             formData.append("name", values.name)
             formData.append("type", values.type)
@@ -122,7 +125,7 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                 category: editData?.categories?.length > 0 ? editData?.categories?.map((it) => it._id) : []
 
             })
-            setImages([editData?.logo])
+            setImages([{ preview: editData?.logo }])
 
             setBrand(editData?.brand_segment?.map((it) => it._id))
         }
@@ -159,9 +162,11 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                     />
                     <CustomInput
                         label="Name"
+                        required
                         input={
                             <TextField
                                 fullWidth
+                                required
                                 name="name"
                                 placeholder="Enter Name"
                                 value={formik.values.name}
@@ -208,13 +213,15 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                     /> */}
                     <CustomInput
                         label="Type"
+                        required
                         input={
-                            <FormControl fullWidth>
+                            <FormControl fullWidth required>
                                 <Select
                                     value={formik.values.type}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     name="type"
+                                    required
                                     displayEmpty
                                 >
                                     <MenuItem value={""}>
@@ -241,6 +248,7 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                                         onBlur={formik.handleBlur}
                                         name="category"
                                         multiple
+                                        ret
                                         renderValue={(selected) =>
                                             category?._payload
                                                 ?.filter(({ _id }) => selected.includes(_id))
@@ -303,7 +311,7 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                             </Box>
                         }
                     /> */}
-                    <CustomRadio
+                    {/* <CustomRadio
                         name="brand_day"
                         title="Brand Day"
                         required
@@ -315,7 +323,7 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                                 { value: "false", label: "No" },
                             ]
                         }
-                    />
+                    /> */}
                     <CustomRadio
                         name="status"
                         title="Status"

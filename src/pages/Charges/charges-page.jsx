@@ -79,7 +79,7 @@ export function ChargesPage() {
                         <Grid2 container spacing={2}>
                             <Grid2 size={{ xs: 12, }}>
                                 <Stack direction="row" justifyContent="flex-end">
-                                    <FormControlLabel sx={{ gap: 1 }} control={<Switch checked={disable} onChange={(e) => setDisable(e.target.checked)} />} label={disable ? "Disable" : "Active"} />
+                                    <FormControlLabel sx={{ gap: 1 }} control={<Switch checked={disable} onChange={(e) => setDisable(e.target.checked)} />} label={disable ? "Disable" : "Enable"} />
                                 </Stack>
                             </Grid2>
                             <Grid2 size={{ xs: 12, md: 6 }}>

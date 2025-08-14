@@ -70,7 +70,6 @@ export function ChargesPage() {
             <Box>
                 <SectionHeader
                     heading="Charges & Fees"
-                    icon="https://ticketsque-public.s3.ap-south-1.amazonaws.com/icons/Events.svg"
                 />
             </Box>
             <Stack maxWidth={700}>

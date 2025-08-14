@@ -28,7 +28,7 @@ export function FaqPage() {
 
     return (
         <Box>
-            <SectionHeader heading="Faqs" icon="https://ticketsque-public.s3.ap-south-1.amazonaws.com/icons/Events.svg" />
+            <SectionHeader heading="Faqs" />
             <Stack gap={1} sx={{ mb: 2 }} direction="row" justifyContent={{ xs: "flex-end", }} alignItems="center" flexWrap="wrap">
                 <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenModal} >Create FAQ</Button>
             </Stack>

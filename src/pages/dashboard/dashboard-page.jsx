@@ -217,8 +217,8 @@ export const DashboardPage = () => {
             },
             {
                 title: "Total Orders",
-                series: [data.orders?.completed || 0, data.orders?.pending || 0, data.orders?.cancelled || 0, data.orders?.shipped || 0, data.orders?.confirmed || 0, data.orders?.refunded || 0],
-                labels: ["Completed Orders", "Pending Orders", "Cancelled Orders", "Shipped Orders", "Confirmed Orders", "Refunded Orders"],
+                series: [data.orders?.completed || 0, data.orders?.cancelled || 0, data.orders?.shipped || 0, data.orders?.confirmed || 0, data.orders?.refunded || 0],
+                labels: ["Completed Orders", "Cancelled Orders", "Shipped Orders", "Confirmed Orders", "Refunded Orders"],
                 render: () => {
                     const orderKeys = Object.keys(data.orders || {});
                     return (

@@ -40,7 +40,7 @@ export function SubCategoriesPage() {
     }, [data])
     return (
         <Box>
-            <SectionHeader heading="Sub Categories" icon="https://ticketsque-public.s3.ap-south-1.amazonaws.com/icons/Events.svg" />
+            <SectionHeader heading="Sub Categories" />
             <Stack gap={1} sx={{ mb: 2 }} direction="row" justifyContent={{ xs: "flex-end", md: "space-between" }} alignItems="center" flexWrap="wrap">
                 <TextField
                     fullWidth

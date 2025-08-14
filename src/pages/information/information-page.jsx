@@ -68,7 +68,7 @@ export function InformationPage() {
 
     return (
         <Box>
-            <SectionHeader heading="Information's" icon="https://ticketsque-public.s3.ap-south-1.amazonaws.com/icons/Events.svg" />
+            <SectionHeader heading="Information's" />
             <CustomPaper p="20px" border={false}>
 
                 <Grid2 container spacing={1}>

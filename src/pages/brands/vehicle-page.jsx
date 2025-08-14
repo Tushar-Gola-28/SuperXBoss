@@ -40,7 +40,7 @@ export function VehiclesPage() {
     }, [data])
     return (
         <Box>
-            <SectionHeader heading="Vehicles Modal" icon="https://ticketsque-public.s3.ap-south-1.amazonaws.com/icons/Events.svg" />
+            <SectionHeader heading="Vehicles Modal" />
             <Stack gap={1} sx={{ mb: 2 }} direction="row" justifyContent={{ xs: "flex-end       ", md: "space-between" }} alignItems="center" flexWrap="wrap">
                 <TextField
                     fullWidth

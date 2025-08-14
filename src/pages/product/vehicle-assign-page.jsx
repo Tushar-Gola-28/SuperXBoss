@@ -132,7 +132,7 @@ export function VehicleAssignPage() {
 
                     <Box sx={{ border: 1, borderColor: 'divider', borderRadius: "6px", }}>
                         <Tabs value={value} onChange={handleChange3} aria-label="basic tabs example" variant="scrollable">
-                            <Tab label={`*Brand And Vehicle(Modal) Assign`} {...a11yProps(0)} sx={{ textTransform: "initial" }} />
+                            <Tab label={`*Brand And Vehicle(Model) Assign`} {...a11yProps(0)} sx={{ textTransform: "initial" }} />
                             <Tab label={`*Brand And Category Assign`} {...a11yProps(1)} sx={{ textTransform: "initial" }} />
                         </Tabs>
                     </Box>
@@ -141,7 +141,7 @@ export function VehicleAssignPage() {
                     <CustomPaper sx={{ mt: 2 }}>
                         <Stack sx={{ mb: 2 }}>
                             <Typography variant="h5" sx={{ color: "primary.main" }}>
-                                *Brand And Vehicle(Modal) Assign
+                                *Brand And Vehicle(Model) Assign
                             </Typography>
                         </Stack>
                         <Grid2 container spacing={1}>
@@ -210,7 +210,7 @@ export function VehicleAssignPage() {
                     <CustomPaper sx={{ mt: 1 }}>
                         <Stack sx={{ mb: 2 }}>
                             <Typography variant="h5" sx={{ color: "primary.main" }}>
-                                *Brand And Category(Modal) Assign
+                                *Brand And Category(Model) Assign
                             </Typography>
                         </Stack>
                         <Grid2 container spacing={1}>

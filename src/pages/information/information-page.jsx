@@ -76,7 +76,7 @@ export function InformationPage() {
                     <Grid2 size={{ lg: editData ? 4 : 0, xs: 12 }} >
                         <CustomPaper p="15px" >
                             <Stack direction="row" justifyContent="flex-end">
-                                <FormControlLabel sx={{ gap: 1 }} control={<Switch checked={disable} onChange={(e) => setDisable(e.target.checked)} />} label={disable ? "Disable" : "Un Disable"} />
+                                <FormControlLabel sx={{ gap: 1 }} control={<Switch checked={disable} onChange={(e) => setDisable(e.target.checked)} />} label={disable ? "Disable" : "Active"} />
                             </Stack>
                             <Stack spacing={1.5}>
                                 <CustomInput

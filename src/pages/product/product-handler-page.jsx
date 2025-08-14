@@ -48,7 +48,7 @@ export function ProductHandlePage() {
     }
     const { data, refetch: fetchSegment, isLoading: isLoading4 } = useQuery({
         queryKey: ['fetchSegmentsAll',],
-        queryFn: ({ signal }) => fetchSegmentsAll(signal, product ? false : true)
+        queryFn: ({ signal }) => fetchSegmentsAll(signal, product ? "" : true)
     })
     const { data: unitData, refetch: fetchUnit, isLoading: isLoading3 } = useQuery({
         queryKey: ['fetchUnits',],
@@ -56,7 +56,7 @@ export function ProductHandlePage() {
     })
     const { data: active_brand, refetch: fetchBrand, isLoading: isLoading2 } = useQuery({
         queryKey: ['fetchActiveBrands',],
-        queryFn: ({ signal }) => fetchActiveBrands(signal, product ? false : true)
+        queryFn: ({ signal }) => fetchActiveBrands(signal, product ? "" : true)
     })
     const { data: product_data, isLoading } = useQuery({
         queryKey: ['fetchProductsById',],

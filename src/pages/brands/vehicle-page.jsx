@@ -40,8 +40,8 @@ export function VehiclesPage() {
     }, [data])
     return (
         <Box>
-            <SectionHeader heading="Vehicles Modal" />
-            <Stack gap={1} sx={{ mb: 2 }} direction="row" justifyContent={{ xs: "flex-end       ", md: "space-between" }} alignItems="center" flexWrap="wrap">
+            <SectionHeader heading="Vehicles Model" />
+            <Stack gap={1} sx={{ mb: 2 }} direction="row" justifyContent={{ xs: "flex-end", md: "space-between" }} alignItems="center" flexWrap="wrap">
                 <TextField
                     fullWidth
                     id="Search"
@@ -62,7 +62,7 @@ export function VehiclesPage() {
                     }}
                 />
                 <Stack>
-                    <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenModal} >Create Vehicle Modal</Button>
+                    <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenModal} >Create Vehicle Model</Button>
                 </Stack>
             </Stack>
             <CustomTable

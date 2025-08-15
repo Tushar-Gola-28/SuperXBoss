@@ -116,7 +116,7 @@ export function VehicleModal({ open, close, refetch, editData, handleEditData })
                 {...{
                     open,
                     close,
-                    heading: editData ? "Update Vehicles Modal" : 'Create Vehicles Modal',
+                    heading: editData ? "Update Vehicles Model" : 'Create Vehicles Model',
                     action: (
                         <LoadingButton
                             variant="contained"
@@ -172,6 +172,7 @@ export function VehicleModal({ open, close, refetch, editData, handleEditData })
                             />
                         }
                     />
+
                     <CustomInput
                         label="Start Year"
                         required

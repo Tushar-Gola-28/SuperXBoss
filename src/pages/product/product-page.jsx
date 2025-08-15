@@ -8,22 +8,34 @@ import { CustomPagination, CustomTable } from '../../components';
 import useColumns from './hooks/useColumns';
 import { useQuery } from '@tanstack/react-query';
 import { usePagination } from '../../hooks/usePagination';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { urls } from '../../routes';
 import { fetchProducts } from '../../services/product';
 
 export function ProductPage() {
     const navigate = useNavigate()
+    const location = useLocation()
     const [search, setSearch] = useState("")
     const { columns } = useColumns()
     const { page, setPage, page_size, total_records, setTotal_records, totalPages, setTotalPages, handlePageSize } = usePagination()
+    // Use queryParams to extract the page value from the URL
+    const queryParams = new URLSearchParams(location.search);
+    const savedPage = queryParams.get('page');
+
+    // Set initial page based on URL if available
+    useEffect(() => {
+        if (savedPage) {
+            setPage(parseInt(savedPage, 10));
+        }
+    }, [savedPage, setPage]);
     const handleSearch = debounce((value) => {
         setSearch(value)
     }, 600)
 
     const { data, isLoading, } = useQuery({
         queryKey: ['fetchProducts', page + 1, page_size, search],
-        queryFn: ({ signal }) => fetchProducts(signal, "", page + 1, page_size, search)
+        queryFn: ({ signal }) => fetchProducts(signal, "", page + 1, page_size, search),
+        enabled: savedPage !== null,
     })
     useEffect(() => {
         if (data?.pagination) {
@@ -31,6 +43,22 @@ export function ProductPage() {
             setTotalPages(data?.pagination?.totalPages)
         }
     }, [data])
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        if (savedPage === null) {
+            queryParams.set('page', 0);
+            navigate({
+                pathname: location.pathname,
+                search: queryParams.toString(),
+            });
+        } else {
+            queryParams.set('page', page);
+            navigate({
+                pathname: location.pathname,
+                search: queryParams.toString(),
+            });
+        }
+    }, [page, location.search, navigate, savedPage]);
     return (
         <Box>
             <SectionHeader heading="Products" icon="https://ticketsque-public.s3.ap-south-1.amazonaws.com/icons/Events.svg" />

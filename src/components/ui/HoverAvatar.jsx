@@ -152,8 +152,8 @@ const HoverAvatar = ({
                 <Avatar
                     src={src}
                     alt={alt}
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseLeave}
+                    // onMouseEnter={handleMouseEnter}
+                    // onMouseLeave={handleMouseLeave}
                     sx={{
                         width: avatarSize,
                         height: avatarSize,

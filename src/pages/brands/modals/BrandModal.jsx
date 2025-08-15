@@ -311,7 +311,7 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                             </Box>
                         }
                     /> */}
-                    {/* <CustomRadio
+                    <CustomRadio
                         name="brand_day"
                         title="Brand Day"
                         required
@@ -323,7 +323,7 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                                 { value: "false", label: "No" },
                             ]
                         }
-                    /> */}
+                    />
                     <CustomRadio
                         name="status"
                         title="Status"

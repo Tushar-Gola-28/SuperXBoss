@@ -676,7 +676,7 @@ const Navbar = ({ open, handleDrawerToggle }) => {
                                             textOverflow: "ellipsis",
                                         }}
                                     >
-                                        {user?.name}
+                                        Hi, {user?.name}
                                     </Typography>
                                 )}
                             </Stack>

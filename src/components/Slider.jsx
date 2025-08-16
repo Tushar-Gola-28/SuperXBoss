@@ -439,6 +439,15 @@ const Sidebar = ({
         // },
         {
 
+            icon: <NotificationAddIcon />,
+            label: "Queries",
+            order: 0,
+            parent: null,
+            path: "/queries",
+            children: []
+        },
+        {
+
             icon: <InfoIcon />,
             label: "Information",
             order: 0,

@@ -30,6 +30,7 @@ import { UnitPage } from '../pages/units/unit-page'
 import { VehicleAssignPage } from '../pages/product/vehicle-assign-page'
 import { OrderDetailsPage } from '../pages/order/order-details-page'
 import { ChargesPage } from '../pages/Charges/charges-page'
+import { QueriesPage } from '../pages/queries/queries-page'
 
 export const root = [
   {
@@ -277,6 +278,15 @@ export const root = [
           {
             index: true,
             element: <SegmentPage />
+          },
+        ]
+      },
+      {
+        path: urls.QUERIES,
+        children: [
+          {
+            index: true,
+            element: <QueriesPage />
           },
         ]
       },

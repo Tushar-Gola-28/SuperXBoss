@@ -2,7 +2,6 @@ import { IconButton, Stack } from '@mui/material';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { urls } from '../../../routes';
 export default function useColumns() {
     const navigate = useNavigate()
     const columns = [

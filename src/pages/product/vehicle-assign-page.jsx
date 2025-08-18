@@ -277,7 +277,9 @@ import {
     Box,
     Button, Checkbox, ListItemText, MenuItem, Select, Stack, Tab, Tabs, Typography,
     Autocomplete, TextField, Chip,
-    Paper
+    Paper,
+    Backdrop,
+    CircularProgress
 } from '@mui/material';
 import Grid from '@mui/material/Grid2'
 import PageStructure from '../../components/PageStructure';
@@ -294,16 +296,16 @@ export function VehicleAssignPage() {
     const navigate = useNavigate();
     const { product } = useParams();
 
-    const { data } = useQuery({
+    const { data, isLoading } = useQuery({
         queryKey: ["vehicle brands"],
         queryFn: ({ signal }) => fetchVehicleBrand(signal, "Vehicle")
     });
-    const { data: brandCategory } = useQuery({
+    const { data: brandCategory, isLoading: isLoading2 } = useQuery({
         queryKey: ["brands category"],
         queryFn: ({ signal }) => fetchBrandCategory(signal, "Vehicle")
     });
 
-    const { data: storeData } = useQuery({
+    const { data: storeData, isLoading: isLoading3 } = useQuery({
         queryKey: ["vehicle brands get"],
         queryFn: ({ signal }) => getVehicleAssign(signal, product)
     });
@@ -370,25 +372,13 @@ export function VehicleAssignPage() {
     const handleTabChange = (event, newValue) => {
         setValue(newValue);
     };
-
-    function CustomTabPanel(props) {
-        const { children, value, index, ...other } = props;
-
-        return (
-            <div role="tabpanel"
-                hidden={value !== index}
-                id={`simple-tabpanel-${index}`}
-                aria-labelledby={`simple-tab-${index}`}  {...other}>
-                {value === index && <Box sx={{ p: 1 }} onClick={(e) => e.stopPropagation()}>{children}</Box>}
-            </div>
-        );
-    }
-
-    function a11yProps(index) {
-        return {
-            id: `simple-tab-${index}`,
-            'aria-controls': `simple-tabpanel-${index}`,
-        };
+    if (isLoading || isLoading2, isLoading3) {
+        return <Backdrop
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={true}
+        >
+            <CircularProgress color="inherit" />
+        </Backdrop>
     }
 
     return (

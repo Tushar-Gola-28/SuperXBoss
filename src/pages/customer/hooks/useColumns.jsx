@@ -1,7 +1,8 @@
-import { FormControlLabel, Stack, Switch } from '@mui/material';
+import { FormControlLabel, IconButton, Stack, Switch } from '@mui/material';
 import dayjs from 'dayjs';
 import { HoverAvatar, notify } from '../../../components';
-export default function useColumns(updateMutation, refetch) {
+import AddIcon from '@mui/icons-material/Add';
+export default function useColumns(updateMutation, refetch, handleOpenModal, handleEditData) {
     const columns = [
         {
             id: "S No", label: "S No.", renderCell: (row, index) => {
@@ -46,6 +47,20 @@ export default function useColumns(updateMutation, refetch) {
                     <div className="active">Active</div>
                 ) : (
                     <div className="pending">Pending</div>
+                );
+            },
+        },
+        {
+            id: "Add Wallet Amount",
+            label: "Add Wallet Amount",
+            renderCell: (row) => {
+                return (
+                    <Stack direction="row" justifyContent="center" >
+
+                        <IconButton color='primary' onClick={() => { handleEditData(row); handleOpenModal() }}>
+                            <AddIcon />
+                        </IconButton>
+                    </Stack >
                 );
             },
         },

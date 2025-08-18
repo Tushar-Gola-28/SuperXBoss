@@ -19,3 +19,14 @@ export const updateCustomerStatus = async (values) => {
         }
     }
 }
+export const updateCustomerAmount = async (values) => {
+    try {
+        const data = await api.put(`/wallets/add-amount`, values)
+        return data
+    } catch (err) {
+        console.log(err?.response?.data?.message);
+        if (err?.response?.data?.message) {
+            notify(err?.response?.data?.message)
+        }
+    }
+}

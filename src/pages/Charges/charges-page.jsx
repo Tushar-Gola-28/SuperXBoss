@@ -18,6 +18,8 @@ export function ChargesPage() {
         initialValues: {
             platformCharges: '',
             deliveryChargesPerKM: '',
+            pointValue: 0.6,
+            freeShippingUpto: "",
         },
         validationSchema: Yup.object({
             platformCharges: Yup.number()
@@ -28,6 +30,10 @@ export function ChargesPage() {
                 .typeError('Must be a number')
                 .required('Delivery charges are required')
                 .min(1, 'Cannot be negative'),
+            pointValue: Yup.number()
+                .typeError('Must be a number')
+                .required('Delivery charges are required')
+                .min(0.1, 'Cannot be negative'),
         }),
         onSubmit: (values) => {
             updateMutation.mutate(values, {
@@ -133,6 +139,62 @@ export function ChargesPage() {
                                             helperText={
                                                 formik.touched.deliveryChargesPerKM &&
                                                 formik.errors.deliveryChargesPerKM
+                                            }
+                                        />
+                                    }
+                                />
+                            </Grid2>
+                            <Grid2 size={{ xs: 12, md: 6 }}>
+                                <CustomInput
+                                    label="Point Value"
+                                    required
+                                    input={
+                                        <TextField
+                                            fullWidth
+                                            disabled={disable}
+                                            type="number"
+                                            name="pointValue"
+                                            required
+                                            value={formik.values.pointValue}
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                            placeholder="Enter Delivery Charges Per KM"
+                                            onWheel={(e) => e.target.blur()}
+                                            error={
+                                                formik.touched.pointValue &&
+                                                Boolean(formik.errors.pointValue)
+                                            }
+                                            helperText={
+                                                formik.touched.pointValue &&
+                                                formik.errors.pointValue
+                                            }
+                                        />
+                                    }
+                                />
+                            </Grid2>
+                            <Grid2 size={{ xs: 12, md: 6 }}>
+                                <CustomInput
+                                    label="Free Shipping Up To"
+                                    required
+                                    input={
+                                        <TextField
+                                            fullWidth
+                                            disabled={disable}
+                                            type="number"
+                                            name="freeShippingUpto"
+                                            required
+                                            value={formik.values.freeShippingUpto}
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                            placeholder="Enter Delivery Charges Per KM"
+                                            onWheel={(e) => e.target.blur()}
+                                            error={
+                                                formik.touched.freeShippingUpto &&
+                                                Boolean(formik.errors.freeShippingUpto)
+                                            }
+                                            helperText={
+                                                formik.touched.freeShippingUpto &&
+                                                formik.errors.freeShippingUpto
                                             }
                                         />
                                     }

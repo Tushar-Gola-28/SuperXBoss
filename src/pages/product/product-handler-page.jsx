@@ -445,9 +445,9 @@ export function ProductHandlePage() {
                                                         <MenuItem value={""}>
                                                             <em> <ListItemText primary={"Select Brand"} /></em>
                                                         </MenuItem>
-                                                        {active_brand?._payload?.map(({ name, _id }) => (
+                                                        {active_brand?._payload?.map(({ name, _id, type }) => (
                                                             <MenuItem key={_id} value={_id}>
-                                                                <ListItemText primary={name} />
+                                                                <ListItemText primary={`${name} (${type.name})`} />
                                                             </MenuItem>
                                                         ))}
                                                     </Select>

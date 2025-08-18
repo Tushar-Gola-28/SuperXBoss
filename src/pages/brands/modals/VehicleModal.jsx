@@ -1,16 +1,16 @@
 import { CustomInput, CustomModal, CustomRadio, notify } from '../../../components';
-import { MenuItem, Stack, TextField } from '@mui/material';
+import { FormControlLabel, IconButton, InputAdornment, MenuItem, Stack, Switch, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import ImageUpload from '../../../components/ui/ImageUpload';
 import { useEffect, useState } from 'react';
 import { SegmentModal } from '../../segment/modal/SegmentModal';
 import { useModalControl } from '../../../hooks/useModalControl';
 import { useParams } from 'react-router';
 import { createVehicle, updateVehicle } from '../../../services/vehicle';
-
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 export function VehicleModal({ open, close, refetch, editData, handleEditData }) {
     const { brand_id } = useParams()
     const [images, setImages] = useState()
@@ -25,7 +25,8 @@ export function VehicleModal({ open, close, refetch, editData, handleEditData })
             description: '',
             status: "true",
             start_year: "",
-            end_year: ""
+            end_year: "",
+            no_end_year: true, // NEW
 
         },
         validationSchema: Yup.object({
@@ -34,11 +35,16 @@ export function VehicleModal({ open, close, refetch, editData, handleEditData })
                 .required('Start Year is required'),
 
             end_year: Yup.number()
-                .required('End Year is required')
-                .min(
-                    Yup.ref('start_year'),
-                    'End Year must be greater than or equal to Start Year'
-                ),
+                .nullable()
+                .when('no_end_year', {
+                    is: true,
+                    then: (schema) => schema.notRequired().nullable(true),
+                    otherwise: (schema) =>
+                        schema
+                            .typeError('End Year is required')
+                            .required('End Year is required')
+                            .min(Yup.ref('start_year'), 'End Year must be greater than or equal to Start Year'),
+                }),
         }),
         onSubmit: (values) => {
             if (!images) {
@@ -53,7 +59,11 @@ export function VehicleModal({ open, close, refetch, editData, handleEditData })
             formData.append("description", values.description)
             formData.append("status", values.status)
             formData.append("start_year", values.start_year)
-            formData.append("end_year", values.end_year)
+            // formData.append("end_year", values.end_year)
+            if (!values.no_end_year && values.end_year !== "" && values.end_year != null) {
+                formData.append("end_year", Number(values.end_year));
+            } // else: omit end_year to mean "Present"
+
             if (editData) {
                 updateMutation.mutate(formData, {
                     onSuccess: ({ data: data }) => {
@@ -98,12 +108,14 @@ export function VehicleModal({ open, close, refetch, editData, handleEditData })
     })
     useEffect(() => {
         if (editData) {
+            const hasEnd = editData?.end_year != null && editData?.end_year !== '';
             formik.setValues({
                 name: editData?.name,
                 description: editData?.description,
                 start_year: editData?.start_year,
                 end_year: editData?.end_year,
                 status: String(editData?.status),
+                no_end_year: !hasEnd, // NEW
 
             })
             setImages([{ preview: editData?.logo }])
@@ -202,7 +214,7 @@ export function VehicleModal({ open, close, refetch, editData, handleEditData })
                             </TextField>
                         }
                     />
-                    <CustomInput
+                    {/* <CustomInput
                         label="End Year"
                         required
                         input={
@@ -233,6 +245,73 @@ export function VehicleModal({ open, close, refetch, editData, handleEditData })
                                         })
                                 }
 
+                            </TextField>
+                        }
+                    /> */}
+
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                name="no_end_year"
+                                checked={formik.values.no_end_year}
+                                onChange={(e) => {
+                                    const checked = e.target.checked;
+                                    formik.setFieldValue('no_end_year', checked);
+                                    if (checked) formik.setFieldValue('end_year', ""); // clear if Present
+                                }}
+                            />
+                        }
+                        label="No End Year (Present)"
+                        sx={{ mt: 1, label: { ml: 1 } }}
+                    />
+
+                    <CustomInput
+                        label="End Year"
+                        required={!formik.values.no_end_year}
+                        input={
+                            <TextField
+                                required={!formik.values.no_end_year}
+                                fullWidth
+                                name="end_year"
+                                placeholder="Select End Year"
+                                value={formik.values.end_year || ""}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                error={!formik.values.no_end_year && formik.touched.end_year && Boolean(formik.errors.end_year)}
+                                helperText={!formik.values.no_end_year && formik.touched.end_year && formik.errors.end_year}
+                                select
+                                disabled={formik.values.no_end_year}
+                                SelectProps={{ displayEmpty: true }}
+                                InputProps={{
+                                    endAdornment: !formik.values.no_end_year && formik.values.end_year ? (
+                                        <InputAdornment position="start" sx={{ right: "20px", position: "relative" }}>
+                                            <IconButton
+                                                aria-label="clear end year"
+                                                edge="end"
+                                                onClick={() => formik.setFieldValue('end_year', "")}
+                                                size="small"
+                                            >
+                                                <CloseRoundedIcon fontSize="small" />
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ) : null
+                                }}
+                            >
+                                {/* Optional "placeholder" row */}
+                                <MenuItem value="">
+                                    — Select —
+                                </MenuItem>
+
+                                {years
+                                    ?.filter((it) => {
+                                        const selectedStart = Number(formik.values.start_year);
+                                        return !selectedStart || it >= selectedStart;
+                                    })
+                                    ?.map((it) => (
+                                        <MenuItem key={it} value={it}>
+                                            {it}
+                                        </MenuItem>
+                                    ))}
                             </TextField>
                         }
                     />

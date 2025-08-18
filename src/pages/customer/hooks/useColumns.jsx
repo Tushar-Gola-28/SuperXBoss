@@ -11,7 +11,7 @@ export default function useColumns(updateMutation, refetch, handleOpenModal, han
         },
         {
             id: "icon",
-            label: "Profile Photo",
+            label: "Profile ",
             renderCell: (row) => {
                 return (
                     <HoverAvatar
@@ -21,6 +21,7 @@ export default function useColumns(updateMutation, refetch, handleOpenModal, han
 
                 );
             },
+            width: 80
         },
         { id: "name", label: "Name" },
         { id: "email", label: "Email" },
@@ -37,7 +38,7 @@ export default function useColumns(updateMutation, refetch, handleOpenModal, han
             renderCell: (row) => {
                 return dayjs(row?.createdAt).format("DD MMMM YYYY, h:mm A");
             },
-            width: 150
+            width: 200
         },
         {
             id: "status",

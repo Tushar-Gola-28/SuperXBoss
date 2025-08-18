@@ -30,6 +30,7 @@ export default function useColumns() {
 
                 );
             },
+            width: 80
         },
         {
             id: "icon",

@@ -26,6 +26,7 @@ export default function useColumns(handleEditData, handleOpenModal) {
 
                 );
             },
+            width: 80
         },
         { id: "name", label: "Name" },
 
@@ -53,6 +54,7 @@ export default function useColumns(handleEditData, handleOpenModal) {
             renderCell: (row) => {
                 return dayjs(row?.updatedAt).format("DD MMMM YYYY, h:mm A");
             },
+            width: 200
         },
         {
             id: "status",

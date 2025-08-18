@@ -28,6 +28,7 @@ export default function useColumns(handleEditData, handleOpenModal) {
 
                 );
             },
+            width: 80
         },
         { id: "name", label: "Name" },
         {
@@ -71,6 +72,7 @@ export default function useColumns(handleEditData, handleOpenModal) {
             renderCell: (row) => {
                 return dayjs(row?.updatedAt).format("DD MMMM YYYY, h:mm A");
             },
+            width: 200
         },
         {
             id: "brand_day",
@@ -130,10 +132,16 @@ export default function useColumns(handleEditData, handleOpenModal) {
 
                 );
             },
+            width: 80
         },
         { id: "name", label: "Name" },
         { id: "start_year", label: "Start year" },
-        { id: "end_year", label: "End year" },
+        {
+            id: "end_year", label: "End year",
+            renderCell: (row) => {
+                return row?.end_year || "-"
+            },
+        },
 
         {
             id: "Brand Name", label: "Brand Name", renderCell: (row) => {
@@ -164,6 +172,7 @@ export default function useColumns(handleEditData, handleOpenModal) {
             renderCell: (row) => {
                 return dayjs(row?.updatedAt).format("DD MMMM YYYY, h:mm A");
             },
+            width: 200
         },
         {
             id: "status",
@@ -188,7 +197,8 @@ export default function useColumns(handleEditData, handleOpenModal) {
                     </Stack >
                 );
             },
-            sticky: true
+            sticky: true,
+            width: 100
         },
     ];
     return { columns, columns2 }

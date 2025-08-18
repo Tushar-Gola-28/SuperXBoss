@@ -39,6 +39,7 @@ export default function useColumns(handleEditData, handleOpenModal) {
             renderCell: (row) => {
                 return dayjs(row?.updatedAt).format("DD MMMM YYYY, h:mm A");
             },
+            width: 200
         },
 
         {

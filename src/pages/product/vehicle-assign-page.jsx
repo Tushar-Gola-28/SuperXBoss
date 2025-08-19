@@ -505,7 +505,7 @@ export function VehicleAssignPage() {
                                             <CustomRadio
                                                 name={`status-${brand._id}`}
                                                 title="Status"
-                                                value={String(selected.status || "true")}
+                                                value={String(selected.status)}
                                                 handleChange={handleStatusChange(brand._id)}
                                                 options={[
                                                     { value: "true", label: "Active" },
@@ -551,7 +551,7 @@ export function VehicleAssignPage() {
                                         <CustomRadio
                                             name={`status-${brand._id}`}
                                             title="Status"
-                                            value={String(selected.status || "true")}
+                                            value={String(selected.status)}
                                             handleChange={handleStatusChange(brand.brand._id)}
                                             options={[
                                                 { value: "true", label: "Active" },

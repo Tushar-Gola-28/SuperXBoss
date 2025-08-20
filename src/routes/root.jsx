@@ -31,6 +31,7 @@ import { VehicleAssignPage } from '../pages/product/vehicle-assign-page'
 import { OrderDetailsPage } from '../pages/order/order-details-page'
 import { ChargesPage } from '../pages/Charges/charges-page'
 import { QueriesPage } from '../pages/queries/queries-page'
+import DocumentsPage from '../pages/documents/documents-page'
 
 export const root = [
   {
@@ -287,6 +288,15 @@ export const root = [
           {
             index: true,
             element: <QueriesPage />
+          },
+        ]
+      },
+      {
+        path: urls.DOCUMENTS,
+        children: [
+          {
+            index: true,
+            element: <DocumentsPage />
           },
         ]
       },

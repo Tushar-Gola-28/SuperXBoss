@@ -37,5 +37,6 @@ export const urls = {
     LOGIN: "/login",
     CHARGES: "/charges",
     QUERIES: "/queries",
+    DOCUMENTS: "/documents",
 
 }

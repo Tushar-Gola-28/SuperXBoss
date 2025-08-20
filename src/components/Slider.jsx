@@ -41,6 +41,7 @@ import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import InfoIcon from '@mui/icons-material/Info';
 import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
 import QuizIcon from '@mui/icons-material/Quiz';
+import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
 
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router";
@@ -462,6 +463,15 @@ const Sidebar = ({
             order: 0,
             parent: null,
             path: "/charges",
+            children: []
+        },
+        {
+
+            icon: <HistoryEduIcon />,
+            label: "Documents",
+            order: 0,
+            parent: null,
+            path: "/documents",
             children: []
         },
         {

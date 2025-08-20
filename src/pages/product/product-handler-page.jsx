@@ -235,30 +235,30 @@ export function ProductHandlePage() {
     // }, [])
     useEffect(() => {
         if (product && product_data?._payload) {
-            const { name, video, b2b_price, point, new_arrival, pop_item, part_no, customer_price, min_qty, description, any_discount, item_stock, sku_id, tax, hsn_code, ship_days, return_days, weight, unit, status, trend_part, brand, images, bulk_discount, segment_type, return_policy } = product_data?._payload
+            const { name, video, b2b_price, point, new_arrival, pop_item, part_no, customer_price, min_qty, description, any_discount, item_stock, sku_id, tax, hsn_code, ship_days, return_days, weight, unit, status, trend_part, brand, images, bulk_discount, segment_type, return_policy } = product_data?._payload || {}
             setValues({
-                name,
-                b2b_price,
-                point,
-                new_arrival,
-                pop_item,
-                part_no,
-                customer_price,
-                min_qty,
-                any_discount,
-                item_stock,
-                sku_id,
-                tax,
-                hsn_code,
-                ship_days,
-                return_days,
+                name: name || "",
+                b2b_price: b2b_price || "",
+                point: point || 0,
+                new_arrival: new_arrival || "false",
+                pop_item: pop_item || "false",
+                part_no: part_no || "",
+                customer_price: customer_price || 0,
+                min_qty: min_qty || 1,
+                any_discount: any_discount || "",
+                item_stock: item_stock || 1,
+                sku_id: sku_id || "",
+                tax: tax || "",
+                hsn_code: hsn_code || "",
+                ship_days: ship_days || "",
+                return_days: return_days || "",
                 unit: unit._id,
-                status,
-                trend_part,
+                status: status || "true",
+                trend_part: trend_part || "false",
                 brand_id: brand?._id,
                 segment_type: segment_type.map((it) => it._id),
-                return_policy,
-                description
+                return_policy: return_policy || "",
+                description: description || ""
             })
             if (images) {
                 setPrevImages(images)

@@ -1,25 +1,21 @@
 import { CustomInput, CustomModal, CustomRadio, notify } from '../../../components';
-import { Box, Button, Checkbox, FormControl, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, Stack, TextField } from '@mui/material';
+import { Button, Checkbox, FormControl, ListItemText, MenuItem, Select, Stack, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import ImageUpload from '../../../components/ui/ImageUpload';
 import { useEffect, useState } from 'react';
-import { fetchBrandType, fetchVehicleSegmentType } from '../../../services/for-all';
-import { handleKeyPress } from '../../../functions';
+import { fetchBrandType } from '../../../services/for-all';
 import { createBrand, editBrand } from '../../../services/brands';
 import { fetchSegmentsAll } from '../../../services/segments';
 import { SegmentModal } from '../../segment/modal/SegmentModal';
 import { useModalControl } from '../../../hooks/useModalControl';
-import { VehicleModal } from './VehicleModal';
 import { fetchCategories } from '../../../services';
 import { CreateCategory } from '../../categories/modals/create-category';
 
 export function BrandSpareModal({ open, close, refetch, editData, handleEditData }) {
-
     const [images, setImages] = useState()
-    const [brand, setBrand] = useState([])
     const { open: isOpen, handleCloseModal, handleOpenModal } = useModalControl()
     const { open: isOpen2, handleCloseModal: handleCloseModal2, handleOpenModal: handleOpenModal2 } = useModalControl()
     const formik = useFormik({
@@ -28,10 +24,7 @@ export function BrandSpareModal({ open, close, refetch, editData, handleEditData
             description: '',
             status: "true",
             type: "",
-            // brand_day_offer: "",
             category: [],
-            brand_day: "false"
-
         },
         validationSchema: Yup.object({
             name: Yup.string().required('Name is required'),
@@ -46,16 +39,11 @@ export function BrandSpareModal({ open, close, refetch, editData, handleEditData
             let formData = new FormData()
             formData.append("name", values.name)
             formData.append("type", values.type)
-            // formData.append("brand_day_offer", values.brand_day_offer)
-            // formData.append("brand_day", values.brand_day)
             if (images[0]?.file) {
                 formData.append("logo", images[0]?.file)
             }
             formData.append("description", values.description)
             formData.append("status", values.status)
-            // brand.forEach(element => {
-            //     formData.append("brand_segment", element)
-            // });
             values.category.forEach(element => {
                 formData.append("categories", element)
             });
@@ -90,10 +78,6 @@ export function BrandSpareModal({ open, close, refetch, editData, handleEditData
         }
     });
 
-    const { data, refetch: segmentRefetch } = useQuery({
-        queryKey: ['fetchSegmentsAll',],
-        queryFn: ({ signal }) => fetchSegmentsAll(signal)
-    })
     const { data: brandTypes } = useQuery({
         queryKey: ['brandTypes',],
         queryFn: ({ signal }) => fetchBrandType(signal)
@@ -122,24 +106,17 @@ export function BrandSpareModal({ open, close, refetch, editData, handleEditData
         queryFn: ({ signal }) => fetchCategories(signal, 1, 15, undefined, undefined, "false")
     })
     useEffect(() => {
-        if (editData && data?._payload && brandTypes?._payload) {
+        if (editData && brandTypes?._payload) {
             formik.setValues({
                 name: editData?.name,
                 description: editData?.description,
                 status: String(editData?.status),
-                brand_day: String(editData?.brand_day),
-                brand_day_offer: editData?.brand_day_offer,
-                type: editData?.type,
                 category: editData?.categories?.length > 0 ? editData?.categories?.map((it) => it._id) : []
 
             })
             setImages([{ preview: editData?.logo }])
-
-            setBrand(editData?.brand_segment?.map((it) => it._id))
         }
-    }, [editData, data?._payload, brandTypes?._payload, category?._payload])
-
-
+    }, [editData, brandTypes?._payload, category?._payload])
 
     return (
         <div>

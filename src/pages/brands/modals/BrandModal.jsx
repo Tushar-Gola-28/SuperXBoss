@@ -6,22 +6,17 @@ import * as Yup from 'yup';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import ImageUpload from '../../../components/ui/ImageUpload';
 import { useEffect, useState } from 'react';
-import { fetchBrandType, fetchVehicleSegmentType } from '../../../services/for-all';
-import { handleKeyPress } from '../../../functions';
+import { fetchBrandType } from '../../../services/for-all';
 import { createBrand, editBrand } from '../../../services/brands';
 import { fetchSegmentsAll } from '../../../services/segments';
 import { SegmentModal } from '../../segment/modal/SegmentModal';
 import { useModalControl } from '../../../hooks/useModalControl';
-import { VehicleModal } from './VehicleModal';
-import { fetchCategories } from '../../../services';
-import { CreateCategory } from '../../categories/modals/create-category';
 
 export function BrandModal({ open, close, refetch, editData, handleEditData }) {
 
     const [images, setImages] = useState()
     const [brand, setBrand] = useState([])
     const { open: isOpen, handleCloseModal, handleOpenModal } = useModalControl()
-    const { open: isOpen2, handleCloseModal: handleCloseModal2, handleOpenModal: handleOpenModal2 } = useModalControl()
     const formik = useFormik({
         initialValues: {
             name: '',
@@ -109,25 +104,21 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
         mutationFn: async (data) => {
             return await editBrand(data, editData?._id)
         },
-    })
-    const { data: category, refetch: categoryRefetch } = useQuery({
-        queryKey: ['categories',],
-        queryFn: ({ signal }) => fetchCategories(signal, 1, 15, undefined, undefined, "false")
-    })
+    });
+
+
     useEffect(() => {
         if (editData && data?._payload && brandTypes?._payload) {
             formik.setValues({
                 name: editData?.name,
                 description: editData?.description,
                 status: String(editData?.status),
-                category: editData?.categories?.length > 0 ? editData?.categories?.map((it) => it._id) : []
-
             })
             setImages([{ preview: editData?.logo }])
 
             setBrand(editData?.brand_segment?.map((it) => it._id))
         }
-    }, [editData, data?._payload, brandTypes?._payload, category?._payload])
+    }, [editData, data?._payload, brandTypes?._payload,])
 
 
 
@@ -229,19 +220,6 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                             </Box>
                         }
                     />
-                    {/* <CustomRadio
-                        name="brand_day"
-                        title="Brand Day"
-                        required
-                        value={formik.values.brand_day}
-                        handleChange={formik.handleChange}
-                        options={
-                            [
-                                { value: "true", label: "Yes" },
-                                { value: "false", label: "No" },
-                            ]
-                        }
-                    /> */}
                     <CustomRadio
                         name="status"
                         title="Status"
@@ -256,7 +234,6 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                     />
                 </Stack>
                 {isOpen && <SegmentModal open={isOpen} close={() => { handleCloseModal(); }} refetch={segmentRefetch} />}
-                {isOpen2 && <CreateCategory open={isOpen2} close={() => { handleCloseModal2(); }} refetch={categoryRefetch} />}
             </CustomModal>
         </div>
     )

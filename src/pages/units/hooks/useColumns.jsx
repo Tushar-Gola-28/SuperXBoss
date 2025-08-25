@@ -1,11 +1,7 @@
 import { IconButton, Stack } from '@mui/material';
 import dayjs from 'dayjs';
 import EditIcon from '@mui/icons-material/Edit';
-import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
-import { useNavigate, useParams } from 'react-router';
-import { HoverAvatar } from '../../../components';
 export default function useColumns(handleEditData, handleOpenModal) {
-    const navigate = useNavigate()
     const columns = [
         {
             id: "S No", label: "S No.", renderCell: (row, index) => {
@@ -61,9 +57,6 @@ export default function useColumns(handleEditData, handleOpenModal) {
                     <Stack direction="row" justifyContent="center" gap="10px">
                         <IconButton color="primary" onClick={() => { handleEditData(row); handleOpenModal() }}>
                             <EditIcon />
-                        </IconButton>
-                        <IconButton color="primary" onClick={() => navigate(`sub-categories/${row?._id}`)}>
-                            <PlaylistAddIcon />
                         </IconButton>
                     </Stack >
                 );

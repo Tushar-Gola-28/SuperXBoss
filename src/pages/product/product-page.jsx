@@ -1,16 +1,17 @@
-import { Box, Button, InputAdornment, Stack, TextField } from '@mui/material'
+import { Box, Button, FormControl, InputAdornment, ListItemText, MenuItem, Select, Stack, TextField } from '@mui/material'
 import SectionHeader from '../../components/SectionHeader'
 import searchIcon from '../../assets/search.svg'
 import AddIcon from '@mui/icons-material/Add';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
-import { CustomPagination, CustomTable } from '../../components';
+import { CustomInput, CustomPagination, CustomTable } from '../../components';
 import useColumns from './hooks/useColumns';
 import { useQuery } from '@tanstack/react-query';
 import { usePagination } from '../../hooks/usePagination';
 import { useLocation, useNavigate } from 'react-router';
 import { urls } from '../../routes';
 import { fetchProducts } from '../../services/product';
+import { fetchActiveBrands } from '../../services/brands';
 
 export function ProductPage() {
     const navigate = useNavigate()
@@ -31,10 +32,15 @@ export function ProductPage() {
     const handleSearch = debounce((value) => {
         setSearch(value)
     }, 600)
+    const [brand, setBrand] = useState("")
+    const { data: active_brand, refetch: fetchBrand, isLoading: isLoading2 } = useQuery({
+        queryKey: ['fetchActiveBrands',],
+        queryFn: ({ signal }) => fetchActiveBrands(signal)
+    })
 
     const { data, isLoading, } = useQuery({
-        queryKey: ['fetchProducts', page + 1, page_size, search],
-        queryFn: ({ signal }) => fetchProducts(signal, "", page + 1, page_size, search),
+        queryKey: ['fetchProducts', page + 1, page_size, search, brand],
+        queryFn: ({ signal }) => fetchProducts(signal, "", page + 1, page_size, search, undefined, brand),
         enabled: savedPage !== null,
     })
     useEffect(() => {
@@ -82,7 +88,29 @@ export function ProductPage() {
                         ),
                     }}
                 />
-                <Stack>
+                <Stack direction="row" alignItems="center" gap="10px" flexWrap="wrap">
+                    <CustomInput
+                        input={
+                            <FormControl fullWidth>
+                                <Select
+                                    name="brand_id"
+                                    required
+                                    displayEmpty
+                                    onChange={(e) => setBrand(e.target.value)}
+                                    value={brand}
+                                >
+                                    <MenuItem value={""}>
+                                        <em> <ListItemText primary={"-Select Brand-"} /></em>
+                                    </MenuItem>
+                                    {active_brand?._payload?.map(({ name, _id, type }) => (
+                                        <MenuItem key={_id} value={_id}>
+                                            <ListItemText primary={`${name} (${type.name})`} />
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        }
+                    />
                     <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate(`${urls?.PRODUCTS_HANDLER}/`)} >Create Product</Button>
                 </Stack>
             </Stack>

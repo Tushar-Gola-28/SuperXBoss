@@ -1,4 +1,4 @@
-import { Box, Button, InputAdornment, MenuItem, Select, Stack, TextField } from '@mui/material'
+import { Box, Button, InputAdornment, MenuItem, Select, Stack, Tab, Tabs, TextField } from '@mui/material'
 import SectionHeader from '../../components/SectionHeader'
 import searchIcon from '../../assets/search.svg'
 import AddIcon from '@mui/icons-material/Add';
@@ -17,7 +17,12 @@ export function BrandsPage() {
     const { editData, handleEditData } = useEditData()
     const { open, handleCloseModal, handleOpenModal } = useModalControl()
     const [search, setSearch] = useState("")
-    const [type, setType] = useState("")
+    const [value, setValue] = useState("Vehicle");
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
+
     const { columns } = useColumns(handleEditData, handleOpenModal)
     const { page, setPage, page_size, total_records, setTotal_records, totalPages, setTotalPages, handlePageSize } = usePagination()
     const handleSearch = debounce((value) => {
@@ -26,8 +31,8 @@ export function BrandsPage() {
 
 
     const { data, isLoading, refetch } = useQuery({
-        queryKey: ['brands', page, page_size, search, type],
-        queryFn: ({ signal }) => fetchBrands(signal, page, page_size, search, type)
+        queryKey: ['brands', page, page_size, search, value],
+        queryFn: ({ signal }) => fetchBrands(signal, page, page_size, search, value)
     })
     useEffect(() => {
         if (data?.pagination) {
@@ -35,11 +40,7 @@ export function BrandsPage() {
             setTotalPages(data?.pagination?.totalPages)
         }
     }, [data])
-    const dataMenu = [
-        { value: "", name: "All Brands" },
-        { value: "Vehicle", name: "Vehicle" },
-        { value: "Spare Parts", name: "Spare Parts" },
-    ];
+
     return (
         <Box>
             <SectionHeader heading="Brands" icon="https://ticketsque-public.s3.ap-south-1.amazonaws.com/icons/Events.svg" />
@@ -64,28 +65,17 @@ export function BrandsPage() {
                     }}
                 />
                 <Stack direction="row" gap="10px" alignItems="center">
-                    <Select select sx={{ width: { xs: "140px", md: "150px" } }} size='small'
-                        value={type}
-                        onChange={(e) => setType(e.target.value)}
-                        displayEmpty
-                    >
-                        {
-                            dataMenu?.map(({ name, value }) => {
-                                return (
-                                    <MenuItem value={value} key={value}>
-                                        <span >{name}</span>
-                                    </MenuItem>
-                                )
-                            })
-                        }
-
-
-                    </Select>
                     <Stack>
                         <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenModal} >Create Brand</Button>
                     </Stack>
                 </Stack>
             </Stack>
+            <Box sx={{ mb: 2, display: "inline", display: "flex" }}>
+                <Tabs value={value} onChange={handleChange} sx={{ bgcolor: "white", borderBottom: 1, borderColor: 'divider', }}>
+                    <Tab label="Vehicle" value="Vehicle" />
+                    <Tab label="Spare Parts" value="Spare Parts" />
+                </Tabs>
+            </Box>
             <CustomTable
                 rows={data?._payload}
                 columns={columns}

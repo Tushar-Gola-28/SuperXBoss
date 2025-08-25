@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import PageStructure from '../../components/ui/PageStructure'
-import { Backdrop, Button, Checkbox, CircularProgress, FormControl, Grid2, IconButton, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, Stack, TextField, Typography } from '@mui/material'
+import { Backdrop, Box, Button, Checkbox, CircularProgress, FormControl, Grid2, IconButton, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, Stack, TextField, Typography } from '@mui/material'
 import ImageUpload from '../../components/ui/ImageUpload'
 import { CustomInput, CustomPaper, CustomRadio, notify, VideoUpload } from '../../components'
 import CloseIcon from '@mui/icons-material/Close';
@@ -276,6 +276,7 @@ export function ProductHandlePage() {
     const { open, handleCloseModal, handleOpenModal } = useModalControl()
     const { open: isOpen, handleCloseModal: handleCloseSegmentModal, handleOpenModal: handleOpenSegmentModal } = useModalControl()
     const { open: isOpen2, handleCloseModal: handleCloseUnitModal, handleOpenModal: handleOpenUnitModal } = useModalControl()
+    const [open4, setOpen4] = useState(false);
 
     if (isLoading || isLoading2, isLoading3 || isLoading4) {
         return <Backdrop
@@ -461,16 +462,21 @@ export function ProductHandlePage() {
                                         </Stack>
                                     </Grid2>
                                     <Grid2 size={{ xs: 12 }}>
+
                                         <CustomInput
                                             label="Vehicle Segment"
                                             required
                                             input={
                                                 <FormControl fullWidth>
-                                                    <InputLabel id="demo-multiple-checkbox-label">Vehicle Segment</InputLabel>
+                                                    <InputLabel id="vehicle-segment-label">Vehicle Segment</InputLabel>
                                                     <Select
+                                                        labelId="vehicle-segment-label"
                                                         multiple
+                                                        open={open4}
+                                                        onClose={() => setOpen4(false)}
+                                                        onOpen={() => setOpen4(true)}
                                                         onChange={handleChange}
-                                                        name='segment_type'
+                                                        name="segment_type"
                                                         required
                                                         value={values.segment_type}
                                                         input={<OutlinedInput label="Vehicle Segment" />}
@@ -478,15 +484,48 @@ export function ProductHandlePage() {
                                                             data?._payload
                                                                 ?.filter(({ _id }) => selected.includes(_id))
                                                                 .map(({ name }) => name)
-                                                                .join(', ')
+                                                                .join(", ")
                                                         }
+                                                        MenuProps={{
+                                                            PaperProps: {
+                                                                sx: {
+                                                                    maxHeight: 300, // fixed height
+                                                                    display: "flex",
+                                                                    flexDirection: "column",
+                                                                },
+                                                            },
+                                                        }}
                                                     >
+                                                        {/* ✅ Scrollable list */}
                                                         {data?._payload?.map(({ _id, name }) => (
                                                             <MenuItem key={_id} value={_id}>
                                                                 <Checkbox checked={values.segment_type?.includes(_id)} />
                                                                 <ListItemText primary={name} />
                                                             </MenuItem>
                                                         ))}
+
+                                                        {/* ✅ Static "Done" footer */}
+                                                        <Box
+                                                            sx={{
+                                                                borderTop: "1px solid #e0e0e0",
+                                                                p: 1,
+                                                                textAlign: "right",
+                                                                backgroundColor: "background.paper",
+                                                                position: "sticky",
+                                                                bottom: 0,
+                                                            }}
+                                                            onClick={() => setOpen4(false)}
+                                                        >
+                                                            <Button
+                                                                variant="contained"
+                                                                size="small"
+                                                                onClick={() => {
+                                                                    setOpen4(false);
+                                                                }}
+                                                            >
+                                                                Done
+                                                            </Button>
+                                                        </Box>
                                                     </Select>
                                                 </FormControl>
                                             }

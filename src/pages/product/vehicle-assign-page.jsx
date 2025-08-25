@@ -291,6 +291,7 @@ import { LoadingButton } from '@mui/lab';
 import { createVehicleAssign, getVehicleAssign } from '../../services/product';
 import { useNavigate, useParams } from 'react-router';
 import CategoryTree from './CategoryTree';
+import dayjs from 'dayjs';
 
 export function VehicleAssignPage() {
     const navigate = useNavigate();
@@ -416,20 +417,40 @@ export function VehicleAssignPage() {
 
                                         <Autocomplete
                                             multiple
-                                            options={brand.vehicles || []}
-                                            getOptionLabel={(option) => `${option.name} (${option.start_year}-${option.end_year})`}
+                                            options={["__select_all__", ...(brand.vehicles || [])]} // add "Select All"
+                                            getOptionLabel={(option) =>
+                                                option === "__select_all__"
+                                                    ? "Select All"
+                                                    : `${option.name} (${option.start_year}-${option.end_year})`
+                                            }
                                             value={selectedVehicles}
-                                            onChange={(e, newValue) => handleVehicleChange(brand._id, newValue)}
+                                            onChange={(e, newValue, reason, details) => {
+                                                if (newValue.includes("__select_all__")) {
+                                                    const allSelected = selectedVehicles.length === (brand.vehicles?.length || 0);
+
+                                                    handleVehicleChange(
+                                                        brand._id,
+                                                        allSelected ? [] : brand.vehicles // toggle
+                                                    );
+                                                } else {
+                                                    handleVehicleChange(brand._id, newValue);
+                                                }
+                                            }}
+                                            disableCloseOnSelect
                                             filterOptions={(options, { inputValue }) => {
                                                 const norm = (s) =>
                                                     (s ?? "")
                                                         .toLowerCase()
-                                                        .replace(/\s+/g, " ") // collapse multiple spaces
+                                                        .replace(/\s+/g, " ")
                                                         .trim();
                                                 const q = norm(inputValue);
-                                                return options.filter(o => (o.name || "").toLowerCase().includes(q));
+
+                                                return options.filter((o) =>
+                                                    o === "__select_all__"
+                                                        ? true // always show "Select All"
+                                                        : (o.name || "").toLowerCase().includes(q)
+                                                );
                                             }}
-                                            disableCloseOnSelect
                                             renderInput={(params) => (
                                                 <TextField
                                                     {...params}
@@ -441,66 +462,84 @@ export function VehicleAssignPage() {
                                                 />
                                             )}
                                             renderTags={(value, getTagProps) => (
-                                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                                    {value.map((option, index) => (
-                                                        <Chip
-                                                            {...getTagProps({ index })}
-                                                            key={option._id}
-                                                            label={`${option.name} (${option.start_year}-${option.end_year})`}
-                                                            size="small"
+                                                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                                                    {value
+                                                        .filter((v) => v !== "__select_all__") // don't show tag for Select All
+                                                        .map((option, index) => (
+                                                            <Chip
+                                                                {...getTagProps({ index })}
+                                                                key={option._id}
+                                                                label={`${option.name} (${option.start_year}-${option.end_year || dayjs().format("YYYY")})`}
+                                                                size="small"
+                                                                sx={{
+                                                                    backgroundColor: "primary.light",
+                                                                    color: "primary.contrastText",
+                                                                    "& .MuiChip-deleteIcon": {
+                                                                        color: "primary.contrastText",
+                                                                    },
+                                                                }}
+                                                            />
+                                                        ))}
+                                                </Box>
+                                            )}
+                                            renderOption={(props, option, { selected }) => {
+                                                const isSelectAll = option === "__select_all__";
+                                                const allSelected = selectedVehicles.length === (brand.vehicles?.length || 0);
+
+                                                return (
+                                                    <MenuItem
+                                                        {...props}
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+
+                                                            if (isSelectAll) {
+                                                                handleVehicleChange(
+                                                                    brand._id,
+                                                                    allSelected ? [] : brand.vehicles
+                                                                );
+                                                            } else {
+                                                                const newSelected = selectedVehicles.some((v) => v._id === option._id)
+                                                                    ? selectedVehicles.filter((v) => v._id !== option._id)
+                                                                    : [...selectedVehicles, option];
+                                                                handleVehicleChange(brand._id, newSelected);
+                                                            }
+                                                        }}
+                                                    >
+                                                        <Checkbox
+                                                            checked={isSelectAll ? allSelected : selected}
+                                                            indeterminate={
+                                                                isSelectAll &&
+                                                                selectedVehicles.length > 0 &&
+                                                                selectedVehicles.length < (brand.vehicles?.length || 0)
+                                                            }
                                                             sx={{
-                                                                backgroundColor: 'primary.light',
-                                                                color: 'primary.contrastText',
-                                                                '& .MuiChip-deleteIcon': {
-                                                                    color: 'primary.contrastText',
+                                                                color: "primary.main",
+                                                                "&.Mui-checked": {
+                                                                    color: "primary.main",
                                                                 },
                                                             }}
                                                         />
-                                                    ))}
-                                                </Box>
-                                            )}
-                                            renderOption={(props, option, { selected }) => (
-                                                <MenuItem
-                                                    {...props}
-                                                    sx={{
-                                                        backgroundColor: selected ? 'action.selected' : 'background.paper',
-                                                        '&:hover': {
-                                                            backgroundColor: 'action.hover',
-                                                        },
-                                                    }}
-                                                    onClick={(e) => {
-                                                        // Prevent default to stop auto-scrolling
-                                                        e.preventDefault();
-                                                        e.stopPropagation();
-                                                        const newSelected = selectedVehicles.includes(option)
-                                                            ? selectedVehicles.filter(v => v._id !== option._id)
-                                                            : [...selectedVehicles, option];
-                                                        handleVehicleChange(brand._id, newSelected);
-                                                    }}
-                                                >
-                                                    <Checkbox
-                                                        checked={selected}
-                                                        sx={{
-                                                            color: 'primary.main',
-                                                            '&.Mui-checked': {
-                                                                color: 'primary.main',
-                                                            },
-                                                        }}
-                                                    />
-                                                    <ListItemText
-                                                        primary={`${option.name} (${option.start_year}-${option.end_year})`}
-                                                    />
-                                                </MenuItem>
-                                            )}
+                                                        <ListItemText
+                                                            primary={
+                                                                isSelectAll
+                                                                    ? "Select All"
+                                                                    : `${option.name} (${option.start_year}-${option.end_year || dayjs().format("YYYY")})`
+                                                            }
+                                                        />
+                                                    </MenuItem>
+                                                );
+                                            }}
                                             sx={{
-                                                '& .MuiAutocomplete-inputRoot': {
-                                                    padding: '5px 9px',
+                                                "& .MuiAutocomplete-inputRoot": {
+                                                    padding: "5px 9px",
                                                 },
-                                                '& .MuiOutlinedInput-root': {
-                                                    borderRadius: '8px',
+                                                "& .MuiOutlinedInput-root": {
+                                                    borderRadius: "8px",
                                                 },
                                             }}
                                         />
+
                                         <Stack mt={2}>
                                             <CustomRadio
                                                 name={`status-${brand._id}`}
@@ -509,7 +548,7 @@ export function VehicleAssignPage() {
                                                 handleChange={handleStatusChange(brand._id)}
                                                 options={[
                                                     { value: "true", label: "Active" },
-                                                    { value: "false", label: "Inactive" },
+                                                    { value: "false", label: "InActive" },
                                                 ]}
                                                 row
                                             />

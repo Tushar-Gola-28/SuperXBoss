@@ -16,7 +16,7 @@ import { VehicleModal } from './VehicleModal';
 import { fetchCategories } from '../../../services';
 import { CreateCategory } from '../../categories/modals/create-category';
 
-export function BrandModal({ open, close, refetch, editData, handleEditData }) {
+export function BrandSpareModal({ open, close, refetch, editData, handleEditData }) {
 
     const [images, setImages] = useState()
     const [brand, setBrand] = useState([])
@@ -28,6 +28,9 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
             description: '',
             status: "true",
             type: "",
+            // brand_day_offer: "",
+            category: [],
+            brand_day: "false"
 
         },
         validationSchema: Yup.object({
@@ -43,6 +46,8 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
             let formData = new FormData()
             formData.append("name", values.name)
             formData.append("type", values.type)
+            // formData.append("brand_day_offer", values.brand_day_offer)
+            // formData.append("brand_day", values.brand_day)
             if (images[0]?.file) {
                 formData.append("logo", images[0]?.file)
             }
@@ -51,6 +56,9 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
             // brand.forEach(element => {
             //     formData.append("brand_segment", element)
             // });
+            values.category.forEach(element => {
+                formData.append("categories", element)
+            });
             if (editData) {
                 updateMutation.mutate(formData, {
                     onSuccess: ({ data: data }) => {
@@ -93,13 +101,12 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
 
     useEffect(() => {
         if (brandTypes?._payload?.length) {
-            const valueData = brandTypes?._payload.find((it) => it.name == "Vehicle")
+            const valueData = brandTypes?._payload.find((it) => it.name == "Spare Parts")
             if (valueData) {
                 formik.setFieldValue("type", valueData._id)
             }
         }
     }, [brandTypes])
-
     const createMutation = useMutation({
         mutationFn: async (data) => {
             return await createBrand(data)
@@ -120,6 +127,9 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                 name: editData?.name,
                 description: editData?.description,
                 status: String(editData?.status),
+                brand_day: String(editData?.brand_day),
+                brand_day_offer: editData?.brand_day_offer,
+                type: editData?.type,
                 category: editData?.categories?.length > 0 ? editData?.categories?.map((it) => it._id) : []
 
             })
@@ -137,7 +147,7 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                 {...{
                     open,
                     close,
-                    heading: editData ? "Update Vehicle Brand" : 'Create Vehicle Brand',
+                    heading: editData ? "Update Spare Brand" : 'Create Spare Brand',
                     action: (
                         <LoadingButton
                             variant="contained"
@@ -193,6 +203,132 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                             />
                         }
                     />
+                    {/* {brandTypes?._payload?.find((it) => it._id == formik.values.type)?.name == "Spare Parts" && <CustomInput
+                        label="Categories"
+                        input={
+                            <Box>
+
+                                <FormControl fullWidth>
+                                    <Select
+                                        value={formik.values.category}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        name="category"
+                                        multiple
+                                        ret
+                                        renderValue={(selected) =>
+                                            category?._payload
+                                                ?.filter(({ _id }) => selected.includes(_id))
+                                                .map(({ name }) => name)
+                                                .join(', ')
+                                        }
+                                    >
+                                        <MenuItem value={""}>
+                                            <em> <ListItemText primary={"Select Categories"} /></em>
+                                        </MenuItem>
+                                        {category?._payload?.map(({ name, _id }) => (
+                                            <MenuItem key={name} value={_id}>
+                                                <Checkbox checked={formik.values.category.includes(_id)} />
+                                                <ListItemText primary={name} />
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <Stack direction="row" justifyContent="flex-end" mt={1}>
+                                    <Button variant="outlined" onClick={handleOpenModal2}>
+                                        Add Category
+                                    </Button>
+
+                                </Stack>
+                            </Box>
+                        }
+                    />} */}
+
+                    {brandTypes?._payload?.find((it) => it._id == formik.values.type)?.name == "Spare Parts" && (
+                        <CustomInput
+                            label="Categories"
+                            input={
+                                <>
+                                    <FormControl fullWidth>
+                                        <Select
+                                            value={formik.values.category}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+
+                                                // If user clicks "all"
+                                                if (value.includes("all")) {
+                                                    if (formik.values.category.length === category?._payload?.length) {
+                                                        // Deselect all
+                                                        formik.setFieldValue("category", []);
+                                                    } else {
+                                                        // Select all
+                                                        formik.setFieldValue(
+                                                            "category",
+                                                            category?._payload?.map(({ _id }) => _id) || []
+                                                        );
+                                                    }
+                                                } else {
+                                                    formik.setFieldValue("category", value);
+                                                }
+                                            }}
+                                            onBlur={formik.handleBlur}
+                                            name="category"
+                                            multiple
+                                            MenuProps={{
+                                                PaperProps: {
+                                                    style: {
+                                                        maxHeight: 250, // 👈 fixed max height
+                                                        width: 300,     // optional: fix width
+                                                    },
+                                                },
+                                            }}
+                                            renderValue={(selected) =>
+                                                category?._payload
+                                                    ?.filter(({ _id }) => selected.includes(_id))
+                                                    .map(({ name }) => name)
+                                                    .join(", ")
+                                            }
+                                        >
+                                            {/* ✅ Select All Option */}
+                                            <MenuItem value="all">
+                                                <Checkbox
+                                                    checked={
+                                                        formik.values.category.length === category?._payload?.length
+                                                    }
+                                                    indeterminate={
+                                                        formik.values.category.length > 0 &&
+                                                        formik.values.category.length < category?._payload?.length
+                                                    }
+                                                />
+                                                <ListItemText primary="Select All" />
+                                            </MenuItem>
+
+                                            {/* Default option */}
+                                            {/* <MenuItem value="">
+                                                <em>
+                                                    <ListItemText primary={"Select Categories"} />
+                                                </em>
+                                            </MenuItem> */}
+
+                                            {/* Dynamic categories */}
+                                            {category?._payload?.map(({ name, _id }) => (
+                                                <MenuItem key={_id} value={_id}>
+                                                    <Checkbox checked={formik.values.category.includes(_id)} />
+                                                    <ListItemText primary={name} />
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+
+                                    <Stack direction="row" justifyContent="flex-end" mt={1}>
+                                        <Button variant="outlined" onClick={handleOpenModal2}>
+                                            Add Category
+                                        </Button>
+                                    </Stack>
+                                </>
+                            }
+                        />
+                    )}
 
                     {/* <CustomInput
                         label="Vehicle Segment"

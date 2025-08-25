@@ -13,17 +13,33 @@ import { usePagination } from '../../hooks/usePagination';
 import { useEditData } from '../../hooks/useEdit';
 import { BrandModal } from './modals/BrandModal';
 import { fetchBrands } from '../../services/brands';
+import { createSearchParams, useNavigate, useSearchParams } from 'react-router';
+import { BrandSpareModal } from './modals/BrandSpareModal';
 export function BrandsPage() {
     const { editData, handleEditData } = useEditData()
+    const navigate = useNavigate()
+    const [searchParams] = useSearchParams();
+    const tab = searchParams.get("tab");
     const { open, handleCloseModal, handleOpenModal } = useModalControl()
+    const { open: isOpen, handleCloseModal: handleCloseModal1, handleOpenModal: handleOpenModal1 } = useModalControl()
     const [search, setSearch] = useState("")
-    const [value, setValue] = useState("Vehicle");
+    const [value, setValue] = useState(() => tab || "Vehicle");
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
-    };
 
-    const { columns } = useColumns(handleEditData, handleOpenModal)
+        navigate({
+            pathname: "/brands",
+            search: `?${createSearchParams({ tab: newValue })}`,
+        });
+    };
+    useEffect(() => {
+        if (tab) {
+            setValue(tab)
+        }
+    }, [tab])
+
+    const { columns } = useColumns(handleEditData, handleOpenModal, handleOpenModal1)
     const { page, setPage, page_size, total_records, setTotal_records, totalPages, setTotalPages, handlePageSize } = usePagination()
     const handleSearch = debounce((value) => {
         setSearch(value)
@@ -66,7 +82,12 @@ export function BrandsPage() {
                 />
                 <Stack direction="row" gap="10px" alignItems="center">
                     <Stack>
-                        <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenModal} >Create Brand</Button>
+                        {
+                            value == "Vehicle" ?
+                                <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenModal} >Create Vehicle Brand </Button>
+                                :
+                                <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenModal1} >Create Spare Brand</Button>
+                        }
                     </Stack>
                 </Stack>
             </Stack>
@@ -83,6 +104,7 @@ export function BrandsPage() {
             />
             {data?._payload?.length > 0 && <CustomPagination  {...{ page, page_size, total_records, setPage, totalPages, handlePageSize }} />}
             {open && <BrandModal open={open} close={() => { handleCloseModal(); handleEditData(null) }} refetch={refetch} editData={editData} handleEditData={handleEditData} />}
+            {isOpen && <BrandSpareModal open={isOpen} close={() => { handleCloseModal1(); handleEditData(null) }} refetch={refetch} editData={editData} handleEditData={handleEditData} />}
         </Box>
     )
 }

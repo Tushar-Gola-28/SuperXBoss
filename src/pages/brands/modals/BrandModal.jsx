@@ -48,9 +48,9 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
             }
             formData.append("description", values.description)
             formData.append("status", values.status)
-            // brand.forEach(element => {
-            //     formData.append("brand_segment", element)
-            // });
+            brand.forEach(element => {
+                formData.append("brand_segment", element)
+            });
             if (editData) {
                 updateMutation.mutate(formData, {
                     onSuccess: ({ data: data }) => {
@@ -84,7 +84,7 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
 
     const { data, refetch: segmentRefetch } = useQuery({
         queryKey: ['fetchSegmentsAll',],
-        queryFn: ({ signal }) => fetchSegmentsAll(signal)
+        queryFn: ({ signal }) => fetchSegmentsAll(signal, editData ? "" : true)
     })
     const { data: brandTypes } = useQuery({
         queryKey: ['brandTypes',],
@@ -194,7 +194,7 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                         }
                     />
 
-                    {/* <CustomInput
+                    <CustomInput
                         label="Vehicle Segment"
                         input={
                             <Box>
@@ -228,7 +228,7 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                                 </Stack>
                             </Box>
                         }
-                    /> */}
+                    />
                     {/* <CustomRadio
                         name="brand_day"
                         title="Brand Day"

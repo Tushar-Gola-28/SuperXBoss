@@ -90,7 +90,7 @@ export function ProductHandlePage() {
         status: Yup.string().oneOf(['true', 'false'], 'Invalid value').required(),
         trend_part: Yup.string().oneOf(['true', 'false'], 'Invalid value').required(),
     });
-    const { handleBlur, handleChange, values, errors, touched, setValues, handleSubmit } = useFormik({
+    const { handleBlur, handleChange, values, errors, touched, setValues, handleSubmit, setFieldValue } = useFormik({
         initialValues: {
             name: '',
             point: "0",
@@ -206,33 +206,6 @@ export function ProductHandlePage() {
             return await updateProduct(data, product)
         },
     })
-
-    // useEffect(() => {
-    //     setValues({
-    //         name: 'Product 1',
-    //         point: "10",
-    //         new_arrival: "false",
-    //         pop_item: "false",
-    //         part_no: "23456789",
-    //         segment_type: [],
-    //         customer_price: '1000',
-    //         b2b_price: '1000',
-    //         min_qty: '1',
-    //         any_discount: '0',
-    //         brand_id: '',
-    //         item_stock: '100',
-    //         tax: '18',
-    //         sku_id: '23456789',
-    //         hsn_code: '12345',
-    //         ship_days: "7",
-    //         return_days: "10",
-    //         return_policy: "",
-    //         weight: "1000",
-    //         unit: "kilograms",
-    //         status: "false",
-    //         trend_part: "false",
-    //     })
-    // }, [])
     useEffect(() => {
         if (product && product_data?._payload) {
             const { name, video, b2b_price, point, new_arrival, pop_item, part_no, customer_price, min_qty, description, any_discount, item_stock, sku_id, tax, hsn_code, ship_days, return_days, weight, unit, status, trend_part, brand, images, bulk_discount, segment_type, return_policy } = product_data?._payload || {}
@@ -277,6 +250,20 @@ export function ProductHandlePage() {
     const { open: isOpen, handleCloseModal: handleCloseSegmentModal, handleOpenModal: handleOpenSegmentModal } = useModalControl()
     const { open: isOpen2, handleCloseModal: handleCloseUnitModal, handleOpenModal: handleOpenUnitModal } = useModalControl()
     const [open4, setOpen4] = useState(false);
+
+    useEffect(() => {
+        if (values.brand_id && !product) {
+            const brands = active_brand?._payload.find((it) => it._id == values.brand_id)
+            if (brands && brands?.brand_segment?.length) {
+                const segments = data._payload?.map(seg => seg._id) || [];
+                const validSegments = brands.brand_segment.filter(seg => segments.includes(seg));
+                setFieldValue("segment_type", validSegments)
+            } else {
+                setFieldValue("segment_type", [])
+
+            }
+        }
+    }, [values.brand_id])
 
     if (isLoading || isLoading2, isLoading3 || isLoading4) {
         return <Backdrop
@@ -442,6 +429,14 @@ export function ProductHandlePage() {
                                                         displayEmpty
                                                         onChange={handleChange}
                                                         value={values.brand_id}
+                                                        MenuProps={{
+                                                            PaperProps: {
+                                                                style: {
+                                                                    maxHeight: 250, // 👈 fixed max height
+                                                                    width: 300,     // optional: fix width
+                                                                },
+                                                            },
+                                                        }}
                                                     >
                                                         <MenuItem value={""}>
                                                             <em> <ListItemText primary={"Select Brand"} /></em>

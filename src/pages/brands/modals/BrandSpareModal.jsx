@@ -84,7 +84,7 @@ export function BrandSpareModal({ open, close, refetch, editData, handleEditData
     })
 
     useEffect(() => {
-        if (brandTypes?._payload?.length) {
+        if (brandTypes?._payload?.length && !editData) {
             const valueData = brandTypes?._payload.find((it) => it.name == "Spare Parts")
             if (valueData) {
                 formik.setFieldValue("type", valueData._id)
@@ -105,11 +105,13 @@ export function BrandSpareModal({ open, close, refetch, editData, handleEditData
         queryKey: ['categories',],
         queryFn: ({ signal }) => fetchCategories(signal, 1, 15, undefined, undefined, "false")
     })
+
     useEffect(() => {
         if (editData && brandTypes?._payload) {
             formik.setValues({
                 name: editData?.name,
                 description: editData?.description,
+                type: editData?.type,
                 status: String(editData?.status),
                 category: editData?.categories?.length > 0 ? editData?.categories?.map((it) => it._id) : []
 
@@ -117,6 +119,7 @@ export function BrandSpareModal({ open, close, refetch, editData, handleEditData
             setImages([{ preview: editData?.logo }])
         }
     }, [editData, brandTypes?._payload, category?._payload])
+
 
     return (
         <div>

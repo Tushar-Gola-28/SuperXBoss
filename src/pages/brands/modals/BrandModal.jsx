@@ -87,13 +87,13 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
     })
 
     useEffect(() => {
-        if (brandTypes?._payload?.length) {
+        if (brandTypes?._payload?.length && !editData) {
             const valueData = brandTypes?._payload.find((it) => it.name == "Vehicle")
             if (valueData) {
                 formik.setFieldValue("type", valueData._id)
             }
         }
-    }, [brandTypes])
+    }, [brandTypes, open])
 
     const createMutation = useMutation({
         mutationFn: async (data) => {
@@ -113,6 +113,7 @@ export function BrandModal({ open, close, refetch, editData, handleEditData }) {
                 name: editData?.name,
                 description: editData?.description,
                 status: String(editData?.status),
+                type: editData?.type,
             })
             setImages([{ preview: editData?.logo }])
 

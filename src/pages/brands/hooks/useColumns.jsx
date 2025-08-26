@@ -71,17 +71,17 @@ export default function useColumns(handleEditData, handleOpenModal, handleOpenMo
             },
             width: 200
         },
-        {
-            id: "brand_day",
-            label: "Brand Day",
-            renderCell: (row) => {
-                return row?.brand_day ? (
-                    <div className="active">Yes</div>
-                ) : (
-                    <div className="pending">No</div>
-                );
-            },
-        },
+        // {
+        //     id: "brand_day",
+        //     label: "Brand Day",
+        //     renderCell: (row) => {
+        //         return row?.brand_day ? (
+        //             <div className="active">Yes</div>
+        //         ) : (
+        //             <div className="pending">No</div>
+        //         );
+        //     },
+        // },
         {
             id: "status",
             label: "Status",

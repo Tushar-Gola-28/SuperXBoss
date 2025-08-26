@@ -41,6 +41,21 @@ export default function useColumns() {
         },
         { id: "name", label: "Name" },
         {
+            id: "Total Brand Assigned", label: "Total Brand Assigned", renderCell: (row) => {
+                return row?.assigned?.brand_ids?.length || 0
+            },
+        },
+        {
+            id: "Total Vehicle Assigned", label: "Total Vehicle Assigned", renderCell: (row) => {
+                return row?.assigned?.vehicle_ids?.length || 0
+            },
+        },
+        {
+            id: "Total Categories Assigned", label: "Total Categories Assigned", renderCell: (row) => {
+                return row?.assigned?.categories?.length || 0
+            },
+        },
+        {
             id: "brand", label: "Brand", renderCell: (row) => {
                 return row?.brand?.name || "-"
             },

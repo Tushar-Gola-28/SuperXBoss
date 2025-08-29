@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, InputAdornment, ListItemText, MenuItem, Select, Stack, TextField } from '@mui/material'
+import { Autocomplete, Box, Button, FormControl, InputAdornment, ListItemText, MenuItem, Select, Stack, TextField } from '@mui/material'
 import SectionHeader from '../../components/SectionHeader'
 import searchIcon from '../../assets/search.svg'
 import AddIcon from '@mui/icons-material/Add';
@@ -12,6 +12,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { urls } from '../../routes';
 import { fetchProducts } from '../../services/product';
 import { fetchActiveBrands } from '../../services/brands';
+import { fetchAllCategories, fetchCategories } from '../../services';
 
 export function ProductPage() {
     const navigate = useNavigate()
@@ -33,14 +34,15 @@ export function ProductPage() {
         setSearch(value)
     }, 600)
     const [brand, setBrand] = useState("")
+    const [categories, setCategories] = useState("")
     const { data: active_brand, refetch: fetchBrand, isLoading: isLoading2 } = useQuery({
         queryKey: ['fetchActiveBrands',],
         queryFn: ({ signal }) => fetchActiveBrands(signal)
     })
 
     const { data, isLoading, } = useQuery({
-        queryKey: ['fetchProducts', page + 1, page_size, search, brand],
-        queryFn: ({ signal }) => fetchProducts(signal, "", page + 1, page_size, search, undefined, brand),
+        queryKey: ['fetchProducts', page + 1, page_size, search, brand, categories],
+        queryFn: ({ signal }) => fetchProducts(signal, "", page + 1, page_size, search, undefined, brand, categories),
         enabled: savedPage !== null,
     })
     useEffect(() => {
@@ -65,6 +67,10 @@ export function ProductPage() {
             });
         }
     }, [page, location.search, navigate, savedPage]);
+    const { data: category } = useQuery({
+        queryKey: ['all-categories',],
+        queryFn: ({ signal }) => fetchAllCategories(signal,)
+    })
     return (
         <Box>
             <SectionHeader heading="Products" icon="https://ticketsque-public.s3.ap-south-1.amazonaws.com/icons/Events.svg" />
@@ -91,24 +97,60 @@ export function ProductPage() {
                 <Stack direction="row" alignItems="center" gap="10px" flexWrap="wrap">
                     <CustomInput
                         input={
-                            <FormControl fullWidth>
-                                <Select
-                                    name="brand_id"
-                                    required
-                                    displayEmpty
-                                    onChange={(e) => setBrand(e.target.value)}
-                                    value={brand}
-                                >
-                                    <MenuItem value={""}>
-                                        <em> <ListItemText primary={"-Select Brand-"} /></em>
-                                    </MenuItem>
-                                    {active_brand?._payload?.map(({ name, _id, type }) => (
-                                        <MenuItem key={_id} value={_id}>
-                                            <ListItemText primary={`${name} (${type.name})`} />
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                            <Autocomplete
+                                options={active_brand?._payload || []}
+                                getOptionLabel={(option) =>
+                                    option?.name ? `${option.name} (${option?.type?.name || ""})` : ""
+                                }
+                                value={active_brand?._payload?.find((b) => b._id === brand) || null}
+                                onChange={(_, newValue) => setBrand(newValue?._id || "")}
+                                sx={{ maxWidth: 400, width: { xs: 300, md: 200 } }}  // 👈 max width applied
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="-Select Brand-"
+                                        fullWidth
+                                        sx={{
+                                            "& .MuiInputBase-root": {
+                                                height: 45,              // 👈 input height
+                                                minHeight: 40,
+                                            },
+                                            "& input": {
+                                                height: "100%",          // 👈 text stays centered
+                                                padding: "20px 14px",
+                                            },
+                                        }}
+                                    />
+                                )}
+                            />
+                        }
+                    />
+                    <CustomInput
+                        input={
+                            <Autocomplete
+                                options={category?._payload || []}
+                                getOptionLabel={(option) => option.name || ""}
+                                value={category?._payload?.find((c) => c._id === categories) || null}
+                                onChange={(_, newValue) => setCategories(newValue?._id || "")}
+                                sx={{ maxWidth: 400, width: { xs: 300, md: 200 } }}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="-Select Categories-"
+                                        fullWidth
+                                        sx={{
+                                            "& .MuiInputBase-root": {
+                                                height: 45,              // 👈 input height
+                                                minHeight: 40,
+                                            },
+                                            "& input": {
+                                                height: "100%",          // 👈 text stays centered
+                                                padding: "20px 14px",
+                                            },
+                                        }}
+                                    />
+                                )}
+                            />
                         }
                     />
                     <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate(`${urls?.PRODUCTS_HANDLER}/`)} >Create Product</Button>

@@ -6,6 +6,10 @@ export const fetchCategories = async (signal, page, page_size, search, parent, p
     const { data } = await api.get(`/category`, { signal, params: { page, page_size, search, parent, pagination } })
     return data
 }
+export const fetchAllCategories = async (signal,) => {
+    const { data } = await api.get(`/category/all`, { signal, })
+    return data
+}
 
 export const createCategory = async (values) => {
     try {

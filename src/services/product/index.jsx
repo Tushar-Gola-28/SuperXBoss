@@ -50,8 +50,8 @@ export const updateProduct = async (values, product) => {
 
     }
 }
-export const fetchProducts = async (signal, pagination = true, page, page_size, search, active, brand) => {
-    const { data } = await api.get(`/product`, { signal, params: { pagination, page, page_size, search, active, brand } })
+export const fetchProducts = async (signal, pagination = true, page, page_size, search, active, brand, categories) => {
+    const { data } = await api.get(`/product`, { signal, params: { pagination, page, page_size, search, active, brand, categories } })
     return data
 }
 export const fetchProductsById = async (signal, product) => {

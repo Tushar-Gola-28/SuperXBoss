@@ -40,21 +40,22 @@ export default function useColumns() {
             },
         },
         { id: "name", label: "Name" },
+        { id: "part_no", label: "Part number" },
         {
             id: "Total Brand Assigned", label: "Total Brand Assigned", renderCell: (row) => {
                 return row?.assigned?.brand_ids?.length || 0
             },
         },
-        {
-            id: "Total Vehicle Assigned", label: "Total Vehicle Assigned", renderCell: (row) => {
-                return row?.assigned?.vehicle_ids?.length || 0
-            },
-        },
-        {
-            id: "Total Categories Assigned", label: "Total Categories Assigned", renderCell: (row) => {
-                return row?.assigned?.categories?.length || 0
-            },
-        },
+        // {
+        //     id: "Total Vehicle Assigned", label: "Total Vehicle Assigned", renderCell: (row) => {
+        //         return row?.assigned?.vehicle_ids?.length || 0
+        //     },
+        // },
+        // {
+        //     id: "Total Categories Assigned", label: "Total Categories Assigned", renderCell: (row) => {
+        //         return row?.assigned?.categories?.length || 0
+        //     },
+        // },
         {
             id: "brand", label: "Brand", renderCell: (row) => {
                 return row?.brand?.name || "-"
@@ -76,7 +77,7 @@ export default function useColumns() {
                 return row?.bulk_discount?.length
             },
         },
-        { id: "part_no", label: "Part number" },
+
         {
             id: "Trend", label: "Trend",
             renderCell: (row) => {
@@ -112,7 +113,7 @@ export default function useColumns() {
         {
             id: "unit", label: "Unit",
             renderCell: (row) => {
-                return row?.unit?.pc ? `${row?.unit?.name} ${row?.unit?.set} (${row?.unit?.pc})` : `${row?.unit?.name} ${row?.unit?.set}`
+                return row?.unit?.pc && row?.unit?.set ? `${row?.unit?.name} ${row?.unit?.set} (${row?.unit?.pc})` : row?.unit?.set ? `${row?.unit?.name} ${row?.unit?.set}` : row?.unit?.pc ? `${row?.unit?.name} (${row?.unit?.pc})` : `${row?.unit?.name}`
             },
         },
         { id: "hsn_code", label: "HSN Code" },

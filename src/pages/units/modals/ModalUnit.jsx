@@ -19,14 +19,16 @@ export function UnitModal({ open, close, refetch, editData, handleEditData }) {
         },
         validationSchema: Yup.object({
             name: Yup.string().required('Name is required'),
-            pc: Yup.string(), // optional field
-            set: Yup.number().required('Set is required'), // optional field
+            pc: Yup.string().optional(), // optional field
+            set: Yup.number().optional(), // optional field
 
         }),
         onSubmit: (values) => {
             if (!values.pc) {
                 delete values.pc
-
+            }
+            if (!values.set) {
+                delete values.set
             }
             if (editData) {
                 updateMutation.mutate(values, {
@@ -76,8 +78,8 @@ export function UnitModal({ open, close, refetch, editData, handleEditData }) {
         if (editData) {
             formik.setValues({
                 name: editData?.name,
-                set: editData?.set,
-                pc: editData?.pc,
+                set: editData?.set || "",
+                pc: editData?.pc || "",
                 status: String(editData?.status),
             })
         }
@@ -123,12 +125,10 @@ export function UnitModal({ open, close, refetch, editData, handleEditData }) {
                     />
                     <CustomInput
                         label="Set"
-                        required
                         input={
                             <TextField
                                 fullWidth
                                 name="set"
-                                required
                                 placeholder="Enter Name"
                                 value={formik.values.set}
                                 onChange={formik.handleChange}

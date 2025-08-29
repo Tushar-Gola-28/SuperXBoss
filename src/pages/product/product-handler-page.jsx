@@ -19,6 +19,7 @@ import { fetchSegmentsAll } from '../../services/segments'
 import { UnitModal } from '../units/modals/ModalUnit'
 import { fetchUnits } from '../../services/unit'
 import { LoadingButton } from '@mui/lab'
+import { BrandSpareModal } from '../brands/modals/BrandSpareModal'
 
 export function ProductHandlePage() {
     const { product } = useParams()
@@ -56,7 +57,7 @@ export function ProductHandlePage() {
     })
     const { data: active_brand, refetch: fetchBrand, isLoading: isLoading2 } = useQuery({
         queryKey: ['fetchActiveBrands',],
-        queryFn: ({ signal }) => fetchActiveBrands(signal, product ? "" : true)
+        queryFn: ({ signal }) => fetchActiveBrands(signal, product ? "" : true, "Spare Parts")
     })
     const { data: product_data, isLoading } = useQuery({
         queryKey: ['fetchProductsById',],
@@ -226,7 +227,7 @@ export function ProductHandlePage() {
                 ship_days: ship_days || "",
                 return_days: return_days || "",
                 unit: unit._id,
-                status: status || "true",
+                status: String(status),
                 trend_part: trend_part || "false",
                 brand_id: brand?._id,
                 segment_type: segment_type.map((it) => it._id),
@@ -419,7 +420,7 @@ export function ProductHandlePage() {
                                     </Grid2>
                                     <Grid2 size={{ xs: 12, md: 6 }}>
                                         <CustomInput
-                                            label="Select Brand"
+                                            label="Select Spare Brand"
                                             required
                                             input={
                                                 <FormControl fullWidth>
@@ -439,11 +440,11 @@ export function ProductHandlePage() {
                                                         }}
                                                     >
                                                         <MenuItem value={""}>
-                                                            <em> <ListItemText primary={"Select Brand"} /></em>
+                                                            <em> <ListItemText primary={"Select Spare Brand"} /></em>
                                                         </MenuItem>
                                                         {active_brand?._payload?.map(({ name, _id, type }) => (
                                                             <MenuItem key={_id} value={_id}>
-                                                                <ListItemText primary={`${name} (${type.name})`} />
+                                                                <ListItemText primary={`${name}`} />
                                                             </MenuItem>
                                                         ))}
                                                     </Select>
@@ -452,7 +453,7 @@ export function ProductHandlePage() {
                                         />
                                         <Stack direction="row" justifyContent="flex-end" mt={1}>
                                             <Button variant="outlined" onClick={handleOpenModal}>
-                                                Add Brand
+                                                Add Spare Brand
                                             </Button>
                                         </Stack>
                                     </Grid2>
@@ -704,7 +705,7 @@ export function ProductHandlePage() {
                                                         </MenuItem>
                                                         {unitData?._payload?.map(({ _id, name, set, pc }) => (
                                                             <MenuItem key={_id} value={_id}>
-                                                                <ListItemText primary={pc ? `${name} ${set} (${pc})` : `${name} ${set}`} />
+                                                                <ListItemText primary={pc && set ? `${name} ${set} (${pc})` : set ? `${name} ${set}` : pc ? `${name} ${pc}` : `${name}`} />
                                                             </MenuItem>
                                                         ))}
                                                     </Select>
@@ -956,7 +957,7 @@ export function ProductHandlePage() {
                     </Stack>
                 </form>
             </Stack>
-            {open && <BrandModal open={open} close={() => { handleCloseModal(); }} refetch={fetchBrand} />}
+            {open && <BrandSpareModal open={open} close={() => { handleCloseModal(); }} refetch={fetchBrand} />}
             {isOpen && <SegmentModal open={isOpen} close={() => { handleCloseSegmentModal(); }} refetch={fetchSegment} />}
             {isOpen2 && <UnitModal open={isOpen2} close={() => { handleCloseUnitModal(); }} refetch={fetchUnit} />}
         </PageStructure>

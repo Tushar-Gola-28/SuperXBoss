@@ -1,9 +1,9 @@
 import { CustomInput, CustomModal, CustomRadio, notify } from '../../../components';
-import { FormControlLabel, IconButton, InputAdornment, MenuItem, Stack, Switch, TextField } from '@mui/material';
+import { Box, Button, Checkbox, FormControl, FormControlLabel, IconButton, InputAdornment, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, Stack, Switch, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import ImageUpload from '../../../components/ui/ImageUpload';
 import { useEffect, useState } from 'react';
 import { SegmentModal } from '../../segment/modal/SegmentModal';
@@ -11,13 +11,14 @@ import { useModalControl } from '../../../hooks/useModalControl';
 import { useParams } from 'react-router';
 import { createVehicle, updateVehicle } from '../../../services/vehicle';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import { fetchSegmentsAll } from '../../../services/segments';
 export function VehicleModal({ open, close, refetch, editData, handleEditData }) {
     const { brand_id } = useParams()
     const [images, setImages] = useState()
     const currentYear = new Date().getFullYear();
     const startYear = 1950;
     const years = Array.from({ length: currentYear - startYear + 1 }, (_, i) => startYear + i);
-
+    const [vehicle, setVehicle] = useState([])
     const { open: isOpen, handleCloseModal, handleOpenModal } = useModalControl()
     const formik = useFormik({
         initialValues: {
@@ -59,7 +60,9 @@ export function VehicleModal({ open, close, refetch, editData, handleEditData })
             formData.append("description", values.description)
             formData.append("status", values.status)
             formData.append("start_year", values.start_year)
-            // formData.append("end_year", values.end_year)
+            vehicle.forEach(element => {
+                formData.append("vehicle_segment", element)
+            });
             if (!values.no_end_year && values.end_year !== "" && values.end_year != null) {
                 formData.append("end_year", Number(values.end_year));
             } // else: omit end_year to mean "Present"
@@ -96,6 +99,7 @@ export function VehicleModal({ open, close, refetch, editData, handleEditData })
     });
     console.log(formik.errors);
 
+
     const createMutation = useMutation({
         mutationFn: async (data) => {
             return await createVehicle(data, brand_id)
@@ -115,12 +119,17 @@ export function VehicleModal({ open, close, refetch, editData, handleEditData })
                 start_year: editData?.start_year,
                 end_year: editData?.end_year,
                 status: String(editData?.status),
+                vehicle_segment: editData.vehicle_segment || [],
                 no_end_year: !hasEnd, // NEW
 
             })
             setImages([{ preview: editData?.logo }])
         }
     }, [editData,])
+    const { data, refetch: segmentRefetch } = useQuery({
+        queryKey: ['fetchSegmentsAll',],
+        queryFn: ({ signal }) => fetchSegmentsAll(signal, editData ? "" : true)
+    })
 
     return (
         <div>
@@ -182,6 +191,41 @@ export function VehicleModal({ open, close, refetch, editData, handleEditData })
                                 error={formik.touched.description && Boolean(formik.errors.description)}
                                 helperText={formik.touched.description && formik.errors.description}
                             />
+                        }
+                    />
+                    <CustomInput
+                        label="Vehicle Segment"
+                        input={
+                            <Box>
+                                <FormControl fullWidth>
+                                    <InputLabel >Vehicle Segment</InputLabel>
+                                    <Select
+                                        multiple
+                                        value={vehicle}
+
+                                        onChange={(e) => {
+                                            setVehicle(e.target.value || []);
+                                        }}
+                                        input={<OutlinedInput label="Vehicle Segment" />}
+                                        renderValue={(selected) =>
+                                            data?._payload
+                                                ?.filter(({ _id }) => selected.includes(_id))
+                                                .map(({ name }) => name)
+                                                .join(', ')
+                                        }
+                                    >
+                                        {data?._payload?.map(({ _id, name }) => (
+                                            <MenuItem key={_id} value={_id}>
+                                                <Checkbox checked={vehicle.includes(_id)} />
+                                                <ListItemText primary={name} />
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <Stack direction="row" justifyContent="flex-end" mt={1}>
+                                    <Button variant="outlined" onClick={handleOpenModal}>Add Segment</Button>
+                                </Stack>
+                            </Box>
                         }
                     />
 

@@ -154,6 +154,11 @@ export default function useColumns(handleEditData, handleOpenModal, handleOpenMo
             },
         },
         {
+            id: "Total Vehicles", label: "Total Vehicles", renderCell: (row) => {
+                return row?.vehicle_segment?.length || "-"
+            },
+        },
+        {
             id: "user", label: "Create By", renderCell: (row) => {
                 return row?.createdBy?.name || "-"
             },

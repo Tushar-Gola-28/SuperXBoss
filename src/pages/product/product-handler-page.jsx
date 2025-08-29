@@ -30,6 +30,7 @@ export function ProductHandlePage() {
     const [removeImages, setRemoveImages] = useState()
     const navigate = useNavigate()
     const [removeVideo, setRemoveVideo] = useState()
+    const [vehicle_brand_id, setVehicle_brand_id] = useState("")
     const [discounts, setDiscounts] = useState([
         { count: "", discount: "" }
     ])
@@ -58,6 +59,10 @@ export function ProductHandlePage() {
     const { data: active_brand, refetch: fetchBrand, isLoading: isLoading2 } = useQuery({
         queryKey: ['fetchActiveBrands',],
         queryFn: ({ signal }) => fetchActiveBrands(signal, product ? "" : true, "Spare Parts")
+    })
+    const { data: active_vehicle_brand, refetch: fetchVehicleBrand, isLoading: isLoading5 } = useQuery({
+        queryKey: ['fetchActiveVehicleBrands',],
+        queryFn: ({ signal }) => fetchActiveBrands(signal, product ? "" : true, "Vehicle")
     })
     const { data: product_data, isLoading } = useQuery({
         queryKey: ['fetchProductsById',],
@@ -253,8 +258,8 @@ export function ProductHandlePage() {
     const [open4, setOpen4] = useState(false);
 
     useEffect(() => {
-        if (values.brand_id && !product) {
-            const brands = active_brand?._payload.find((it) => it._id == values.brand_id)
+        if (vehicle_brand_id && !product) {
+            const brands = active_vehicle_brand?._payload.find((it) => it._id == vehicle_brand_id)
             if (brands && brands?.brand_segment?.length) {
                 const segments = data._payload?.map(seg => seg._id) || [];
                 const validSegments = brands.brand_segment.filter(seg => segments.includes(seg));
@@ -264,9 +269,9 @@ export function ProductHandlePage() {
 
             }
         }
-    }, [values.brand_id])
+    }, [vehicle_brand_id])
 
-    if (isLoading || isLoading2, isLoading3 || isLoading4) {
+    if (isLoading || isLoading2, isLoading3 || isLoading4 || isLoading5) {
         return <Backdrop
             sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
             open={true}
@@ -423,7 +428,7 @@ export function ProductHandlePage() {
                                             label="Select Spare Brand"
                                             required
                                             input={
-                                                <FormControl fullWidth>
+                                                <FormControl fullWidth sx={{ height: 45 }}>
                                                     <Select
                                                         name="brand_id"
                                                         required
@@ -438,6 +443,7 @@ export function ProductHandlePage() {
                                                                 },
                                                             },
                                                         }}
+                                                        sx={{ height: 45 }}
                                                     >
                                                         <MenuItem value={""}>
                                                             <em> <ListItemText primary={"Select Spare Brand"} /></em>
@@ -457,13 +463,49 @@ export function ProductHandlePage() {
                                             </Button>
                                         </Stack>
                                     </Grid2>
-                                    <Grid2 size={{ xs: 12 }}>
+                                    <Grid2 size={{ xs: 12, md: 6 }}>
+
+                                        <CustomInput
+                                            label="Select Vehicle Brand"
+                                            input={
+                                                <FormControl fullWidth sx={{ height: 45 }}>
+                                                    <Select
+                                                        name="brand_id"
+                                                        displayEmpty
+                                                        onChange={(e) => setVehicle_brand_id(e.target.value)}
+                                                        value={vehicle_brand_id}
+                                                        sx={{ height: 45 }}
+                                                        MenuProps={{
+                                                            PaperProps: {
+                                                                style: {
+                                                                    maxHeight: 250, // 👈 fixed max height
+                                                                    width: 300,     // optional: fix width
+                                                                },
+                                                            },
+                                                        }}
+
+                                                    >
+                                                        <MenuItem value={""}>
+                                                            <em> <ListItemText primary={"Select Vehicle Brand"} /></em>
+                                                        </MenuItem>
+                                                        {active_vehicle_brand?._payload?.map(({ name, _id, type }) => (
+                                                            <MenuItem key={_id} value={_id}>
+                                                                <ListItemText primary={`${name}`} />
+                                                            </MenuItem>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+                                            }
+                                        />
+
+                                    </Grid2>
+                                    <Grid2 size={{ xs: 12, md: 6 }}>
 
                                         <CustomInput
                                             label="Vehicle Segment"
                                             required
                                             input={
-                                                <FormControl fullWidth>
+                                                <FormControl fullWidth sx={{ height: 40 }}>
                                                     <InputLabel id="vehicle-segment-label">Vehicle Segment</InputLabel>
                                                     <Select
                                                         labelId="vehicle-segment-label"
@@ -491,6 +533,7 @@ export function ProductHandlePage() {
                                                                 },
                                                             },
                                                         }}
+                                                        sx={{ height: 40 }}
                                                     >
                                                         {/* ✅ Scrollable list */}
                                                         {data?._payload?.map(({ _id, name }) => (
@@ -532,7 +575,7 @@ export function ProductHandlePage() {
                                             </Button>
                                         </Stack>
                                     </Grid2>
-                                    <Grid2 size={{ xs: 12 }}>
+                                    <Grid2 size={{ xs: 12, }}>
                                         <CustomPaper>
                                             <Stack mb={1}>
                                                 <Typography variant="h5" sx={{ color: "primary.main" }}>

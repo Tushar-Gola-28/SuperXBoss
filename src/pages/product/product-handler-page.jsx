@@ -83,7 +83,8 @@ export function ProductHandlePage() {
         any_discount: Yup.number().typeError('Must be a number')
             .min(0, 'Minimum is 0%')
             .max(100, 'Maximum is 100%').nullable(),
-        brand_id: Yup.string().required('Brand ID is required'),
+        brand_id: Yup.string().required('Spare Brand is required'),
+        vehicle_brand_id: Yup.string().optional('Vehicle Brand is required'),
         item_stock: Yup.number().typeError('Must be a number').min(0, 'Minimum 0').required('Stock is required.'),
         tax: Yup.number().typeError('Must be a number').min(0, 'Minimum is 0%')
             .max(100, 'Maximum is 100%').required('Tax is required'),
@@ -109,6 +110,7 @@ export function ProductHandlePage() {
             min_qty: '1',
             any_discount: '',
             brand_id: '',
+            vehicle_brand_id: '',
             item_stock: '',
             tax: '',
             sku_id: '',
@@ -214,7 +216,7 @@ export function ProductHandlePage() {
     })
     useEffect(() => {
         if (product && product_data?._payload) {
-            const { name, video, b2b_price, point, new_arrival, pop_item, part_no, customer_price, min_qty, description, any_discount, item_stock, sku_id, tax, hsn_code, ship_days, return_days, weight, unit, status, trend_part, brand, images, bulk_discount, segment_type, return_policy } = product_data?._payload || {}
+            const { name, video, vehicle_brand_id, b2b_price, point, new_arrival, pop_item, part_no, customer_price, min_qty, description, any_discount, item_stock, sku_id, tax, hsn_code, ship_days, return_days, weight, unit, status, trend_part, brand, images, bulk_discount, segment_type, return_policy } = product_data?._payload || {}
             setValues({
                 name: name || "",
                 b2b_price: b2b_price || "",
@@ -224,6 +226,7 @@ export function ProductHandlePage() {
                 part_no: part_no || "",
                 customer_price: customer_price || 0,
                 min_qty: min_qty || 1,
+                vehicle_brand_id: vehicle_brand_id,
                 any_discount: any_discount || "",
                 item_stock: item_stock || 1,
                 sku_id: sku_id || "",
@@ -258,8 +261,8 @@ export function ProductHandlePage() {
     const [open4, setOpen4] = useState(false);
 
     useEffect(() => {
-        if (vehicle_brand_id && !product) {
-            const brands = active_vehicle_brand?._payload.find((it) => it._id == vehicle_brand_id)
+        if (values.vehicle_brand_id && !product) {
+            const brands = active_vehicle_brand?._payload.find((it) => it._id == values.vehicle_brand_id)
             if (brands && brands?.brand_segment?.length) {
                 const segments = data._payload?.map(seg => seg._id) || [];
                 const validSegments = brands.brand_segment.filter(seg => segments.includes(seg));
@@ -269,7 +272,7 @@ export function ProductHandlePage() {
 
             }
         }
-    }, [vehicle_brand_id])
+    }, [values.vehicle_brand_id])
 
     if (isLoading || isLoading2, isLoading3 || isLoading4 || isLoading5) {
         return <Backdrop
@@ -470,10 +473,10 @@ export function ProductHandlePage() {
                                             input={
                                                 <FormControl fullWidth sx={{ height: 45 }}>
                                                     <Select
-                                                        name="brand_id"
+                                                        name="vehicle_brand_id"
                                                         displayEmpty
-                                                        onChange={(e) => setVehicle_brand_id(e.target.value)}
-                                                        value={vehicle_brand_id}
+                                                        onChange={handleChange}
+                                                        value={values.vehicle_brand_id}
                                                         sx={{ height: 45 }}
                                                         MenuProps={{
                                                             PaperProps: {
